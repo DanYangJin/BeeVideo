@@ -43,6 +43,13 @@
 		2D54DE291C9D53AB007362F2 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE191C9D53AB007362F2 /* UIView+WebCacheOperation.m */; };
 		2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */; };
 		2D54DE2F1C9D53B4007362F2 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D54DE2D1C9D53B4007362F2 /* WebP.framework */; };
+		2DF9B5A41C9FC35600FE0A6B /* HttpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5A31C9FC35600FE0A6B /* HttpConstants.swift */; };
+		2DF9B5A61C9FC6F300FE0A6B /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5A51C9FC6F300FE0A6B /* BaseRequest.swift */; };
+		2DF9B5AA1C9FD20A00FE0A6B /* TestRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5A91C9FD20A00FE0A6B /* TestRequest.swift */; };
+		2DF9B5AC1C9FDF4100FE0A6B /* BaseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5AB1C9FDF4100FE0A6B /* BaseResult.swift */; };
+		2DF9B5AE1C9FE14000FE0A6B /* TestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5AD1C9FE14000FE0A6B /* TestResult.swift */; };
+		2DF9B5B21C9FF05000FE0A6B /* UrlCfgUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5B11C9FF05000FE0A6B /* UrlCfgUtils.swift */; };
+		2DF9B5B41CA0017700FE0A6B /* InternetUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF9B5B31CA0017700FE0A6B /* InternetUtils.swift */; };
 		A3ABB4A7F87A58BA8238F838 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3133115507B85392C7E5A37A /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -125,6 +132,13 @@
 		2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+WebP.m"; sourceTree = "<group>"; };
 		2D54DE2D1C9D53B4007362F2 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		2D54DE331C9D5444007362F2 /* BeeVideo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeeVideo-Bridging-Header.h"; sourceTree = "<group>"; };
+		2DF9B5A31C9FC35600FE0A6B /* HttpConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpConstants.swift; sourceTree = "<group>"; };
+		2DF9B5A51C9FC6F300FE0A6B /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
+		2DF9B5A91C9FD20A00FE0A6B /* TestRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestRequest.swift; path = ../../Networking/TestRequest.swift; sourceTree = "<group>"; };
+		2DF9B5AB1C9FDF4100FE0A6B /* BaseResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseResult.swift; sourceTree = "<group>"; };
+		2DF9B5AD1C9FE14000FE0A6B /* TestResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestResult.swift; path = ../../Networking/TestResult.swift; sourceTree = "<group>"; };
+		2DF9B5B11C9FF05000FE0A6B /* UrlCfgUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlCfgUtils.swift; sourceTree = "<group>"; };
+		2DF9B5B31CA0017700FE0A6B /* InternetUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetUtils.swift; sourceTree = "<group>"; };
 		3133115507B85392C7E5A37A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		395854C8C7FCBCC2AC8708A8 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		F0BDEC49C86317D58235B5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -222,6 +236,8 @@
 		2D143C061C9C5A6500C11099 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2DF9B5AF1C9FE54B00FE0A6B /* Request */,
+				2DF9B5B01C9FE55400FE0A6B /* Result */,
 				2D143C0B1C9C5B5900C11099 /* Controllers */,
 				2D143C0C1C9C5B5900C11099 /* Model */,
 				2D143C0D1C9C5B5900C11099 /* UIView */,
@@ -241,6 +257,11 @@
 		2D143C081C9C5A7800C11099 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				2DF9B5A31C9FC35600FE0A6B /* HttpConstants.swift */,
+				2DF9B5A51C9FC6F300FE0A6B /* BaseRequest.swift */,
+				2DF9B5AB1C9FDF4100FE0A6B /* BaseResult.swift */,
+				2DF9B5B11C9FF05000FE0A6B /* UrlCfgUtils.swift */,
+				2DF9B5B31CA0017700FE0A6B /* InternetUtils.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -353,6 +374,22 @@
 				2D54DE2D1C9D53B4007362F2 /* WebP.framework */,
 			);
 			path = "iOS-WebP";
+			sourceTree = "<group>";
+		};
+		2DF9B5AF1C9FE54B00FE0A6B /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				2DF9B5A91C9FD20A00FE0A6B /* TestRequest.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		2DF9B5B01C9FE55400FE0A6B /* Result */ = {
+			isa = PBXGroup;
+			children = (
+				2DF9B5AD1C9FE14000FE0A6B /* TestResult.swift */,
+			);
+			path = Result;
 			sourceTree = "<group>";
 		};
 		EB13B2A8EC69E148BBD52AA9 /* Frameworks */ = {
@@ -552,7 +589,11 @@
 				2D54DE261C9D53AB007362F2 /* UIImage+WebP.m in Sources */,
 				2D143BD81C9C566A00C11099 /* ViewController.swift in Sources */,
 				2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */,
+				2DF9B5A41C9FC35600FE0A6B /* HttpConstants.swift in Sources */,
+				2DF9B5AE1C9FE14000FE0A6B /* TestResult.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
+				2DF9B5AA1C9FD20A00FE0A6B /* TestRequest.swift in Sources */,
+				2DF9B5B41CA0017700FE0A6B /* InternetUtils.swift in Sources */,
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
 				2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */,
 				2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */,
@@ -563,6 +604,7 @@
 				2D54DDF11C9D339C007362F2 /* BlockView.swift in Sources */,
 				2D54DDF31C9D39B7007362F2 /* VideoPageView.swift in Sources */,
 				2D54DE1D1C9D53AB007362F2 /* SDWebImageCompat.m in Sources */,
+				2DF9B5A61C9FC6F300FE0A6B /* BaseRequest.swift in Sources */,
 				2D54DE1B1C9D53AB007362F2 /* NSData+ImageContentType.m in Sources */,
 				2D54DDED1C9D2865007362F2 /* DataFactory.swift in Sources */,
 				2D54DE211C9D53AB007362F2 /* SDWebImageManager.m in Sources */,
@@ -572,9 +614,11 @@
 				2D54DE1A1C9D53AB007362F2 /* MKAnnotationView+WebCache.m in Sources */,
 				2D54DE241C9D53AB007362F2 /* UIImage+GIF.m in Sources */,
 				2D54DDEB1C9D27A5007362F2 /* RemmondedPageView.swift in Sources */,
+				2DF9B5AC1C9FDF4100FE0A6B /* BaseResult.swift in Sources */,
 				2D54DE221C9D53AB007362F2 /* SDWebImagePrefetcher.m in Sources */,
 				2D54DE231C9D53AB007362F2 /* UIButton+WebCache.m in Sources */,
 				2D54DE251C9D53AB007362F2 /* UIImage+MultiFormat.m in Sources */,
+				2DF9B5B21C9FF05000FE0A6B /* UrlCfgUtils.swift in Sources */,
 				2D54DE1E1C9D53AB007362F2 /* SDWebImageDecoder.m in Sources */,
 				2D54DE291C9D53AB007362F2 /* UIView+WebCacheOperation.m in Sources */,
 				2D54DDEF1C9D2892007362F2 /* CycleItemInfo.swift in Sources */,

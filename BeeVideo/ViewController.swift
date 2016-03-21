@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate{
+class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate, CallbackDelegate{
 
     private var mTableTitleView:TableTitleView!
     private var mContentScrollView:UIScrollView!
@@ -91,9 +91,21 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         }
         
         mContentScrollView.contentSize = CGSize(width: calcTotalSizeByIndex(4), height: self.view.frame.height - 100)
+        
+        TestRequest(baseResult: TestResult(callBackDelegate: self)).sendAsyn()
 
     }
 
+    
+    func onRequestSuccess(baseResult:BaseResult) {
+        let result:TestResult = baseResult as! TestResult
+        NSLog("data \(result.data)")
+    }
+    
+    func onRequestFail(error:NSError?) {
+    
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
