@@ -8,8 +8,9 @@
 
 class HttpConstants {
     
-    static let HOST:String = "http://www.beevideo.tv"
+    static let HOST:String = "www.beevideo.tv"
+        
+    static let URL_HOME_DATA = "/api/hometv2.0/listBlockByVersion.action"
 
-    //    http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2
 
 }
