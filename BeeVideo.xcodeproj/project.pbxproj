@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2D143BD61C9C566A00C11099 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D143BD51C9C566A00C11099 /* AppDelegate.swift */; };
-		2D143BD81C9C566A00C11099 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D143BD71C9C566A00C11099 /* ViewController.swift */; };
 		2D143BDB1C9C566A00C11099 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D143BD91C9C566A00C11099 /* Main.storyboard */; };
 		2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D143BDC1C9C566A00C11099 /* BeeVideo.xcdatamodeld */; };
 		2D143BE01C9C566A00C11099 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D143BDF1C9C566A00C11099 /* Assets.xcassets */; };
@@ -43,6 +42,7 @@
 		2D54DE291C9D53AB007362F2 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE191C9D53AB007362F2 /* UIView+WebCacheOperation.m */; };
 		2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */; };
 		2D54DE2F1C9D53B4007362F2 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D54DE2D1C9D53B4007362F2 /* WebP.framework */; };
+		2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBD25E61CA166BE00E4BC86 /* ViewController.swift */; };
 		2DE7CE541CA12794004F0D68 /* HomeDataRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE531CA12794004F0D68 /* HomeDataRequest.swift */; };
 		2DE7CE561CA12838004F0D68 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE551CA12838004F0D68 /* BaseRequest.swift */; };
 		2DE7CE581CA128D1004F0D68 /* BaseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE571CA128D1004F0D68 /* BaseResult.swift */; };
@@ -76,7 +76,6 @@
 /* Begin PBXFileReference section */
 		2D143BD21C9C566A00C11099 /* BeeVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeeVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D143BD51C9C566A00C11099 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../AppDelegate.swift; sourceTree = "<group>"; };
-		2D143BD71C9C566A00C11099 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../../ViewController.swift; sourceTree = "<group>"; };
 		2D143BDA1C9C566A00C11099 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2D143BDD1C9C566A00C11099 /* BeeVideo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BeeVideo.xcdatamodel; sourceTree = "<group>"; };
 		2D143BDF1C9C566A00C11099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
@@ -135,6 +134,7 @@
 		2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+WebP.m"; sourceTree = "<group>"; };
 		2D54DE2D1C9D53B4007362F2 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		2D54DE331C9D5444007362F2 /* BeeVideo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeeVideo-Bridging-Header.h"; sourceTree = "<group>"; };
+		2DBD25E61CA166BE00E4BC86 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2DE7CE531CA12794004F0D68 /* HomeDataRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeDataRequest.swift; sourceTree = "<group>"; };
 		2DE7CE551CA12838004F0D68 /* BaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		2DE7CE571CA128D1004F0D68 /* BaseResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseResult.swift; sourceTree = "<group>"; };
@@ -288,7 +288,7 @@
 		2D143C0B1C9C5B5900C11099 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				2D143BD71C9C566A00C11099 /* ViewController.swift */,
+				2DBD25E61CA166BE00E4BC86 /* ViewController.swift */,
 				2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */,
 			);
 			path = Controllers;
@@ -597,11 +597,11 @@
 				2D54DDE91C9D269C007362F2 /* BasePageView.swift in Sources */,
 				2DE7CE601CA153BC004F0D68 /* ChannelInfo.swift in Sources */,
 				2D54DE261C9D53AB007362F2 /* UIImage+WebP.m in Sources */,
-				2D143BD81C9C566A00C11099 /* ViewController.swift in Sources */,
 				2DE7CE641CA163E5004F0D68 /* HomeData.swift in Sources */,
 				2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */,
 				2DF9B5A41C9FC35600FE0A6B /* HttpConstants.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
+				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
 				2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */,
 				2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */,
