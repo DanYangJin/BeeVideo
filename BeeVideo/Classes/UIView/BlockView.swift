@@ -11,8 +11,12 @@ import SDWebImage
 
 class BlockView: UIView {
 
-    private var blockImage:UIImageView!
+    var blockImage:UIImageView!
     private var blockName:UILabel!
+    private var x:CGFloat!
+    private var y:CGFloat!
+    private var width:CGFloat!
+    private var height:CGFloat!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,27 +27,58 @@ class BlockView: UIView {
         super.init(coder: aDecoder)
     }
     
+    //初始化Frame
+    func initFrame(x:CGFloat, y:CGFloat, width:CGFloat, height:CGFloat){
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+    }
+    
     //初始化view
-    func initView(item:CycleItemInfo){
+    func initView(homeSpace:HomeSpace){
+        setFrame()
+        initImage(homeSpace.items[0].icon)
+        initLabel(homeSpace.items[0].name)
+        
+        
+    }
+    
+    func click(){
+        print("click.....")
+    
+    }
+    
+    func setFrame(){
+        frame = CGRectMake(x, y, width, height)
+    }
+    
+    func initImage(url:String){
         blockImage = UIImageView()
-        blockImage.frame = CGRectMake(0, 0, 100, 60)
-        blockImage.sd_setImageWithURL(NSURL(string: item.picUrl), placeholderImage: UIImage(named: "cycle1.jpg")) { (image, error, cacheType, url) -> Void in
-            NSLog("成功")
-        }
+        blockImage.setCorner()
+        blockImage.frame = CGRectMake(0, 0, width, height)
+        blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "cycle1.jpg"));
         addSubview(blockImage)
-        
+    }
+    
+    func initLabel(text:String){
         blockName = UILabel()
-        blockName.frame = CGRectMake(0, 40, 100, 20)
-        blockName.text = item.desp
+        blockName.frame = CGRectMake(0, height - 20, width, 20)
+        blockName.text = text
         blockName.textAlignment = NSTextAlignment.Center
-        blockName.textColor = UIColor.redColor()
+        blockName.textColor = UIColor.whiteColor()
+        blockName.font = UIFont(name: "Helvetica", size: 12.0)
+
         addSubview(blockName)
-        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        NSLog("touchesBegan.......")
+        print("touchesBegan.......")
     }
     
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        print("touchesEnded.......")
+    }
 
 }

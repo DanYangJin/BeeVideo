@@ -10,26 +10,27 @@ import UIKit
 
 class BasePageView: UIView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        initView()
-    }
+    internal var homeSpace:[HomeSpace]!
     
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        initView()
-    }
-    
-    //初始化view
     func initView(){
-        prepareLoadData()
+       initData()
     }
-    // 初始化数据
-    func prepareLoadData(){}
-    //获取宽度
+    
     func getViewWidth() -> CGFloat {
         return 0
     }
+    
+    func setData(homeSpace:[HomeSpace]?){
+        self.homeSpace = homeSpace
+        for var i = 0; i < homeSpace!.count; i++ {
+            let homeItem:HomeSpace = homeSpace![i]
+            for var j = 0; j < homeItem.items.count; j++ {
+                print("#####\(homeItem.position)######\(homeItem.items[j].name)")
+            }
+        }
+    }
 
+    func initData(){
+        
+    }
 }

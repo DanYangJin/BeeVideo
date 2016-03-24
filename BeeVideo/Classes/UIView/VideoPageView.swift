@@ -17,13 +17,9 @@ class VideoPageView: BasePageView {
         cycleImage = UIImageView()
         cycleImage.frame = CGRectMake(0, 0, 220, 150)
         cycleImage.image = UIImage(named: "girl")
+        
         addSubview(cycleImage)
         
-    }
-    
-    
-    override func prepareLoadData(){
-        //
     }
     
     override func getViewWidth() -> CGFloat {

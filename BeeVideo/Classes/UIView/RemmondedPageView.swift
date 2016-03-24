@@ -8,11 +8,11 @@
 
 import UIKit
 import SpriteKit
+import SDWebImage
 
 class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate{
-
     
-    private var cycleItems:[CycleItemInfo]!
+    private var baseViewController:BaseViewController!
     
     private var cycleImage:UIImageView!
     private var cycleTableView:UITableView!
@@ -21,17 +21,60 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     private var blockMiddle:[UIImageView]!
     private var blockLarge:UIImageView!
     
+    //data
+    private var cycleItems:HomeSpace!
+    
+    //
+    private var cyclePosition:Int = 0
+    private var timer:NSTimer!
+    private var isCycling:Bool {
+        get{
+            return self.isCycling
+        }
+        set{
+            if newValue {
+                timer = NSTimer.scheduledTimerWithTimeInterval(2,
+                    target:self,selector:Selector("tickDown"),
+                    userInfo:nil,repeats:true)
+            } else {
+                if timer != nil {
+                    timer.invalidate()
+                    timer = nil
+                }
+            }
+        }
+    
+    }
+    
+    /**
+     *计时器每秒触发事件
+     **/
+    func tickDown()
+    {
+        if cyclePosition > cycleItems.items.count - 1 {
+            cyclePosition = 0
+        }
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition++].icon), placeholderImage: UIImage(named: "girl"))
+    }
+    
+    func setController(baseViewController:BaseViewController){
+        self.baseViewController = baseViewController
+    }
+    
+   
+    
     override func initView(){
         super.initView()
+
         cycleImage = UIImageView()
         cycleImage.frame = CGRectMake(0, 0, 220, 150)
-        cycleImage.image = UIImage(named: "girl")
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "girl"))
         addSubview(cycleImage)
         
         cycleTableView = UITableView()
         cycleTableView.frame = CGRect(x: 220, y: 0, width: 100, height: 150)
-        cycleTableView.backgroundColor = UIColor.blueColor()
         cycleTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        cycleTableView.backgroundColor = UIColor.clearColor()
         cycleTableView.dataSource = self
         cycleTableView.delegate = self
         cycleTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
@@ -39,32 +82,43 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
         for var index = 0; index < 3; index++ {
             let blockView = BlockView()
-            blockView.initView(DataFactory.blockItems[index])
-            blockView.frame = CGRect(x: 110*index, y: 160, width: 100, height: 60)
+            blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 50)
+            blockView.initView(super.homeSpace![index + 1])
+            
+            blockView.addOnClickListener(self, action: "click")
+            
             addSubview(blockView)
+
         }
         
+        
+        
         for var index = 0; index < 2; index++ {
-            let blockSmall = UIImageView()
-            blockSmall.image = UIImage(named: "girl")
-            blockSmall.frame = CGRect(x: 325, y: 115 * index, width: 110, height: 110)
+            let blockSmall = AnimationBlockView()
+            blockSmall.initFrame(325, y: CGFloat(110 * index), width: 110, height: 100)
+            blockSmall.initView(super.homeSpace![index + 5])
             addSubview(blockSmall)
         }
-        
+
         for var index = 0; index < 2; index++ {
-            let blockMiddle = UIImageView()
-            blockMiddle.image = UIImage(named: "girl")
-            blockMiddle.frame = CGRect(x: 440, y: 115 * index, width: 150, height: 110)
+            let blockMiddle = AnimationBlockView()
+            blockMiddle.initFrame(440, y: CGFloat(110 * index), width: 150, height: 100)
+            blockMiddle.initView(super.homeSpace![index + 7])
             addSubview(blockMiddle)
         }
+
+
+        let blockLarge = AnimationBlockView()
+        blockLarge.initFrame(595, y: 0, width: 150, height: 210)
+        blockLarge.initView(super.homeSpace![9])
+        addSubview(blockLarge)
+    
         
-        for var index = 0; index < 2; index++ {
-            let blockLarge = UIImageView()
-            blockLarge.image = UIImage(named: "girl")
-            blockLarge.frame = CGRect(x: 595, y: 0, width: 150, height: 340)
-            addSubview(blockLarge)
-        }
-        
+        isCycling = true
+    }
+    
+    func click(){
+        print("###onClick###")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -72,18 +126,18 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cycleItems.count
+        return cycleItems.items.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 30.0
+        return 25.0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) 
         tableViewCell.backgroundColor = UIColor.clearColor()
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
-        tableViewCell.textLabel?.text = cycleItems[indexPath.row].desp
+        tableViewCell.textLabel?.text = cycleItems.items[indexPath.row].name
         return tableViewCell
     }
     
@@ -92,12 +146,11 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         //
     }
     
-    override func prepareLoadData(){
-        self.cycleItems = DataFactory.cycleItems;
+    override func getViewWidth() -> CGFloat {
+        return 900
     }
     
-    override func getViewWidth() -> CGFloat {
-        return 800
+    override func initData(){
+        self.cycleItems = super.homeSpace![0]
     }
-
 }

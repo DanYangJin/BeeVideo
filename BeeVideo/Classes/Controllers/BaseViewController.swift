@@ -27,5 +27,7 @@ class BaseViewController: UIViewController {
         self.view.backgroundColor = UIColor.init(patternImage: UIImage(named: "background")!)
     
     }
-
+    
+    
+    func onClick(){}
 }

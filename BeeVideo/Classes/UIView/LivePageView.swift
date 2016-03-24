@@ -21,10 +21,6 @@ class LivePageView: BasePageView {
         
     }
     
-    override func prepareLoadData(){
-        //
-    }
-    
     override func getViewWidth() -> CGFloat {
         return 1000
     }

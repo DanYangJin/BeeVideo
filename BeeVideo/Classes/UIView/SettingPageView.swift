@@ -21,10 +21,6 @@ class SettingPageView: BasePageView {
         
     }
     
-    override func prepareLoadData(){
-        //
-    }
-    
     override func getViewWidth() -> CGFloat {
         return 600
     }
