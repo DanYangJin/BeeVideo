@@ -22,9 +22,9 @@ class BasePageView: UIView {
     
     func setData(homeSpace:[HomeSpace]?){
         self.homeSpace = homeSpace
-        for var i = 0; i < homeSpace!.count; i++ {
+        for i in 0 ..< homeSpace!.count {
             let homeItem:HomeSpace = homeSpace![i]
-            for var j = 0; j < homeItem.items.count; j++ {
+            for j in 0 ..< homeItem.items.count {
                 print("#####\(homeItem.position)######\(homeItem.items[j].name)")
             }
         }

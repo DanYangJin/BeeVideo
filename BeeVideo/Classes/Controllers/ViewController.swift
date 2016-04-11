@@ -53,7 +53,6 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         }
         
         self.remmondedPageView = RemmondedPageView()
-        self.remmondedPageView.setController(self)
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.initView()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
@@ -147,7 +146,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     //获取当前滚动的偏移量
     func calcTotalSizeByIndex(index: Int) -> CGFloat{
         var totalSize:CGFloat = 0
-        for var i = 0; i < index; i++ {
+        for i in 0 ..< index {
             totalSize += mPagesWidth[i]
         }
         return totalSize

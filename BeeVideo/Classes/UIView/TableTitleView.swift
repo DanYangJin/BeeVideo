@@ -36,13 +36,13 @@ class TableTitleView: UIScrollView {
             NSLog("this view must set delegate")
             return
         }
-        for var index = 0; index < mTitles.count; index++ {
+        for index in 0 ..< mTitles.count {
             let button:UIButton = UIButton()
             button.frame = CGRect(x: mTitleWidth * index, y: 0, width: mTitleWidth, height: mTitleHeight)
             button.tag = index
             button.setTitle(mTitles[index], forState: UIControlState.Normal)
             button.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-            button.addTarget(self, action: "onClickBtn:", forControlEvents: UIControlEvents.TouchDown)
+            button.addTarget(self, action: #selector(onClickBtn(_:)), forControlEvents: UIControlEvents.TouchDown)
             mButtons.append(button)
             addSubview(button)
             

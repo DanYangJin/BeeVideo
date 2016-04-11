@@ -100,6 +100,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     // 监听解析节点的内容
     func parser(parser: NSXMLParser, foundCharacters string: String) {
         let content:String = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+
         if currentName == nil{
             return
         }

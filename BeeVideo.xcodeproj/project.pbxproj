@@ -15,7 +15,6 @@
 		2D03D1061CA3EDEF00ED8B7E /* BaseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03D1011CA3EDEF00ED8B7E /* BaseResult.swift */; };
 		2D03D1071CA3EDEF00ED8B7E /* HttpConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03D1021CA3EDEF00ED8B7E /* HttpConstants.swift */; };
 		2D03D10A1CA3EE7C00ED8B7E /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D03D1091CA3EE7C00ED8B7E /* UIView+Extension.swift */; };
-		2D143BD61C9C566A00C11099 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D143BD51C9C566A00C11099 /* AppDelegate.swift */; };
 		2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D143BDC1C9C566A00C11099 /* BeeVideo.xcdatamodeld */; };
 		2D143BE01C9C566A00C11099 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D143BDF1C9C566A00C11099 /* Assets.xcassets */; };
 		2D143BE31C9C566A00C11099 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D143BE11C9C566A00C11099 /* LaunchScreen.storyboard */; };
@@ -49,8 +48,14 @@
 		2D54DE291C9D53AB007362F2 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE191C9D53AB007362F2 /* UIView+WebCacheOperation.m */; };
 		2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */; };
 		2D54DE2F1C9D53B4007362F2 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D54DE2D1C9D53B4007362F2 /* WebP.framework */; };
-		2D58C0CA1CA41C110061C526 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D58C0C91CA41C110061C526 /* UIImageView+Extension.swift */; };
+		2D5CA0B81CA4E38F00F0F20E /* CornerImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */; };
+		2D5CA0BC1CA4E99800F0F20E /* SXMarquee.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0BB1CA4E99800F0F20E /* SXMarquee.m */; };
+		2D5CA0C51CA4EA2A00F0F20E /* SXColorGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0BE1CA4EA2A00F0F20E /* SXColorGradientView.m */; };
+		2D5CA0C61CA4EA2A00F0F20E /* SXColorLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0C01CA4EA2A00F0F20E /* SXColorLabel.m */; };
+		2D5CA0C71CA4EA2A00F0F20E /* UIColor+Separate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0C21CA4EA2A00F0F20E /* UIColor+Separate.m */; };
+		2D5CA0C81CA4EA2A00F0F20E /* UIColor+Wonderful.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5CA0C41CA4EA2A00F0F20E /* UIColor+Wonderful.m */; };
 		2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBD25E61CA166BE00E4BC86 /* ViewController.swift */; };
+		2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */; };
 		2DE7CE5A1CA1315E004F0D68 /* HomeSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */; };
 		2DE7CE5C1CA131D5004F0D68 /* HomeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */; };
 		2DE7CE5E1CA1326D004F0D68 /* ExtraData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE5D1CA1326D004F0D68 /* ExtraData.swift */; };
@@ -87,11 +92,9 @@
 		2D03D1021CA3EDEF00ED8B7E /* HttpConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpConstants.swift; sourceTree = "<group>"; };
 		2D03D1091CA3EE7C00ED8B7E /* UIView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		2D143BD21C9C566A00C11099 /* BeeVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeeVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D143BD51C9C566A00C11099 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../AppDelegate.swift; sourceTree = "<group>"; };
 		2D143BDD1C9C566A00C11099 /* BeeVideo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BeeVideo.xcdatamodel; sourceTree = "<group>"; };
 		2D143BDF1C9C566A00C11099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		2D143BE21C9C566A00C11099 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2D143BE41C9C566A00C11099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		2D143BE91C9C566A00C11099 /* BeeVideoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeeVideoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D143BED1C9C566A00C11099 /* BeeVideoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeeVideoTests.swift; sourceTree = "<group>"; };
 		2D143BEF1C9C566A00C11099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -145,8 +148,20 @@
 		2D54DE2C1C9D53B4007362F2 /* UIImage+WebP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+WebP.m"; sourceTree = "<group>"; };
 		2D54DE2D1C9D53B4007362F2 /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		2D54DE331C9D5444007362F2 /* BeeVideo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeeVideo-Bridging-Header.h"; sourceTree = "<group>"; };
-		2D58C0C91CA41C110061C526 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
+		2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CornerImageView.swift; sourceTree = "<group>"; };
+		2D5CA0BA1CA4E99800F0F20E /* SXMarquee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SXMarquee.h; sourceTree = "<group>"; };
+		2D5CA0BB1CA4E99800F0F20E /* SXMarquee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SXMarquee.m; sourceTree = "<group>"; };
+		2D5CA0BD1CA4EA2A00F0F20E /* SXColorGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SXColorGradientView.h; sourceTree = "<group>"; };
+		2D5CA0BE1CA4EA2A00F0F20E /* SXColorGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SXColorGradientView.m; sourceTree = "<group>"; };
+		2D5CA0BF1CA4EA2A00F0F20E /* SXColorLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SXColorLabel.h; sourceTree = "<group>"; };
+		2D5CA0C01CA4EA2A00F0F20E /* SXColorLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SXColorLabel.m; sourceTree = "<group>"; };
+		2D5CA0C11CA4EA2A00F0F20E /* UIColor+Separate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Separate.h"; sourceTree = "<group>"; };
+		2D5CA0C21CA4EA2A00F0F20E /* UIColor+Separate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Separate.m"; sourceTree = "<group>"; };
+		2D5CA0C31CA4EA2A00F0F20E /* UIColor+Wonderful.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Wonderful.h"; sourceTree = "<group>"; };
+		2D5CA0C41CA4EA2A00F0F20E /* UIColor+Wonderful.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Wonderful.m"; sourceTree = "<group>"; };
+		2DB7CFF61CA4D1D600B5CBBD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		2DBD25E61CA166BE00E4BC86 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpace.swift; sourceTree = "<group>"; };
 		2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeItem.swift; sourceTree = "<group>"; };
 		2DE7CE5D1CA1326D004F0D68 /* ExtraData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtraData.swift; sourceTree = "<group>"; };
@@ -222,7 +237,6 @@
 			isa = PBXGroup;
 			children = (
 				2D03D1091CA3EE7C00ED8B7E /* UIView+Extension.swift */,
-				2D58C0C91CA41C110061C526 /* UIImageView+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -294,6 +308,7 @@
 		2D143C071C9C5A7000C11099 /* 3Lib */ = {
 			isa = PBXGroup;
 			children = (
+				2D5CA0B91CA4E99800F0F20E /* Marqueen */,
 				2D54DE2A1C9D53B4007362F2 /* iOS-WebP */,
 				2D54DDF81C9D53AB007362F2 /* SDWebImage */,
 			);
@@ -362,6 +377,7 @@
 				2D54DDF41C9D3A20007362F2 /* LivePageView.swift */,
 				2D54DDF61C9D3A5A007362F2 /* SettingPageView.swift */,
 				2D03D0FD1CA3E27F00ED8B7E /* AnimationBlockView.swift */,
+				2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -369,10 +385,10 @@
 		2D143C131C9C66CB00C11099 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2DB7CFF61CA4D1D600B5CBBD /* Info.plist */,
+				2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */,
 				2D54DE331C9D5444007362F2 /* BeeVideo-Bridging-Header.h */,
-				2D143BD51C9C566A00C11099 /* AppDelegate.swift */,
 				2D143BDC1C9C566A00C11099 /* BeeVideo.xcdatamodeld */,
-				2D143BE41C9C566A00C11099 /* Info.plist */,
 				2D143BE11C9C566A00C11099 /* LaunchScreen.storyboard */,
 				2D03D0F51CA38C8800ED8B7E /* Main.storyboard */,
 			);
@@ -427,6 +443,23 @@
 				2D54DE2D1C9D53B4007362F2 /* WebP.framework */,
 			);
 			path = "iOS-WebP";
+			sourceTree = "<group>";
+		};
+		2D5CA0B91CA4E99800F0F20E /* Marqueen */ = {
+			isa = PBXGroup;
+			children = (
+				2D5CA0BD1CA4EA2A00F0F20E /* SXColorGradientView.h */,
+				2D5CA0BE1CA4EA2A00F0F20E /* SXColorGradientView.m */,
+				2D5CA0BF1CA4EA2A00F0F20E /* SXColorLabel.h */,
+				2D5CA0C01CA4EA2A00F0F20E /* SXColorLabel.m */,
+				2D5CA0C11CA4EA2A00F0F20E /* UIColor+Separate.h */,
+				2D5CA0C21CA4EA2A00F0F20E /* UIColor+Separate.m */,
+				2D5CA0C31CA4EA2A00F0F20E /* UIColor+Wonderful.h */,
+				2D5CA0C41CA4EA2A00F0F20E /* UIColor+Wonderful.m */,
+				2D5CA0BA1CA4E99800F0F20E /* SXMarquee.h */,
+				2D5CA0BB1CA4E99800F0F20E /* SXMarquee.m */,
+			);
+			path = Marqueen;
 			sourceTree = "<group>";
 		};
 		EB13B2A8EC69E148BBD52AA9 /* Frameworks */ = {
@@ -622,13 +655,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */,
 				2D03D1051CA3EDEF00ED8B7E /* BaseRequest.swift in Sources */,
 				2D54DDE91C9D269C007362F2 /* BasePageView.swift in Sources */,
 				2DE7CE601CA153BC004F0D68 /* ChannelInfo.swift in Sources */,
 				2D54DE261C9D53AB007362F2 /* UIImage+WebP.m in Sources */,
+				2D5CA0C61CA4EA2A00F0F20E /* SXColorLabel.m in Sources */,
 				2DE7CE641CA163E5004F0D68 /* HomeData.swift in Sources */,
 				2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
+				2D5CA0C81CA4EA2A00F0F20E /* UIColor+Wonderful.m in Sources */,
 				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,
 				2D03D10A1CA3EE7C00ED8B7E /* UIView+Extension.swift in Sources */,
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
@@ -640,13 +676,13 @@
 				2DE7CE5E1CA1326D004F0D68 /* ExtraData.swift in Sources */,
 				2D54DE201C9D53AB007362F2 /* SDWebImageDownloaderOperation.m in Sources */,
 				2D54DDF51C9D3A20007362F2 /* LivePageView.swift in Sources */,
-				2D58C0CA1CA41C110061C526 /* UIImageView+Extension.swift in Sources */,
 				2D54DE1C1C9D53AB007362F2 /* SDImageCache.m in Sources */,
 				2D03D0FE1CA3E27F00ED8B7E /* AnimationBlockView.swift in Sources */,
-				2D143BD61C9C566A00C11099 /* AppDelegate.swift in Sources */,
 				2DE7CE5C1CA131D5004F0D68 /* HomeItem.swift in Sources */,
 				2D54DDF11C9D339C007362F2 /* BlockView.swift in Sources */,
+				2D5CA0C51CA4EA2A00F0F20E /* SXColorGradientView.m in Sources */,
 				2D54DDF31C9D39B7007362F2 /* VideoPageView.swift in Sources */,
+				2D5CA0C71CA4EA2A00F0F20E /* UIColor+Separate.m in Sources */,
 				2D54DE1D1C9D53AB007362F2 /* SDWebImageCompat.m in Sources */,
 				2DE7CE5A1CA1315E004F0D68 /* HomeSpace.swift in Sources */,
 				2D54DE1B1C9D53AB007362F2 /* NSData+ImageContentType.m in Sources */,
@@ -663,9 +699,11 @@
 				2D54DE231C9D53AB007362F2 /* UIButton+WebCache.m in Sources */,
 				2D54DE251C9D53AB007362F2 /* UIImage+MultiFormat.m in Sources */,
 				2D03D0FA1CA3B42000ED8B7E /* LauncherViewController.swift in Sources */,
+				2D5CA0BC1CA4E99800F0F20E /* SXMarquee.m in Sources */,
 				2D54DE1E1C9D53AB007362F2 /* SDWebImageDecoder.m in Sources */,
 				2D54DE291C9D53AB007362F2 /* UIView+WebCacheOperation.m in Sources */,
 				2D54DDEF1C9D2892007362F2 /* CycleItemInfo.swift in Sources */,
+				2D5CA0B81CA4E38F00F0F20E /* CornerImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,7 +787,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -787,7 +825,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -799,6 +837,8 @@
 			baseConfigurationReference = 395854C8C7FCBCC2AC8708A8 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeeVideo/3Lib/iOS-WebP",
@@ -809,10 +849,13 @@
 					"SD_WEBP=1",
 				);
 				INFOPLIST_FILE = BeeVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = www.skyworth.com.BeeVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeeVideo/Supporting Files/BeeVideo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -821,6 +864,8 @@
 			baseConfigurationReference = F0BDEC49C86317D58235B5AB /* Pods.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeeVideo/3Lib/iOS-WebP",
@@ -831,10 +876,13 @@
 					"SD_WEBP=1",
 				);
 				INFOPLIST_FILE = BeeVideo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = www.skyworth.com.BeeVideo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeeVideo/Supporting Files/BeeVideo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

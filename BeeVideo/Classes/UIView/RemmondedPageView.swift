@@ -8,18 +8,16 @@
 
 import UIKit
 import SpriteKit
-import SDWebImage
+
 
 class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate{
     
-    private var baseViewController:BaseViewController!
-    
-    private var cycleImage:UIImageView!
+    private var cycleImage:CornerImageView!
     private var cycleTableView:UITableView!
     private var blockView:[BlockView]!
-    private var blockSmall:[UIImageView]!
-    private var blockMiddle:[UIImageView]!
-    private var blockLarge:UIImageView!
+    private var blockSmall:[CornerImageView]!
+    private var blockMiddle:[CornerImageView]!
+    private var blockLarge:CornerImageView!
     
     //data
     private var cycleItems:HomeSpace!
@@ -34,7 +32,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         set{
             if newValue {
                 timer = NSTimer.scheduledTimerWithTimeInterval(2,
-                    target:self,selector:Selector("tickDown"),
+                    target:self,selector:#selector(RemmondedPageView.tickDown),
                     userInfo:nil,repeats:true)
             } else {
                 if timer != nil {
@@ -54,20 +52,16 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         if cyclePosition > cycleItems.items.count - 1 {
             cyclePosition = 0
         }
-        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition++].icon), placeholderImage: UIImage(named: "girl"))
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "girl"))
+        cyclePosition += 1
+        print("tickDown......")
     }
-    
-    func setController(baseViewController:BaseViewController){
-        self.baseViewController = baseViewController
-    }
-    
    
     
     override func initView(){
         super.initView()
 
-        cycleImage = UIImageView()
-        cycleImage.frame = CGRectMake(0, 0, 220, 150)
+        cycleImage = CornerImageView(frame: CGRectMake(0, 0, 220, 150))
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "girl"))
         addSubview(cycleImage)
         
@@ -80,12 +74,12 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
         addSubview(cycleTableView)
         
-        for var index = 0; index < 3; index++ {
+        for index in 0 ..< 3 {
             let blockView = BlockView()
             blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 50)
             blockView.initView(super.homeSpace![index + 1])
             
-            blockView.addOnClickListener(self, action: "click")
+            blockView.addOnClickListener(self, action: #selector(RemmondedPageView.click))
             
             addSubview(blockView)
 
@@ -93,14 +87,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
         
         
-        for var index = 0; index < 2; index++ {
+        for index in 0 ..< 2 {
             let blockSmall = AnimationBlockView()
             blockSmall.initFrame(325, y: CGFloat(110 * index), width: 110, height: 100)
             blockSmall.initView(super.homeSpace![index + 5])
             addSubview(blockSmall)
         }
 
-        for var index = 0; index < 2; index++ {
+        for index in 0 ..< 2 {
             let blockMiddle = AnimationBlockView()
             blockMiddle.initFrame(440, y: CGFloat(110 * index), width: 150, height: 100)
             blockMiddle.initView(super.homeSpace![index + 7])

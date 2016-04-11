@@ -8,8 +8,9 @@
 
 class AnimationBlockView: BlockView {
 
-//    override func initView(homeSpace: HomeSpace) {
-//        setFrame()
-//        initImage(homeSpace.items[0].icon)
-//    }
+    override func initView(homeSpace: HomeSpace) {
+        setFrame()
+        initImage(homeSpace.items[0].icon)
+    }
+    
 }

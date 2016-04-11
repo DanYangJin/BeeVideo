@@ -7,11 +7,11 @@
 //
 
 import UIKit
-import SDWebImage
+
 
 class BlockView: UIView {
 
-    var blockImage:UIImageView!
+    private var blockImage:CornerImageView!
     private var blockName:UILabel!
     private var x:CGFloat!
     private var y:CGFloat!
@@ -41,13 +41,6 @@ class BlockView: UIView {
         setFrame()
         initImage(homeSpace.items[0].icon)
         initLabel(homeSpace.items[0].name)
-        
-        
-    }
-    
-    func click(){
-        print("click.....")
-    
     }
     
     func setFrame(){
@@ -55,9 +48,7 @@ class BlockView: UIView {
     }
     
     func initImage(url:String){
-        blockImage = UIImageView()
-        blockImage.setCorner()
-        blockImage.frame = CGRectMake(0, 0, width, height)
+        blockImage = CornerImageView(frame: CGRectMake(0, 0, width, height))
         blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "cycle1.jpg"));
         addSubview(blockImage)
     }
