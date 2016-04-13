@@ -14,6 +14,8 @@ class SettingPageView: BasePageView {
     
     override func initView(){
         super.initView()
+        backgroundColor = UIColor.greenColor()
+        
         cycleImage = UIImageView()
         cycleImage.frame = CGRectMake(0, 0, 220, 150)
         cycleImage.image = UIImage(named: "girl")

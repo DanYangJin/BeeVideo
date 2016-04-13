@@ -47,9 +47,8 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         
         mContentScrollView.snp_makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
-            make.height.equalTo(self.view.frame.height - 100)
-            make.topMargin.equalTo(self.mTableTitleView).offset(40)
-            make.leftMargin.equalTo(self.mTableTitleView).offset(-10)
+            make.height.equalTo(self.view.frame.height - 110)
+            make.topMargin.equalTo(self.mTableTitleView).offset(50)
         }
         
         self.remmondedPageView = RemmondedPageView()
@@ -62,7 +61,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.remmondedPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.mContentScrollView)
             make.topMargin.equalTo(self.mContentScrollView).offset(0)
-            make.leftMargin.equalTo(self.mContentScrollView).offset(0)
+            make.leftMargin.equalTo(self.mContentScrollView).offset(30)
             make.width.equalTo(self.remmondedPageView.getViewWidth());
         }
         
@@ -75,12 +74,12 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.videoPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.mContentScrollView)
             make.topMargin.equalTo(self.mContentScrollView).offset(0)
-            make.leftMargin.equalTo(self.remmondedPageView).offset(mPagesWidth[0])
+            make.leftMargin.equalTo(self.remmondedPageView).offset(mPagesWidth[0] + 30)
             make.width.equalTo(self.videoPageView.getViewWidth());
         }
         
         self.livePageView = LivePageView()
-        self.livePageView.setData(homeData.blockDatas[Constants.TABLE_NAME_LIVE])
+        self.livePageView.setData(homeData.blockDatas[Constants.TABLE_NAME_LIVE], homeData.favChannels, homeData.livePrograms, homeData.dailyPrograms)
         self.livePageView.initView()
         self.mPagesWidth.append(self.livePageView.getViewWidth())
         self.mContentScrollView.addSubview(self.livePageView)
@@ -88,21 +87,22 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.livePageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.mContentScrollView)
             make.topMargin.equalTo(self.mContentScrollView).offset(0)
-            make.leftMargin.equalTo(self.videoPageView).offset(mPagesWidth[1])
+            make.leftMargin.equalTo(self.videoPageView).offset(mPagesWidth[1] + 30)
             make.width.equalTo(self.livePageView.getViewWidth());
         }
         
         self.settingPageView = SettingPageView()
+        self.settingPageView.initView()
         self.mPagesWidth.append(self.settingPageView.getViewWidth())
         self.mContentScrollView.addSubview(self.settingPageView)
         
         self.settingPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.mContentScrollView)
             make.topMargin.equalTo(self.mContentScrollView).offset(0)
-            make.leftMargin.equalTo(self.livePageView).offset(mPagesWidth[2])
+            make.leftMargin.equalTo(self.livePageView).offset(mPagesWidth[2] + 30)
         }
         
-        mContentScrollView.contentSize = CGSize(width: calcTotalSizeByIndex(4), height: self.view.frame.height - 100)
+        mContentScrollView.contentSize = CGSize(width: calcTotalSizeByIndex(4), height: self.view.frame.height - 110)
         
 
     }

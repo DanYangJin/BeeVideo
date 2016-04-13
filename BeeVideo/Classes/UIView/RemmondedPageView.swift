@@ -54,13 +54,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "girl"))
         cyclePosition += 1
-        print("tickDown......")
     }
    
     
     override func initView(){
         super.initView()
 
+        backgroundColor = UIColor.redColor()
+        
         cycleImage = CornerImageView(frame: CGRectMake(0, 0, 220, 150))
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "girl"))
         addSubview(cycleImage)
@@ -141,7 +142,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     override func getViewWidth() -> CGFloat {
-        return 900
+        return 745
     }
     
     override func initData(){

@@ -10,21 +10,51 @@ import UIKit
 
 class VideoPageView: BasePageView {
     
-    private var cycleImage:UIImageView!
-    
     override func initView(){
         super.initView()
-        cycleImage = UIImageView()
-        cycleImage.frame = CGRectMake(0, 0, 220, 150)
-        cycleImage.image = UIImage(named: "girl")
+        backgroundColor = UIColor.yellowColor()
         
-        addSubview(cycleImage)
+        for index in 0 ..< 3 {
+            let blockView = BlockView()
+            blockView.initFrame(0, y: CGFloat(73 * index), width: 65, height: 65)
+            blockView.initView(super.homeSpace[index])
+        
+            addSubview(blockView)
+        }
+        
+        let blockLarge = BlockView()
+        blockLarge.initFrame(70, y: 0, width: 120, height: 210)
+        blockLarge.initView(super.homeSpace[3])
+        addSubview(blockLarge)
+        
+        for index in 0 ..< 2 {
+            let blockView = BlockView()
+            blockView.initFrame(195, y: CGFloat(110 * index), width: 150, height: 100)
+            blockView.initView(super.homeSpace[index + 4])
+            
+            addSubview(blockView)
+        }
+        
+        for index in 0 ..< 2 {
+            let blockView = BlockView()
+            blockView.initFrame(350, y: CGFloat(110 * index), width: 100, height: 100)
+            blockView.initView(super.homeSpace[index + 6])
+            
+            addSubview(blockView)
+        }
+        
+        for index in 0 ..< 2 {
+            let blockView = BlockView()
+            blockView.initFrame(455, y: CGFloat(110 * index), width: 100, height: 100)
+            blockView.initView(super.homeSpace[index + 8])
+            
+            addSubview(blockView)
+        }
         
     }
     
     override func getViewWidth() -> CGFloat {
-        return 1000
+        return 555
     }
-
 
 }
