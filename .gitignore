@@ -1,0 +1,8 @@
+
+*.xcscheme
+
+BeeVideo.xcodeproj/xcuserdata/jinzhang.xcuserdatad/xcschemes/xcschememanagement.plist
+
+BeeVideo.xcworkspace/xcuserdata/jinzhang.xcuserdatad/UserInterfaceState.xcuserstate
+
+Pods/Pods.xcodeproj/xcuserdata/jinzhang.xcuserdatad/xcschemes/xcschememanagement.plist

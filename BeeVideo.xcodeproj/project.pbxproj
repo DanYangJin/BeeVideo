@@ -63,6 +63,11 @@
 		2DE7CE621CA154D7004F0D68 /* ChannelProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE611CA154D7004F0D68 /* ChannelProgram.swift */; };
 		2DE7CE641CA163E5004F0D68 /* HomeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE631CA163E5004F0D68 /* HomeData.swift */; };
 		A3ABB4A7F87A58BA8238F838 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3133115507B85392C7E5A37A /* Pods.framework */; };
+		B3A504FE1CBF8F6000E6201C /* VideoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */; };
+		B3A505001CBF911000E6201C /* VideoSourceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A504FF1CBF911000E6201C /* VideoSourceInfo.swift */; };
+		B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505011CBF914100E6201C /* VideoDetailInfo.swift */; };
+		B3A505041CBF915000E6201C /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505031CBF915000E6201C /* Source.swift */; };
+		B3A505061CBF916300E6201C /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505051CBF916300E6201C /* Drama.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,6 +175,11 @@
 		2DE7CE631CA163E5004F0D68 /* HomeData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeData.swift; sourceTree = "<group>"; };
 		3133115507B85392C7E5A37A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		395854C8C7FCBCC2AC8708A8 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailViewController.swift; sourceTree = "<group>"; };
+		B3A504FF1CBF911000E6201C /* VideoSourceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSourceInfo.swift; sourceTree = "<group>"; };
+		B3A505011CBF914100E6201C /* VideoDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfo.swift; sourceTree = "<group>"; };
+		B3A505031CBF915000E6201C /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
+		B3A505051CBF916300E6201C /* Drama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
 		F0BDEC49C86317D58235B5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -344,6 +354,7 @@
 		2D143C0B1C9C5B5900C11099 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */,
 				2DBD25E61CA166BE00E4BC86 /* ViewController.swift */,
 				2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */,
 				2D03D0F91CA3B42000ED8B7E /* LauncherViewController.swift */,
@@ -354,10 +365,14 @@
 		2D143C0C1C9C5B5900C11099 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B3A505031CBF915000E6201C /* Source.swift */,
+				B3A505011CBF914100E6201C /* VideoDetailInfo.swift */,
 				2D54DDEE1C9D2892007362F2 /* CycleItemInfo.swift */,
+				B3A505051CBF916300E6201C /* Drama.swift */,
 				2D54DDEC1C9D2865007362F2 /* DataFactory.swift */,
 				2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */,
 				2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */,
+				B3A504FF1CBF911000E6201C /* VideoSourceInfo.swift */,
 				2DE7CE5D1CA1326D004F0D68 /* ExtraData.swift */,
 				2DE7CE5F1CA153BC004F0D68 /* ChannelInfo.swift */,
 				2DE7CE611CA154D7004F0D68 /* ChannelProgram.swift */,
@@ -658,6 +673,7 @@
 				2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */,
 				2D03D1051CA3EDEF00ED8B7E /* BaseRequest.swift in Sources */,
 				2D54DDE91C9D269C007362F2 /* BasePageView.swift in Sources */,
+				B3A504FE1CBF8F6000E6201C /* VideoDetailViewController.swift in Sources */,
 				2DE7CE601CA153BC004F0D68 /* ChannelInfo.swift in Sources */,
 				2D54DE261C9D53AB007362F2 /* UIImage+WebP.m in Sources */,
 				2D5CA0C61CA4EA2A00F0F20E /* SXColorLabel.m in Sources */,
@@ -665,10 +681,13 @@
 				2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
 				2D5CA0C81CA4EA2A00F0F20E /* UIColor+Wonderful.m in Sources */,
+				B3A505061CBF916300E6201C /* Drama.swift in Sources */,
 				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,
 				2D03D10A1CA3EE7C00ED8B7E /* UIView+Extension.swift in Sources */,
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
 				2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */,
+				B3A505001CBF911000E6201C /* VideoSourceInfo.swift in Sources */,
+				B3A505041CBF915000E6201C /* Source.swift in Sources */,
 				2D03D1061CA3EDEF00ED8B7E /* BaseResult.swift in Sources */,
 				2D03D1071CA3EDEF00ED8B7E /* HttpConstants.swift in Sources */,
 				2D54DE2E1C9D53B4007362F2 /* UIImage+WebP.m in Sources */,
@@ -691,6 +710,7 @@
 				2D54DE211C9D53AB007362F2 /* SDWebImageManager.m in Sources */,
 				2D54DE1F1C9D53AB007362F2 /* SDWebImageDownloader.m in Sources */,
 				2D54DE281C9D53AB007362F2 /* UIImageView+WebCache.m in Sources */,
+				B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */,
 				2D54DE271C9D53AB007362F2 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2D54DE1A1C9D53AB007362F2 /* MKAnnotationView+WebCache.m in Sources */,
 				2D54DE241C9D53AB007362F2 /* UIImage+GIF.m in Sources */,

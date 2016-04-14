@@ -3,7 +3,7 @@
 //  SwiftTest
 //
 //  Created by JinZhang on 16/4/12.
-//  Copyright © 2016年 金璋. All rights reserved.
+//  Copyright © 2016年 skyworth. All rights reserved.
 //
 
 import UIKit
