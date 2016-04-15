@@ -68,6 +68,8 @@
 		B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505011CBF914100E6201C /* VideoDetailInfo.swift */; };
 		B3A505041CBF915000E6201C /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505031CBF915000E6201C /* Source.swift */; };
 		B3A505061CBF916300E6201C /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505051CBF916300E6201C /* Drama.swift */; };
+		B3F009481CC0855200B4D109 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3F009471CC0855200B4D109 /* Assets.xcassets */; };
+		B3F0094A1CC092DB00B4D109 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F009491CC092DB00B4D109 /* ImageButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +182,8 @@
 		B3A505011CBF914100E6201C /* VideoDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfo.swift; sourceTree = "<group>"; };
 		B3A505031CBF915000E6201C /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		B3A505051CBF916300E6201C /* Drama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		B3F009471CC0855200B4D109 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BeeVideo/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		B3F009491CC092DB00B4D109 /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		F0BDEC49C86317D58235B5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -307,9 +311,9 @@
 		2D143C061C9C5A6500C11099 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2D143C0D1C9C5B5900C11099 /* UIView */,
 				2D143C0B1C9C5B5900C11099 /* Controllers */,
 				2D143C0C1C9C5B5900C11099 /* Model */,
-				2D143C0D1C9C5B5900C11099 /* UIView */,
 				2D03D1081CA3EE5A00ED8B7E /* Extension */,
 			);
 			path = Classes;
@@ -343,6 +347,7 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+
 		2D143C0B1C9C5B5900C11099 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -385,6 +390,7 @@
 				2D54DDF61C9D3A5A007362F2 /* SettingPageView.swift */,
 				2D03D0FD1CA3E27F00ED8B7E /* AnimationBlockView.swift */,
 				2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */,
+				B3F009491CC092DB00B4D109 /* ImageButton.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -598,6 +604,7 @@
 				2D03D0F61CA38C8800ED8B7E /* Main.storyboard in Resources */,
 				2D4B22711CC0DB130083E9FE /* Assets.xcassets in Resources */,
 				2D143BE31C9C566A00C11099 /* LaunchScreen.storyboard in Resources */,
+
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +694,7 @@
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
 				2D143BDE1C9C566A00C11099 /* BeeVideo.xcdatamodeld in Sources */,
 				B3A505001CBF911000E6201C /* VideoSourceInfo.swift in Sources */,
+				B3F0094A1CC092DB00B4D109 /* ImageButton.swift in Sources */,
 				B3A505041CBF915000E6201C /* Source.swift in Sources */,
 				2D03D1061CA3EDEF00ED8B7E /* BaseResult.swift in Sources */,
 				2D03D1071CA3EDEF00ED8B7E /* HttpConstants.swift in Sources */,
@@ -858,6 +866,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -885,6 +894,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
