@@ -22,7 +22,6 @@
 		2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */; };
 		2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D143C111C9C5E3700C11099 /* TableTitleView.swift */; };
 		2D4B22711CC0DB130083E9FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D4B22701CC0DB130083E9FE /* Assets.xcassets */; };
-		2D4B22761CC0DE770083E9FE /* FavTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4B22751CC0DE770083E9FE /* FavTableViewCell.swift */; };
 		2D54DDE91C9D269C007362F2 /* BasePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DDE81C9D269C007362F2 /* BasePageView.swift */; };
 		2D54DDEB1C9D27A5007362F2 /* RemmondedPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DDEA1C9D27A5007362F2 /* RemmondedPageView.swift */; };
 		2D54DDED1C9D2865007362F2 /* DataFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D54DDEC1C9D2865007362F2 /* DataFactory.swift */; };
@@ -110,7 +109,6 @@
 		2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		2D143C111C9C5E3700C11099 /* TableTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableTitleView.swift; sourceTree = "<group>"; };
 		2D4B22701CC0DB130083E9FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		2D4B22751CC0DE770083E9FE /* FavTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavTableViewCell.swift; sourceTree = "<group>"; };
 		2D54DDE81C9D269C007362F2 /* BasePageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasePageView.swift; sourceTree = "<group>"; };
 		2D54DDEA1C9D27A5007362F2 /* RemmondedPageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemmondedPageView.swift; sourceTree = "<group>"; };
 		2D54DDEC1C9D2865007362F2 /* DataFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataFactory.swift; sourceTree = "<group>"; };
@@ -389,7 +387,6 @@
 				2D54DDF41C9D3A20007362F2 /* LivePageView.swift */,
 				2D03D0FD1CA3E27F00ED8B7E /* AnimationBlockView.swift */,
 				2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */,
-				2D4B22751CC0DE770083E9FE /* FavTableViewCell.swift */,
 				B3F009491CC092DB00B4D109 /* ImageButton.swift */,
 			);
 			path = UIView;
@@ -721,7 +718,6 @@
 				2D54DE271C9D53AB007362F2 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2D54DE1A1C9D53AB007362F2 /* MKAnnotationView+WebCache.m in Sources */,
 				2D54DE241C9D53AB007362F2 /* UIImage+GIF.m in Sources */,
-				2D4B22761CC0DE770083E9FE /* FavTableViewCell.swift in Sources */,
 				2D54DDEB1C9D27A5007362F2 /* RemmondedPageView.swift in Sources */,
 				2D54DE221C9D53AB007362F2 /* SDWebImagePrefetcher.m in Sources */,
 				2D54DE231C9D53AB007362F2 /* UIButton+WebCache.m in Sources */,
