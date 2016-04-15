@@ -19,26 +19,99 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
     var dramas : [Drama]!
     var drama : Drama!
     var currentDepth : Int = 1
+    var videoDetailInfo : VideoDetailInfo!
     
     private var posterImg : UIImageView!
     private var videoNameLbl : UILabel!
-    var videoDetailInfo : VideoDetailInfo!
+    private var directorNameLbl : UILabel!
+    private var cateDetailLbl : UILabel!
+    private var publishTimeLbl : UILabel!
+    private var areaDetailLbl : UILabel!
+    private var durationDetailLbl : UILabel!
+    private var actorNameLbl : UILabel!
+    private var descDetailLbl : UILabel!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         posterImg = UIImageView()
-        posterImg.frame = CGRectMake(30, 20, 100, 160)
-        posterImg.image = UIImage(named: "dog")
+        posterImg.frame = CGRectMake(30, 20, 120, 180)
         posterImg.layer.cornerRadius = 10
         posterImg.layer.masksToBounds = true
         self.view.addSubview(posterImg)
         
-        videoNameLbl = UILabel(frame: CGRectMake(140, 20, 438, 16))
+        videoNameLbl = UILabel(frame: CGRectMake(160, 20, 418, 16))
         videoNameLbl.text = "我们相爱吧第二季"
         videoNameLbl.textColor = UIColor.whiteColor()
         self.view.addSubview(videoNameLbl)
+        
+        let directorLbl = UILabel(frame: CGRectMake(160, 46, 30, 12))
+        setCommenAttr(directorLbl)
+        directorLbl.text = "导演:"
+        self.view.addSubview(directorLbl)
+        
+        directorNameLbl = UILabel(frame: CGRectMake(191, 46, 105, 12))
+        setCommenAttr(directorNameLbl)
+        self.view.addSubview(directorNameLbl)
+        
+        let cateLbl = UILabel(frame: CGRectMake(297, 46, 30, 12))
+        setCommenAttr(cateLbl)
+        cateLbl.text = "类型:"
+        self.view.addSubview(cateLbl)
+        
+        cateDetailLbl = UILabel(frame: CGRectMake(328, 46, 105, 12))
+        setCommenAttr(cateDetailLbl)
+        self.view.addSubview(cateDetailLbl)
+        
+        let areaLbl = UILabel(frame: CGRectMake(434, 46, 30, 12))
+        setCommenAttr(areaLbl)
+        areaLbl.text = "地区:"
+        self.view.addSubview(areaLbl)
+        
+        areaDetailLbl = UILabel(frame: CGRectMake(465, 46, 105, 12))
+        setCommenAttr(areaDetailLbl)
+        self.view.addSubview(areaDetailLbl)
+        
+        let timeLbl = UILabel(frame: CGRectMake(160, 64, 30, 12))
+        setCommenAttr(timeLbl)
+        timeLbl.text = "年代:"
+        self.view.addSubview(timeLbl)
+        
+        publishTimeLbl = UILabel(frame: CGRectMake(191, 64, 105, 12))
+        setCommenAttr(publishTimeLbl)
+        self.view.addSubview(publishTimeLbl)
+        
+        let durationLbl = UILabel(frame: CGRectMake(297, 64, 30, 12))
+        setCommenAttr(durationLbl)
+        durationLbl.text = "时长:"
+        self.view.addSubview(durationLbl)
+        
+        durationDetailLbl = UILabel(frame: CGRectMake(328, 64, 105, 12))
+        setCommenAttr(durationDetailLbl)
+        durationDetailLbl.textColor = UIColor.orangeColor()
+        self.view.addSubview(durationDetailLbl)
+        
+        let actorLbl = UILabel(frame: CGRectMake(160, 84, 30, 12))
+        setCommenAttr(actorLbl)
+        actorLbl.text = "演员:"
+        self.view.addSubview(actorLbl)
+        
+        actorNameLbl = UILabel(frame: CGRectMake(191, 84, 357, 12))
+        setCommenAttr(actorNameLbl)
+        actorNameLbl.lineBreakMode = .ByTruncatingTail
+        self.view.addSubview(actorNameLbl)
+        
+        let descLbl = UILabel(frame: CGRectMake(160, 104, 55, 12))
+        setCommenAttr(descLbl)
+        descLbl.text = "剧情介绍:"
+        self.view.addSubview(descLbl)
+        
+        descDetailLbl = UILabel(frame: CGRectMake(160, 116, 388, 44))
+        descDetailLbl.numberOfLines = 3
+        descDetailLbl.lineBreakMode = .ByTruncatingTail
+        setCommenAttr(descDetailLbl)
+        self.view.addSubview(descDetailLbl)
         
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action?videoId=2554").response{ request, response, data, error in
             if error != nil {
@@ -161,6 +234,14 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
     func parserDidEndDocument(parser: NSXMLParser) {
         print(videoDetailInfo.poster)
         posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster))
+        videoNameLbl.text = videoDetailInfo.name
+        directorNameLbl.text = videoDetailInfo.directorString
+        cateDetailLbl.text = videoDetailInfo.category
+        areaDetailLbl.text = videoDetailInfo.area
+        publishTimeLbl.text = videoDetailInfo.publishTime
+        durationDetailLbl.text = videoDetailInfo.duration
+        actorNameLbl.text = videoDetailInfo.actorString
+        descDetailLbl.text = videoDetailInfo.desc
     }
     
     
@@ -187,6 +268,10 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
         return ret
     }
     
+    func setCommenAttr(label:UILabel){
+        label.textColor = UIColor.whiteColor()
+        label.font = UIFont.boldSystemFontOfSize(12)
+    }
     
     
 }

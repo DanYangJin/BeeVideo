@@ -354,9 +354,9 @@
 		2D143C0B1C9C5B5900C11099 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */,
 				2DBD25E61CA166BE00E4BC86 /* ViewController.swift */,
 				2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */,
+				B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */,
 				2D03D0F91CA3B42000ED8B7E /* LauncherViewController.swift */,
 			);
 			path = Controllers;
