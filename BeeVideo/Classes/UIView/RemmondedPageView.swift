@@ -127,6 +127,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) 
         tableViewCell.backgroundColor = UIColor.clearColor()
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
@@ -135,8 +136,9 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     //点击事件
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
+        print("click at \(indexPath.row)")
     }
     
     override func getViewWidth() -> CGFloat {

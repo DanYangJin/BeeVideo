@@ -10,7 +10,7 @@
 import UIKit
 import Alamofire
 
-class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
+class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource {
     
     var videoId : String = ""
     var from : String = ""
@@ -20,6 +20,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
     var drama : Drama!
     var currentDepth : Int = 1
     var videoDetailInfo : VideoDetailInfo!
+    var recommends : [String] = ["相关推荐"]
     
     private var posterImg : UIImageView!
     private var videoNameLbl : UILabel!
@@ -30,6 +31,13 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
     private var durationDetailLbl : UILabel!
     private var actorNameLbl : UILabel!
     private var descDetailLbl : UILabel!
+    
+    private var playButton : ImageButton!
+    private var chooseBtn : ImageButton!
+    private var downloadBtn : ImageButton!
+    private var faviBtn : ImageButton!
+    
+    private var recommendTab : UITableView!
     
     
     override func viewDidLoad() {
@@ -113,6 +121,36 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
         setCommenAttr(descDetailLbl)
         self.view.addSubview(descDetailLbl)
         
+        playButton = ImageButton(frame: CGRectMake(160, 165, 65, 35))
+        setButtonAttr(playButton)
+        playButton.setImage(UIImage(named: "v2_video_detail_op_play_bg_normal"), forState: .Normal)
+        playButton.setTitle("第1集", forState: .Normal)
+        self.view.addSubview(playButton)
+        
+        chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
+        setButtonAttr(chooseBtn)
+        chooseBtn.setImage(UIImage(named: "v2_video_detail_op_choose_drama_bg_normal"), forState: .Normal)
+        chooseBtn.setTitle("选集", forState: .Normal)
+        self.view.addSubview(chooseBtn)
+        
+        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
+        setButtonAttr(downloadBtn)
+        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
+        downloadBtn.setTitle("下载", forState: .Normal)
+        self.view.addSubview(downloadBtn)
+        
+        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
+        setButtonAttr(faviBtn)
+        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
+        faviBtn.setTitle("收藏", forState: .Normal)
+        self.view.addSubview(faviBtn)
+        
+        let divider = UIView(frame: CGRectMake(30, 205, 518, 1))
+        divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
+        self.view.addSubview(divider)
+        
+        initTableView()
+        
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action?videoId=2554").response{ request, response, data, error in
             if error != nil {
                 print(error)
@@ -188,6 +226,10 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
             videoDetailInfo.publishTime = content
         }else if currentElement == "director"{
             videoDetailInfo.directorString = content
+            videoDetailInfo.directors = removeRepeatActor(content.componentsSeparatedByString(","))
+            for ss in videoDetailInfo.directors {
+                print(ss)
+            }
         }else if currentElement == "isEpisode"{
             videoDetailInfo.chooseDramaFlag = Int(content)!
         }else if currentElement == "episodeOrder"{
@@ -195,9 +237,9 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
         }else if currentElement == "performer"{
             videoDetailInfo.actorString = content
             videoDetailInfo.actors = removeRepeatActor(content.componentsSeparatedByString(","))
-            for ss in videoDetailInfo.actors{
-                print(ss)
-            }
+//            for ss in videoDetailInfo.actors{
+//                print(ss)
+//            }
         }else if currentElement == "isFav"{
             videoDetailInfo.isFavorite = judgeStatus(content)
         }else if currentElement == "annotation"{
@@ -242,6 +284,52 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
         durationDetailLbl.text = videoDetailInfo.duration
         actorNameLbl.text = videoDetailInfo.actorString
         descDetailLbl.text = videoDetailInfo.desc
+        recommends.appendContentsOf(videoDetailInfo.directors)
+        recommends.appendContentsOf(videoDetailInfo.actors)
+        recommendTab.reloadData()
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.recommends.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellId = "recommendCell"
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
+        if cell == nil {
+            cell = UITableViewCell(style: .Default, reuseIdentifier: cellId)
+        }
+        
+        cell?.textLabel?.text = recommends[indexPath.row]
+        cell?.textLabel?.textColor = UIColor.whiteColor()
+        cell?.textLabel?.textAlignment = .Center
+        cell?.backgroundColor = UIColor.clearColor()
+        //cell?.selectionStyle = .None
+        cell?.textLabel?.font = UIFont.systemFontOfSize(14)
+        
+        return  cell!
+    }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        print("click at \(indexPath.row)")
+        
+        let nums = recommends.count
+        let cell = tableView.cellForRowAtIndexPath(indexPath)
+        for num in 0..<nums {
+            if num == indexPath.row {
+                cell?.textLabel?.layer.borderColor = UIColor.whiteColor().CGColor
+                cell?.textLabel?.layer.borderWidth = 1
+                cell?.textLabel?.layer.cornerRadius = 5
+            }else{
+                cell?.textLabel?.layer.borderColor = UIColor.clearColor().CGColor
+            }
+        }
     }
     
     
@@ -251,6 +339,16 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
             return true
         }
         return false
+    }
+    
+    func initTableView(){
+        recommendTab = UITableView(frame: CGRectMake(10, 210, 90, 110), style: .Plain)
+        recommendTab.delegate = self
+        recommendTab.dataSource = self
+        recommendTab.backgroundColor = UIColor.redColor()
+        recommendTab.showsVerticalScrollIndicator = false
+       // recommendTab.separatorStyle = .None
+        self.view.addSubview(recommendTab)
     }
     
     /**
@@ -268,9 +366,18 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate {
         return ret
     }
     
+    //UILabel的共同属性
     func setCommenAttr(label:UILabel){
         label.textColor = UIColor.whiteColor()
-        label.font = UIFont.boldSystemFontOfSize(12)
+        label.font = UIFont.systemFontOfSize(12)
+    }
+    
+    //UIButton的共同属性
+    func setButtonAttr(button:UIButton){
+        button.layer.cornerRadius = 8
+        button.layer.borderColor = UIColor.whiteColor().CGColor
+        button.layer.borderWidth = 1
+        button.titleLabel?.font = UIFont.systemFontOfSize(14)
     }
     
     
