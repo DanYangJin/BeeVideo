@@ -12,7 +12,6 @@ class VideoPageView: BasePageView {
     
     override func initView(){
         super.initView()
-        backgroundColor = UIColor.yellowColor()
         
         for index in 0 ..< 3 {
             let blockView = BlockView()

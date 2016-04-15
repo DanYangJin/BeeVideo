@@ -21,7 +21,6 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
     
     override func initView(){
         super.initView()
-        backgroundColor = UIColor.blueColor()
         
         image = CornerImageView(frame: CGRectMake(0, 0, 205, 140))
         image.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"), placeholderImage: UIImage(named: "girl"))
@@ -35,22 +34,23 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
             addSubview(blockView)
         }
         
-        favTableView = UITableView()
-        favTableView.frame = CGRect(x: 205, y: 0, width: 120, height: 210)
-        favTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        favTableView.backgroundColor = UIColor.redColor()
-        favTableView.dataSource = self
-        favTableView.delegate = self
-        favTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
-        addSubview(favTableView)
+//        favTableView = UITableView()
+//        favTableView.frame = CGRect(x: 205, y: 0, width: 150, height: 210)
+//        favTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+//        favTableView.backgroundColor = UIColor.grayColor()
+//        favTableView.tag = 0
+//        favTableView.dataSource = self
+//        favTableView.delegate = self
+//        favTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "FavTableCell")
+//        addSubview(favTableView)
         
         liveTableView = UITableView()
         liveTableView.frame = CGRect(x: 325, y: 0, width: 400, height: 210)
         liveTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        liveTableView.backgroundColor = UIColor.yellowColor()
+        liveTableView.tag = 1
         liveTableView.dataSource = self
         liveTableView.delegate = self
-        liveTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
+        liveTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "LiveTableCell")
         addSubview(liveTableView)
         
     }
@@ -68,14 +68,17 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath)
-        tableViewCell.backgroundColor = UIColor.clearColor()
 
-        return tableViewCell
+        let  liveViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("LiveTableCell", forIndexPath: indexPath)
+        liveViewCell.backgroundColor = UIColor.clearColor()
+//        liveViewCell.imageView?.sd_setImageWithURL(NSURL(string: favChannels![indexPath.row].channelPic))
+//        liveViewCell.textLabel?.text = favChannels![indexPath.row].name
+        
+        return liveViewCell
     }
     
     //点击事件
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
     }
     
