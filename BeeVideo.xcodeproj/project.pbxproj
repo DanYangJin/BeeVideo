@@ -89,6 +89,7 @@
 		B3F184C81CC479FB0099B28A /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */; };
 		B3F184CA1CC47A0D0099B28A /* SimpleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */; };
 		B3F184CC1CC47A440099B28A /* ZXOptionBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184CB1CC47A440099B28A /* ZXOptionBarCell.swift */; };
+		B3F184D01CC4D9CA0099B28A /* SettingBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */; };
 		B3F24C491CC1DF5900ED73FA /* VideoBriefItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */; };
 		B3F24C4F1CC21D7C00ED73FA /* ZXOptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */; };
 /* End PBXBuildFile section */
@@ -323,6 +324,7 @@
 		B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = TableCell/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleTableViewCell.swift; path = TableCell/SimpleTableViewCell.swift; sourceTree = "<group>"; };
 		B3F184CB1CC47A440099B28A /* ZXOptionBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ZXOptionBarCell.swift; path = TableCell/ZXOptionBarCell.swift; sourceTree = "<group>"; };
+		B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingBlockView.swift; sourceTree = "<group>"; };
 		B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoBriefItem.swift; sourceTree = "<group>"; };
 		B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXOptionBar.swift; sourceTree = "<group>"; };
 		F0BDEC49C86317D58235B5AB /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 				2D03D0FD1CA3E27F00ED8B7E /* AnimationBlockView.swift */,
 				2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */,
 				B3F009491CC092DB00B4D109 /* ImageButton.swift */,
+				B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -1109,6 +1112,7 @@
 				2D9163D11CC4DA5A0045163A /* UIColor+Wonderful.m in Sources */,
 				2D9164631CC4DADE0045163A /* KxAudioManager.m in Sources */,
 				2D54DDEF1C9D2892007362F2 /* CycleItemInfo.swift in Sources */,
+				B3F184D01CC4D9CA0099B28A /* SettingBlockView.swift in Sources */,
 				2D5CA0B81CA4E38F00F0F20E /* CornerImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
