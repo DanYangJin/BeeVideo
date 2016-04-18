@@ -11,9 +11,14 @@ import UIKit
 class BasePageView: UIView {
 
     internal var homeSpace:[HomeSpace]!
+    internal var viewController:ViewController!
     
     func initView(){
        initData()
+    }
+    
+    func setController(viewController:ViewController){
+       self.viewController = viewController
     }
     
     func getViewWidth() -> CGFloat {
@@ -27,4 +32,6 @@ class BasePageView: UIView {
     func initData(){
         
     }
+    
+    
 }

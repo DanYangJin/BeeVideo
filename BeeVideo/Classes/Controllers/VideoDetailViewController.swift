@@ -16,9 +16,8 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         case VIDEO_DETAIL_REQUEST_ID
         case RECOMMENDED_REQUEST_ID
     }
-    
-    var videoId : String = ""
-    var from : String = ""
+
+    var extras:[ExtraData]!
     
     var currentElement : String! //xml节点名字
     var dramas : [Drama]!
@@ -161,7 +160,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         initOptionBar()
         
-        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action?videoId=2554").response{ request, response, data, error in
+        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action", parameters: ["videoId": extras[0].value]).response{ request, response, data, error in
             self.requestId = NetRequestId.VIDEO_DETAIL_REQUEST_ID
             if error != nil {
                 print(error)
@@ -385,8 +384,6 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         lastPosition = indexPath.row
         
-        
-        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -399,9 +396,9 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         let cellId = "optionCell"
-        var cell : RecommendedVideoCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? RecommendedVideoCell
+        var cell : BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? BaseTableViewCell
         if cell == nil {
-            cell = RecommendedVideoCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
         }
         
         cell?.videoNameLbl.text = videoBriefItems[index].name
@@ -439,7 +436,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func initOptionBar(){
         horizontalTab = ZXOptionBar(frame: CGRectMake(100, 210, 448, 110), barDelegate: self, barDataSource: self)
-        //horizontalTab.backgroundColor = UIColor.whiteColor()
+        horizontalTab.backgroundColor = UIColor.clearColor()
         self.view.addSubview(horizontalTab)
     }
     

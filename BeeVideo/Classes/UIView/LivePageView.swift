@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
+class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZXOptionBarDelegate, ZXOptionBarDataSource{
     
     private var favChannels:[ChannelInfo]?
     private var livePrograms:[ChannelProgram]?;
@@ -16,7 +16,7 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
     
     var image:CornerImageView!
     var favTableView:UITableView!
-    var liveTableView:UITableView!
+    var liveTableView : ZXOptionBar!
     
     
     override func initView(){
@@ -34,23 +34,19 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
             addSubview(blockView)
         }
         
-//        favTableView = UITableView()
-//        favTableView.frame = CGRect(x: 205, y: 0, width: 150, height: 210)
-//        favTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-//        favTableView.backgroundColor = UIColor.grayColor()
-//        favTableView.tag = 0
-//        favTableView.dataSource = self
-//        favTableView.delegate = self
-//        favTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "FavTableCell")
-//        addSubview(favTableView)
+        favTableView = UITableView()
+        favTableView.frame = CGRect(x: 205, y: 0, width: 140, height: 210)
+        favTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        favTableView.backgroundColor = UIColor.clearColor()
+        favTableView.backgroundView = UIImageView(image: UIImage(named: "v2_live_fav_list_bg"))
+        favTableView.tag = 0
+        favTableView.dataSource = self
+        favTableView.delegate = self
+        favTableView.registerNib(UINib(nibName: "FavTableViewCell", bundle: nil), forCellReuseIdentifier: "FavTableCell")
+        addSubview(favTableView)
         
-        liveTableView = UITableView()
-        liveTableView.frame = CGRect(x: 325, y: 0, width: 400, height: 210)
-        liveTableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        liveTableView.tag = 1
-        liveTableView.dataSource = self
-        liveTableView.delegate = self
-        liveTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "LiveTableCell")
+        liveTableView = ZXOptionBar(frame: CGRectMake(350, 0, 360, 210), barDelegate: self, barDataSource: self)
+        liveTableView.backgroundColor = UIColor.clearColor()
         addSubview(liveTableView)
         
     }
@@ -64,23 +60,51 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 25.0
+        return 35.0
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let  liveViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("LiveTableCell", forIndexPath: indexPath)
-        liveViewCell.backgroundColor = UIColor.clearColor()
-//        liveViewCell.imageView?.sd_setImageWithURL(NSURL(string: favChannels![indexPath.row].channelPic))
-//        liveViewCell.textLabel?.text = favChannels![indexPath.row].name
-        
-        return liveViewCell
+        let  favTableView:FavTableViewCell = tableView.dequeueReusableCellWithIdentifier("FavTableCell", forIndexPath: indexPath) as! FavTableViewCell
+        favTableView.backgroundColor = UIColor.clearColor()
+        favTableView.selectionStyle = .None
+        favTableView.setImageView(favChannels![indexPath.row].channelPic)
+        favTableView.setLabel(favChannels![indexPath.row].name)
+        return favTableView
     }
     
     //点击事件
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
     }
+    
+    
+    //横向TableView
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        return 3
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        let cellId = "liveCell"
+        var cell : BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? BaseTableViewCell
+        if cell == nil {
+            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+        }
+        
+        cell?.videoNameLbl.text = livePrograms![index].name
+        cell?.icon.sd_setImageWithURL(NSURL(string: livePrograms![index].iconId))
+        cell?.durationLbl.text = livePrograms![index].timeStart
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return 120
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        //
+    }
+    
     
     internal func setData(homeSpace: [HomeSpace]?, _ favChannels:[ChannelInfo]?, _ livePrograms:[ChannelProgram]?, _ dailyPrograms:[ChannelProgram]?) {
         super.setData(homeSpace)

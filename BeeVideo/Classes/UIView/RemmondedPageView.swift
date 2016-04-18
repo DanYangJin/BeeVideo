@@ -77,11 +77,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             let blockView = BlockView()
             blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 50)
             blockView.initView(super.homeSpace![index + 1])
-            
-            blockView.addOnClickListener(self, action: #selector(RemmondedPageView.click))
-            
             addSubview(blockView)
-
         }
         
         
@@ -110,10 +106,6 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         isCycling = true
     }
     
-    func click(){
-        print("###onClick###")
-    }
-    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -130,6 +122,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
         let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) 
         tableViewCell.backgroundColor = UIColor.clearColor()
+        tableViewCell.selectionStyle = .None
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
         tableViewCell.textLabel?.text = cycleItems.items[indexPath.row].name
         return tableViewCell
@@ -138,7 +131,15 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     //点击事件
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
-        print("click at \(indexPath.row)")
+        print(cycleItems.items[indexPath.row].action)
+        
+        let action:String = cycleItems.items[indexPath.row].action
+        
+        if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION" {
+            let videoDetailViewController = VideoDetailViewController()
+            videoDetailViewController.extras = cycleItems.items[indexPath.row].extras;
+            self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
+        }
     }
     
     override func getViewWidth() -> CGFloat {
@@ -148,4 +149,5 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     override func initData(){
         self.cycleItems = super.homeSpace![0]
     }
+    
 }

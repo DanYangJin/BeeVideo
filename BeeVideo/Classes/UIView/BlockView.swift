@@ -11,6 +11,7 @@ import UIKit
 
 class BlockView: UIView {
 
+    private var homeSpace:HomeSpace!
     private var blockImage:CornerImageView!
     private var blockName:UILabel!
     private var x:CGFloat!
@@ -39,6 +40,7 @@ class BlockView: UIView {
     //初始化view
     func initView(homeSpace:HomeSpace){
         setFrame()
+        self.homeSpace = homeSpace
         initImage(homeSpace.items[0].icon)
         initLabel(homeSpace.items[0].name)
     }

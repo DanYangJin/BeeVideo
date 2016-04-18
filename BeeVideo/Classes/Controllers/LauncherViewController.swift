@@ -21,6 +21,8 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     var homeItem:HomeItem!
     var position:Int = 0
     var space:HomeSpace!
+    var extras:[ExtraData]!
+    var extra:ExtraData!
     var channelInfo:ChannelInfo!
     var favChannels:[ChannelInfo]!
     var channelProgram:ChannelProgram!
@@ -81,6 +83,10 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
             homeItem  = HomeItem()
         } else if currentName == "title" {
             //
+        } else if currentName == "extras" {
+            extras = Array()
+        } else if currentName == "extra"{
+            extra = ExtraData()
         } else if currentName == "channels" {
             favChannels = Array()
         } else if currentName == "channel" {
@@ -127,6 +133,8 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
             homeItem.type = Int.init(content)!
         } else if currentName == "img" {
             homeItem.icon = content
+        } else if currentName == "action" {
+            homeItem.action = content
         } else if currentName == "channelId" {
             if channelInfo != nil {
                 channelInfo.id = content
@@ -152,15 +160,23 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         } else if currentName == "name" {
             if formBills {
                 channelProgram.channelName = content
+            } else {
+                extra.name = content
             }
+        } else if currentName == "value" {
+            extra.value = content
         } else if currentName == "timeStart" {
-            if content.isEmpty {
+            if !content.isEmpty {
                 channelProgram.timeStart = content
             }
         } else if currentName == "timeEnd" {
-            if content.isEmpty {
+            if !content.isEmpty {
                 channelProgram.timeEnd = content
             }
+        } else if currentName == "scheduleName" {
+            channelProgram.name = content
+        } else if currentName == "schedulePic" {
+            channelProgram.iconId = content
         }
     }
     
@@ -175,6 +191,12 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
             blockDatas[tableName] = homeSpaceList
             homeSpaceList = nil
             tableName = nil
+        } else if elementName == "extras"{
+            homeItem.extras = extras
+            extras = nil
+        } else if elementName == "extra"{
+            extras.append(extra)
+            extra = nil
         } else if elementName == "channel"{
             favChannels.append(channelInfo)
             channelInfo = nil

@@ -53,6 +53,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         
         self.remmondedPageView = RemmondedPageView()
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
+        self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.mContentScrollView.addSubview(self.remmondedPageView)
