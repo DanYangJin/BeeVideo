@@ -308,28 +308,32 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         cell?.textLabel?.textColor = UIColor.whiteColor()
         cell?.textLabel?.textAlignment = .Center
         cell?.backgroundColor = UIColor.clearColor()
-        //cell?.selectionStyle = .None
+        cell?.selectionStyle = .None
         cell?.textLabel?.font = UIFont.systemFontOfSize(14)
         
+        if lastPosition == indexPath.row {
+            cell?.textLabel?.textColor = UIColor.blueColor()
+        }
+    
         return  cell!
     }
     
-    
+    var lastPosition = 0 //记录上一次所点的位置
+
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        print("click at \(indexPath.row)")
+        let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
+        lastCell?.textLabel?.textColor = UIColor.whiteColor()
         
-        let nums = recommends.count
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        for num in 0..<nums {
-            if num == indexPath.row {
-                cell?.textLabel?.layer.borderColor = UIColor.whiteColor().CGColor
-                cell?.textLabel?.layer.borderWidth = 1
-                cell?.textLabel?.layer.cornerRadius = 5
-            }else{
-                cell?.textLabel?.layer.borderColor = UIColor.clearColor().CGColor
-            }
-        }
+        let currentCell = tableView.cellForRowAtIndexPath(indexPath)
+        currentCell?.textLabel?.textColor = UIColor.blueColor()
+        
+        lastPosition = indexPath.row
+        
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 25
     }
     
     
@@ -345,9 +349,9 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         recommendTab = UITableView(frame: CGRectMake(10, 210, 90, 110), style: .Plain)
         recommendTab.delegate = self
         recommendTab.dataSource = self
-        recommendTab.backgroundColor = UIColor.redColor()
+        recommendTab.backgroundColor = UIColor.clearColor()
         recommendTab.showsVerticalScrollIndicator = false
-       // recommendTab.separatorStyle = .None
+        recommendTab.separatorStyle = .None
         self.view.addSubview(recommendTab)
     }
     
