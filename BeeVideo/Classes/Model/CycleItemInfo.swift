@@ -6,7 +6,6 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-import UIKit
 
 class CycleItemInfo {
 

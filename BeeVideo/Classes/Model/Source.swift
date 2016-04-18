@@ -6,8 +6,6 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-import UIKit
-
 public class Source {
     var id : String = ""
     var name : String = ""

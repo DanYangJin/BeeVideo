@@ -10,17 +10,25 @@
 import UIKit
 import Alamofire
 
-class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource {
+class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource, ZXOptionBarDelegate, ZXOptionBarDataSource {
+    
+    enum NetRequestId{
+        case VIDEO_DETAIL_REQUEST_ID
+        case RECOMMENDED_REQUEST_ID
+    }
     
     var videoId : String = ""
     var from : String = ""
     
-    var currentElement : String!
+    var currentElement : String! //xml节点名字
     var dramas : [Drama]!
     var drama : Drama!
-    var currentDepth : Int = 1
+    var currentDepth : Int = 1 //解析xml文件的节点层数
     var videoDetailInfo : VideoDetailInfo!
     var recommends : [String] = ["相关推荐"]
+    var requestId : NetRequestId!
+    var videoBriefItems : [VideoBriefItem] = Array()
+    var videoBriefItem : VideoBriefItem!
     
     private var posterImg : UIImageView!
     private var videoNameLbl : UILabel!
@@ -38,7 +46,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     private var faviBtn : ImageButton!
     
     private var recommendTab : UITableView!
-    
+    private var horizontalTab : ZXOptionBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,8 +159,22 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         initTableView()
         
+        initOptionBar()
+        
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action?videoId=2554").response{ request, response, data, error in
+            self.requestId = NetRequestId.VIDEO_DETAIL_REQUEST_ID
             if error != nil {
+                print(error)
+                return
+            }
+            let parse = NSXMLParser(data: data!)
+            parse.delegate = self
+            parse.parse()
+        }
+        
+        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_relate.action?videoId=2554").response{ request, response, data, error in
+            self.requestId = NetRequestId.RECOMMENDED_REQUEST_ID
+            if error != nil{
                 print(error)
                 return
             }
@@ -170,18 +192,27 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         self.currentElement = elementName;
-        if currentElement == "video" {
-            videoDetailInfo = VideoDetailInfo()
-            currentDepth += 1
-        }else if currentElement == "videoMergeInfoList"{
-            dramas = Array()
-            currentDepth += 1
-        }else if currentElement == "videoMergeInfo"{
-            drama = Drama()
-            currentDepth += 1
-        }else if currentElement == "response"{
-            currentDepth += 1
+        if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
+            if currentElement == "video" {
+                videoDetailInfo = VideoDetailInfo()
+                currentDepth += 1
+            }else if currentElement == "videoMergeInfoList"{
+                dramas = Array()
+                currentDepth += 1
+            }else if currentElement == "videoMergeInfo"{
+                drama = Drama()
+                currentDepth += 1
+            }else if currentElement == "response"{
+                currentDepth += 1
+            }
+        }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID{
+            if currentElement == "video_list" {
+                videoBriefItems = Array()
+            }else if currentElement == "video_item"{
+                videoBriefItem = VideoBriefItem()
+            }
         }
+        
     }
     
     
@@ -194,99 +225,123 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         if content.isEmpty {
             return
         }
-        if currentElement == "id" {
-            if currentDepth == 3 {
-                videoDetailInfo.id = content
-            }else if currentDepth == 5{
-                drama.id = content
+        if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
+            if currentElement == "id" {
+                if currentDepth == 3 {
+                    videoDetailInfo.id = content
+                }else if currentDepth == 5{
+                    drama.id = content
+                }
+            }else if currentElement == "doubanId"{
+                videoDetailInfo.doubanId = content
+            }else if currentElement == "doubanAverage"{
+                videoDetailInfo.doubanAverage = content
+            }else if currentElement == "apikey"{
+                videoDetailInfo.doubanKey = content
+            }else if currentElement == "name"{
+                if currentDepth == 3 {
+                    videoDetailInfo.name = content
+                }else if currentDepth == 5{
+                    drama.title = content
+                }
+            }else if currentElement == "channel"{
+                videoDetailInfo.channel = content
+            }else if currentElement == "channelId"{
+                videoDetailInfo.channelId = content
+            }else if currentElement == "area"{
+                videoDetailInfo.area = content
+            }else if currentElement == "duration"{
+                videoDetailInfo.duration = content
+            }else if currentElement == "cate"{
+                videoDetailInfo.category = content
+            }else if currentElement == "screenTime"{
+                videoDetailInfo.publishTime = content
+            }else if currentElement == "director"{
+                videoDetailInfo.directorString = content
+                videoDetailInfo.directors = removeRepeatActor(content.componentsSeparatedByString(","))
+            }else if currentElement == "isEpisode"{
+                videoDetailInfo.chooseDramaFlag = Int(content)!
+            }else if currentElement == "episodeOrder"{
+                videoDetailInfo.dramaOrderFlag = Int(content)!
+            }else if currentElement == "performer"{
+                videoDetailInfo.actorString = content
+                videoDetailInfo.actors = removeRepeatActor(content.componentsSeparatedByString(","))
+            }else if currentElement == "isFav"{
+                videoDetailInfo.isFavorite = judgeStatus(content)
+            }else if currentElement == "annotation"{
+                videoDetailInfo.desc = content
+            }else if currentElement == "smallImg"{
+                videoDetailInfo.poster = content
+            }else if currentElement == "most"{
+                if currentDepth == 3 {
+                    videoDetailInfo.resolutionType = Int(content)
+                }
+            }else if currentElement == "totalInfo"{
+                videoDetailInfo.count = Int(content)
             }
-        }else if currentElement == "doubanId"{
-            videoDetailInfo.doubanId = content
-        }else if currentElement == "doubanAverage"{
-            videoDetailInfo.doubanAverage = content
-        }else if currentElement == "apikey"{
-            videoDetailInfo.doubanKey = content
-        }else if currentElement == "name"{
-            if currentDepth == 3 {
-                videoDetailInfo.name = content
-            }else if currentDepth == 5{
-                drama.title = content
+        }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID{
+            if currentElement == "video_item" {
+                videoBriefItem = VideoBriefItem()
+            }else if currentElement == "id"{
+                videoBriefItem.id = content
+            }else if currentElement == "name"{
+                videoBriefItem.name = content
+            }else if currentElement == "duration"{
+                videoBriefItem.duration = content
+            }else if currentElement == "smallImg"{
+                videoBriefItem.posterImg = content
+            }else if currentElement == "most"{
+                videoBriefItem.resolutionType = Int(content)
+            }else if currentElement == "doubanAverage"{
+                videoBriefItem.score = content
             }
-        }else if currentElement == "channel"{
-            videoDetailInfo.channel = content
-        }else if currentElement == "channelId"{
-            videoDetailInfo.channelId = content
-        }else if currentElement == "area"{
-            videoDetailInfo.area = content
-        }else if currentElement == "duration"{
-            videoDetailInfo.duration = content
-        }else if currentElement == "cate"{
-            videoDetailInfo.category = content
-        }else if currentElement == "screenTime"{
-            videoDetailInfo.publishTime = content
-        }else if currentElement == "director"{
-            videoDetailInfo.directorString = content
-            videoDetailInfo.directors = removeRepeatActor(content.componentsSeparatedByString(","))
-            for ss in videoDetailInfo.directors {
-                print(ss)
-            }
-        }else if currentElement == "isEpisode"{
-            videoDetailInfo.chooseDramaFlag = Int(content)!
-        }else if currentElement == "episodeOrder"{
-            videoDetailInfo.dramaOrderFlag = Int(content)!
-        }else if currentElement == "performer"{
-            videoDetailInfo.actorString = content
-            videoDetailInfo.actors = removeRepeatActor(content.componentsSeparatedByString(","))
-//            for ss in videoDetailInfo.actors{
-//                print(ss)
-//            }
-        }else if currentElement == "isFav"{
-            videoDetailInfo.isFavorite = judgeStatus(content)
-        }else if currentElement == "annotation"{
-            videoDetailInfo.desc = content
-        }else if currentElement == "smallImg"{
-            videoDetailInfo.poster = content
-        }else if currentElement == "most"{
-            if currentDepth == 3 {
-                videoDetailInfo.resolutionType = Int(content)
-            }
-        }else if currentElement == "totalInfo"{
-            videoDetailInfo.count = Int(content)
         }
+        
+        
     }
     
     func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
-        if elementName == "video" {
-            currentDepth -= 1
-        }else if elementName == "response"{
-            currentDepth -= 1
-        }else if elementName == "videoMergeInfo"{
-            currentDepth -= 1
-            dramas.append(drama)
-            drama = nil
-        }else if elementName == "videoMergeInfoList"{
-            currentDepth -= 1
-            videoDetailInfo.dramas = dramas
+        if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
+            if elementName == "video" {
+                currentDepth -= 1
+            }else if elementName == "response"{
+                currentDepth -= 1
+            }else if elementName == "videoMergeInfo"{
+                currentDepth -= 1
+                dramas.append(drama)
+                drama = nil
+            }else if elementName == "videoMergeInfoList"{
+                currentDepth -= 1
+                videoDetailInfo.dramas = dramas
+            }
+        }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID{
+            if elementName == "video_item" {
+                videoBriefItems.append(videoBriefItem)
+                videoBriefItem = nil
+            }
         }
         
         currentElement = nil
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
-        print(videoDetailInfo.poster)
-        posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster))
-        videoNameLbl.text = videoDetailInfo.name
-        directorNameLbl.text = videoDetailInfo.directorString
-        cateDetailLbl.text = videoDetailInfo.category
-        areaDetailLbl.text = videoDetailInfo.area
-        publishTimeLbl.text = videoDetailInfo.publishTime
-        durationDetailLbl.text = videoDetailInfo.duration
-        actorNameLbl.text = videoDetailInfo.actorString
-        descDetailLbl.text = videoDetailInfo.desc
-        recommends.appendContentsOf(videoDetailInfo.directors)
-        recommends.appendContentsOf(videoDetailInfo.actors)
-        recommendTab.reloadData()
+        if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
+            posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster))
+            videoNameLbl.text = videoDetailInfo.name
+            directorNameLbl.text = videoDetailInfo.directorString
+            cateDetailLbl.text = videoDetailInfo.category
+            areaDetailLbl.text = videoDetailInfo.area
+            publishTimeLbl.text = videoDetailInfo.publishTime
+            durationDetailLbl.text = videoDetailInfo.duration
+            actorNameLbl.text = videoDetailInfo.actorString
+            descDetailLbl.text = videoDetailInfo.desc
+            recommends.appendContentsOf(videoDetailInfo.directors)
+            recommends.appendContentsOf(videoDetailInfo.actors)
+            recommendTab.reloadData()
+        }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID{
+            horizontalTab.reloadData()
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -314,12 +369,12 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         if lastPosition == indexPath.row {
             cell?.textLabel?.textColor = UIColor.blueColor()
         }
-    
+        
         return  cell!
     }
     
     var lastPosition = 0 //记录上一次所点的位置
-
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
@@ -330,12 +385,38 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         lastPosition = indexPath.row
         
+        
+        
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 25
     }
     
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        return videoBriefItems.count
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        let cellId = "optionCell"
+        var cell : RecommendedVideoCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? RecommendedVideoCell
+        if cell == nil {
+            cell = RecommendedVideoCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+        }
+        
+        cell?.videoNameLbl.text = videoBriefItems[index].name
+        cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg))
+        cell?.durationLbl.text = videoBriefItems[index].duration
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return 80
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        print(index)
+    }
     
     func judgeStatus(status:String) -> Bool{
         let ret : Int = Int(status)!
@@ -345,6 +426,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         return false
     }
     
+    //初始化推荐名字列表
     func initTableView(){
         recommendTab = UITableView(frame: CGRectMake(10, 210, 90, 110), style: .Plain)
         recommendTab.delegate = self
@@ -353,6 +435,12 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         recommendTab.showsVerticalScrollIndicator = false
         recommendTab.separatorStyle = .None
         self.view.addSubview(recommendTab)
+    }
+    
+    func initOptionBar(){
+        horizontalTab = ZXOptionBar(frame: CGRectMake(100, 210, 448, 110), barDelegate: self, barDataSource: self)
+        //horizontalTab.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(horizontalTab)
     }
     
     /**
@@ -383,6 +471,8 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         button.layer.borderWidth = 1
         button.titleLabel?.font = UIFont.systemFontOfSize(14)
     }
+    
+    
     
     
 }
