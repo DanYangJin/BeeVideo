@@ -133,6 +133,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         setButtonAttr(playButton)
         playButton.setImage(UIImage(named: "v2_video_detail_op_play_bg_normal"), forState: .Normal)
         playButton.setTitle("第1集", forState: .Normal)
+        playButton.addTarget(self, action: (#selector(VideoDetailViewController.toPlayController)), forControlEvents: .TouchUpInside)
         self.view.addSubview(playButton)
         
         chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
@@ -403,10 +404,17 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         if cell == nil {
             cell = RecommendedVideoCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
         }
-        
+        cell?.backgroundColor = UIColor.clearColor()
         cell?.videoNameLbl.text = videoBriefItems[index].name
         cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg))
         cell?.durationLbl.text = videoBriefItems[index].duration
+        let average = videoBriefItems[index].score
+        if average == nil {
+            cell?.averageLbl.hidden = true
+        }else{
+            cell?.averageLbl.text = videoBriefItems[index].score
+        }
+        
         return cell!
     }
     
@@ -439,7 +447,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func initOptionBar(){
         horizontalTab = ZXOptionBar(frame: CGRectMake(100, 210, 448, 110), barDelegate: self, barDataSource: self)
-        //horizontalTab.backgroundColor = UIColor.whiteColor()
+        horizontalTab.backgroundColor = UIColor.clearColor()
         self.view.addSubview(horizontalTab)
     }
     
@@ -472,6 +480,10 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         button.titleLabel?.font = UIFont.systemFontOfSize(14)
     }
     
+    //播放按钮点击事件
+    func  toPlayController(){
+        print("click success")
+    }
     
     
     
