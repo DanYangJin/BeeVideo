@@ -479,7 +479,12 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     //播放按钮点击事件
     func  toPlayController(){
-        print("click success")
+        let path : String = "http://hot.vrs.sohu.com/ipad2982428_4671293813186_5193749.m3u8?plat=6&vid=2960257&pg=1&pt=5&cv=5.0.1&qd=680&uid=f1220d01d51c10c457fca7ba87d61746&sver=5.0.1&plat=6&ca=3&prod=app"
+        let params : NSDictionary = NSDictionary()
+        
+        let kx : KxMovieViewController = KxMovieViewController.movieViewControllerWithContentPath(path, parameters: params as [NSObject : AnyObject]) as! KxMovieViewController
+        
+        self.presentViewController(kx, animated: true, completion: nil)
     }
     
     
