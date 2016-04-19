@@ -85,6 +85,9 @@
 		B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505011CBF914100E6201C /* VideoDetailInfo.swift */; };
 		B3A505041CBF915000E6201C /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505031CBF915000E6201C /* Source.swift */; };
 		B3A505061CBF916300E6201C /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505051CBF916300E6201C /* Drama.swift */; };
+		B3ECEF041CC60C9D00F25558 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEF031CC60C9D00F25558 /* AboutView.swift */; };
+		B3ECEF0B1CC6369A00F25558 /* AboutSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEF091CC6369A00F25558 /* AboutSettingCell.swift */; };
+		B3ECEF0C1CC6369A00F25558 /* AboutSettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */; };
 		B3F0094A1CC092DB00B4D109 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F009491CC092DB00B4D109 /* ImageButton.swift */; };
 		B3F184C81CC479FB0099B28A /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */; };
 		B3F184CA1CC47A0D0099B28A /* SimpleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */; };
@@ -320,6 +323,9 @@
 		B3A505011CBF914100E6201C /* VideoDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfo.swift; sourceTree = "<group>"; };
 		B3A505031CBF915000E6201C /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		B3A505051CBF916300E6201C /* Drama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		B3ECEF031CC60C9D00F25558 /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		B3ECEF091CC6369A00F25558 /* AboutSettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutSettingCell.swift; path = TableCell/AboutSettingCell.swift; sourceTree = "<group>"; };
+		B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AboutSettingCell.xib; path = TableCell/AboutSettingCell.xib; sourceTree = "<group>"; };
 		B3F009491CC092DB00B4D109 /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = TableCell/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleTableViewCell.swift; path = TableCell/SimpleTableViewCell.swift; sourceTree = "<group>"; };
@@ -537,6 +543,7 @@
 				2D5CA0B71CA4E38F00F0F20E /* CornerImageView.swift */,
 				B3F009491CC092DB00B4D109 /* ImageButton.swift */,
 				B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */,
+				B3ECEF031CC60C9D00F25558 /* AboutView.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -846,6 +853,8 @@
 				B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */,
 				B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */,
 				2D9163931CC47E3E0045163A /* FavTableViewCell.swift */,
+				B3ECEF091CC6369A00F25558 /* AboutSettingCell.swift */,
+				B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */,
 			);
 			name = TableCell;
 			sourceTree = "<group>";
@@ -975,6 +984,7 @@
 				2D9164641CC4DADE0045163A /* kxmovie.bundle in Resources */,
 				2D9163981CC4C2D50045163A /* FavTableViewCell.xib in Resources */,
 				2D4B22711CC0DB130083E9FE /* Assets.xcassets in Resources */,
+				B3ECEF0C1CC6369A00F25558 /* AboutSettingCell.xib in Resources */,
 				2D143BE31C9C566A00C11099 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1069,6 +1079,8 @@
 				2D9163DF1CC4DA5A0045163A /* UIImageView+HighlightedWebCache.m in Sources */,
 				2D9164651CC4DADE0045163A /* KxMovieDecoder.m in Sources */,
 				2D143C121C9C5E3700C11099 /* TableTitleView.swift in Sources */,
+				B3ECEF041CC60C9D00F25558 /* AboutView.swift in Sources */,
+				B3ECEF0B1CC6369A00F25558 /* AboutSettingCell.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
 				B3A505061CBF916300E6201C /* Drama.swift in Sources */,
 				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,

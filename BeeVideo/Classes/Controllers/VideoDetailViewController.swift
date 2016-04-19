@@ -19,6 +19,9 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
 
     var extras:[ExtraData]!
     
+    var videoId : String = "2554"
+    var from : String = ""
+    
     var currentElement : String! //xml节点名字
     var dramas : [Drama]!
     var drama : Drama!
@@ -28,6 +31,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     var requestId : NetRequestId!
     var videoBriefItems : [VideoBriefItem] = Array()
     var videoBriefItem : VideoBriefItem!
+    var params : Dictionary<String,String>!
     
     private var posterImg : UIImageView!
     private var videoNameLbl : UILabel!
@@ -161,6 +165,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         initOptionBar()
         
+
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action", parameters: ["videoId": extras[0].value]).response{ request, response, data, error in
             self.requestId = NetRequestId.VIDEO_DETAIL_REQUEST_ID
             if error != nil {
@@ -172,7 +177,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             parse.parse()
         }
         
-        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_relate.action?videoId=2554").response{ request, response, data, error in
+        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_relate.action?videoId=\(videoId)").response{ request, response, data, error in
             self.requestId = NetRequestId.RECOMMENDED_REQUEST_ID
             if error != nil{
                 print(error)
@@ -384,7 +389,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         currentCell?.textLabel?.textColor = UIColor.blueColor()
         
         lastPosition = indexPath.row
-        
+
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

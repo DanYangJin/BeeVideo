@@ -17,7 +17,7 @@ class VideoDetailInfo{
     var duration : String!
     var category : String!//视频分类
     var publishTime : String!//上映时间
-    var directorString : String!//导演
+    var directorString : String = "" //导演
     var directors : [String]!
     var actorString : String!//演员
     var actors : [String]!
