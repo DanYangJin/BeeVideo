@@ -23,5 +23,11 @@ class DataFactory{
         CycleItemInfo(desp: "院线新片", picUrl: "http://img.beevideo.tv/filestore/1162/baanok386.webp"),
     ]
     
+    static var aboutItems:[CycleItemInfo] = [
+        CycleItemInfo(desp: "www.beevideo.tv", picUrl: "v2_setting_about_web_icon"),
+        CycleItemInfo(desp: "@蜜蜂视频", picUrl: "v2_setting_about_weibo_icon"),
+        CycleItemInfo(desp: "QQ群:290127149", picUrl: "v2_setting_about_qq_icon")
+    ]
+    
 
 }
