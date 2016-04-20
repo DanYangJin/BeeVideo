@@ -5,4 +5,3 @@
 #import "UIImageView+WebCache.h"
 #import "UIImage+WebP.h"
 #import "SXMarquee.h"
-#import "KxMovieViewController.h"
