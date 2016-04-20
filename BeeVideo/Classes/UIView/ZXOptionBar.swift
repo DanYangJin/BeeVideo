@@ -169,6 +169,8 @@ class ZXOptionBar: UIScrollView {
             
         }
         self.contentSize = CGSizeMake(CGFloat(totleWidth), self.bounds.size.height);
+        reusableOptionCells = Dictionary<String, NSMutableArray>()
+        visibleItems = Dictionary<String, ZXOptionBarCell>()
         self.layoutSubviews()
     }
     

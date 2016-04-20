@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         NSThread.sleepForTimeInterval(0)
-        self.window?.rootViewController = PlayerViewController()
+        self.window?.rootViewController = LauncherViewController()
         return true
     }
 
