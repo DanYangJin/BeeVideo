@@ -11,6 +11,9 @@ import SnapKit
 
 class AVPlayerControlView: UIView {
 
+    private let ControlBarAutoFadeOutTimeInterval:Float = 0.5
+    private let AnimationTimeInterval:Float = 7.0
+    
     internal var topImageView:UIImageView!
     internal var bottomImageView:UIImageView!
     internal var playButton:UIButton!
@@ -48,11 +51,11 @@ class AVPlayerControlView: UIView {
         self.bottomImageView.addSubview(self.initTotalTimeLabel())
         self.bottomImageView.addSubview(self.initVideoSlider());
         
-        
         self.topImageView.addSubview(self.initBackButton())
 
-        
         self.makeSubViewsConstraints()
+        
+        hideControlView()
     }
     
     func makeSubViewsConstraints(){
@@ -187,7 +190,7 @@ class AVPlayerControlView: UIView {
     func initIndicatorView() -> UIActivityIndicatorView{
         if loadingView == nil {
             loadingView = UIActivityIndicatorView(activityIndicatorStyle: .White)
-            loadingView.startAnimating()
+//            loadingView.startAnimating()
         }
         return loadingView
     }
@@ -205,6 +208,47 @@ class AVPlayerControlView: UIView {
         totalTimeLabel.text   = TimeUtils.formatTime(totalTime)
     }
     
+    /**
+     * 定时隐藏控制条
+     */
+    func autoFadeOutControlBar(){
+        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(hideControlView), object: nil)
+        self.performSelector(#selector(hideControlView), withObject: nil, afterDelay: NSTimeInterval.init(AnimationTimeInterval))
+    }
     
+    
+    /**
+     * 取消隐藏控制条
+     */
+    func cancelAutoFadeOutControlBar(){
+       NSObject.cancelPreviousPerformRequestsWithTarget(self)
+    }
+    
+    /**
+     * 动画显示控制条
+     */
+    func animationShow(){
+        UIView.animateWithDuration( NSTimeInterval.init(ControlBarAutoFadeOutTimeInterval), animations: {
+                self.showControlView()
+            }, completion: { (flag:Bool) -> Void in
+                self.autoFadeOutControlBar()
+        })
+    }
+    
+    /**
+     * 隐藏控制条
+     */
+    func hideControlView(){
+        self.topImageView.alpha     = 0
+        self.bottomImageView.alpha  = 0
+    }
+    
+    /**
+     * 显示控制条
+     */
+    func showControlView(){
+        self.topImageView.alpha     = 1
+        self.bottomImageView.alpha  = 1
+    }
     
 }

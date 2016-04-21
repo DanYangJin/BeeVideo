@@ -19,7 +19,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     private var videoPlayerView:AVPlayerView!
     private var controlView:AVPlayerControlView!
-    private var playerStatus:PlayerStatus!
+    private var videoStatus:PlayerStatus!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,15 +32,16 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         
         self.videoPlayerView         = AVPlayerView()
         self.videoPlayerView.frame   = self.view.frame
-        self.videoPlayerView.setVideoUrl("http://baobab.wdjcdn.com/1456459181808howtoloseweight_x264.mp4")
+        self.videoPlayerView.setVideoUrl("http://hot.vrs.sohu.com/ipad2982428_4671293813186_5193749.m3u8?plat=6&vid=2960257&pg=1&pt=5&cv=5.0.1&qd=680&uid=f1220d01d51c10c457fca7ba87d61746&sver=5.0.1&plat=6&ca=3&prod=app")
         self.videoPlayerView.setDelegate(self)
         self.view.addSubview(videoPlayerView)
         
         self.controlView         = AVPlayerControlView()
         self.controlView.frame   = self.view.frame
+        self.controlView.animationShow()
         self.view.addSubview(controlView)
         
-        playerStatus = PlayerStatus.PLAY
+        videoStatus = PlayerStatus.PLAY
 
     }
     
@@ -68,21 +69,21 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     //单击
     func tapAction(){
-        
+        self.controlView.animationShow()
     }
     
     /**
      * 暂停或者播放
      */
     func onPauseOrPlay(){
-        switch playerStatus! {
+        switch videoStatus! {
         case .PLAY:
-            self.playerStatus = PlayerStatus.PAUSE
+            self.videoStatus = PlayerStatus.PAUSE
             self.videoPlayerView.pause()
             self.videoPlayerView.setTimering(false)
             self.controlView.changePlayButtonBg(false)
         case .PAUSE:
-            self.playerStatus = PlayerStatus.PLAY
+            self.videoStatus = PlayerStatus.PLAY
             self.videoPlayerView.play()
             self.videoPlayerView.setTimering(true)
             self.controlView.changePlayButtonBg(true)
