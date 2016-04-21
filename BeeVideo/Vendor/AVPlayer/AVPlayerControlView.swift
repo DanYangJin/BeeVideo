@@ -190,7 +190,7 @@ class AVPlayerControlView: UIView {
     func initIndicatorView() -> UIActivityIndicatorView{
         if loadingView == nil {
             loadingView = UIActivityIndicatorView(activityIndicatorStyle: .White)
-//            loadingView.startAnimating()
+            loadingView.startAnimating()
         }
         return loadingView
     }
@@ -249,6 +249,16 @@ class AVPlayerControlView: UIView {
     func showControlView(){
         self.topImageView.alpha     = 1
         self.bottomImageView.alpha  = 1
+    }
+    
+    /**
+     * 重置ControlView
+     */
+    func resetControlView(){
+        self.videoSlider.value      = 0;
+        self.progressView.progress  = 0;
+        self.currentTimeLabel.text  = "00:00:00";
+        self.totalTimeLabel.text    = "00:00:00";
     }
     
 }
