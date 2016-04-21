@@ -54,6 +54,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderValueChanged), forControlEvents: .ValueChanged)
         // slider结束滑动事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchEnded), forControlEvents: .TouchUpInside)
+        self.controlView.backButton.addTarget(self, action: #selector(backAction), forControlEvents: .TouchUpInside)
         self.createGesture()
     }
 
@@ -117,6 +118,10 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
             let dragedSeconds:Int = lrintf(Float(duration) * slider.value);
             self.videoPlayerView.seekToTime(dragedSeconds)
         }
+    }
+    
+    func backAction(){
+        self.dismissViewControllerAnimated(true,completion: nil)
     }
     
     func onPlayProgress(playView: AVPlayerView, currentTime: Int, totalTime: Int) {
