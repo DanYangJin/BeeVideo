@@ -11,7 +11,7 @@ import SnapKit
 
 class AVPlayerControlView: UIView {
 
-    private let ControlBarAutoFadeOutTimeInterval:Float = 0.5
+    private let AutoFadeOutTimeInterval:Float = 0.5
     private let AnimationTimeInterval:Float = 7.0
     
     internal var topImageView:UIImageView!
@@ -23,6 +23,9 @@ class AVPlayerControlView: UIView {
     internal var totalTimeLabel:UILabel!
     internal var backButton:UIButton!
     internal var loadingView:UIActivityIndicatorView!
+    
+    //标记
+    internal var isShowed:Bool = false
     
     
     override init(frame: CGRect) {
@@ -154,6 +157,9 @@ class AVPlayerControlView: UIView {
     func initProgressView() -> UIProgressView {
         if progressView == nil {
             progressView                    = UIProgressView(progressViewStyle: .Default)
+            progressView.progressTintColor  = UIColor.blackColor()
+//            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
+            progressView.trackTintColor     = UIColor.clearColor()
         }
         return progressView
     }
@@ -228,7 +234,7 @@ class AVPlayerControlView: UIView {
      * 动画显示控制条
      */
     func animationShow(){
-        UIView.animateWithDuration( NSTimeInterval.init(ControlBarAutoFadeOutTimeInterval), animations: {
+        UIView.animateWithDuration( NSTimeInterval.init(AutoFadeOutTimeInterval), animations: {
                 self.showControlView()
             }, completion: { (flag:Bool) -> Void in
                 self.autoFadeOutControlBar()
@@ -236,9 +242,20 @@ class AVPlayerControlView: UIView {
     }
     
     /**
+     * 动画隐藏控制条
+     */
+    func animationHide(){
+        UIView.animateWithDuration( NSTimeInterval.init(AutoFadeOutTimeInterval),
+            animations: {
+                self.hideControlView()
+            }, completion: nil)
+    }
+    
+    /**
      * 隐藏控制条
      */
     func hideControlView(){
+        isShowed = false
         self.topImageView.alpha     = 0
         self.bottomImageView.alpha  = 0
     }
@@ -247,6 +264,7 @@ class AVPlayerControlView: UIView {
      * 显示控制条
      */
     func showControlView(){
+        isShowed = true
         self.topImageView.alpha     = 1
         self.bottomImageView.alpha  = 1
     }

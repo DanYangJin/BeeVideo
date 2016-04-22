@@ -46,6 +46,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.controlView         = AVPlayerControlView()
         self.controlView.frame   = self.view.frame
         self.controlView.animationShow()
+        self.controlView.changePlayButtonBg(false)
         self.view.addSubview(controlView)
         
         videoStatus = PlayerStatus.INIT
@@ -54,6 +55,11 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     
     func addNotifications(){
+        //APP进入前台
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(appDidEnterPlayGround), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        //APP退到后台
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
+        
         self.controlView.playButton.addTarget(self, action: (#selector(onPauseOrPlay)), forControlEvents: .TouchUpInside)
         // slider开始滑动事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchBegan), forControlEvents: .TouchDown)
@@ -61,7 +67,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderValueChanged), forControlEvents: .ValueChanged)
         // slider结束滑动事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchEnded), forControlEvents: .TouchUpInside)
-        self.controlView.backButton.addTarget(self, action: #selector(backAction), forControlEvents: .TouchUpInside)
+        self.controlView.backButton.addTarget(self, action: #selector(backButtonAction), forControlEvents: .TouchUpInside)
+        
         self.createGesture()
     }
 
@@ -77,7 +84,11 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     //单击
     func tapAction(){
-        self.controlView.animationShow()
+        if self.controlView.isShowed {
+            self.controlView.animationHide()
+        } else {
+            self.controlView.animationShow()
+        }
     }
     
     /**
@@ -86,31 +97,74 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     func onPauseOrPlay(){
         switch videoStatus! {
         case .PLAY:
-            self.videoStatus = PlayerStatus.PAUSE
-            self.videoPlayerView.pause()
-            self.controlView.changePlayButtonBg(false)
+            pausePlay()
         case .PAUSE:
-            self.videoStatus = PlayerStatus.PLAY
-            self.videoPlayerView.play()
-            self.controlView.changePlayButtonBg(true)
+            resumePlay()
         default:
             break
         }
     }
     
     /**
+     * 播放
+     */
+    func resumePlay(){
+        if self.videoPlayerView == nil {
+            return
+        }
+        self.videoStatus = PlayerStatus.PLAY
+        self.videoPlayerView.play()
+        self.controlView.changePlayButtonBg(false)
+    }
+    
+    /**
+     * 暂停
+     */
+    func pausePlay(){
+        if self.videoPlayerView == nil {
+            return
+        }
+        self.videoStatus = PlayerStatus.PAUSE
+        self.videoPlayerView.pause()
+        self.controlView.changePlayButtonBg(true)
+    }
+    
+    /**
+     * APP进入前台相应事件
+     */
+    func appDidEnterPlayGround(){
+        resumePlay()
+    }
+    
+    /**
+     * APP进入后台相应事件
+     */
+    func appDidEnterBackground(){
+        pausePlay()
+    }
+    
+    /**
      *  滑块事件监听
      */
     func progressSliderTouchBegan(slider:UISlider){
+        if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
+            return
+        }
         self.videoPlayerView.setTimering(false)
     }
     
     func progressSliderValueChanged(slider:UISlider){
+        if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
+            return
+        }
         let currentTime:Int = self.videoPlayerView.getCurrentTime()
         self.controlView.currentTimeLabel.text = TimeUtils.formatTime(currentTime)
     }
     
     func progressSliderTouchEnded(slider:UISlider){
+        if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
+            return
+        }
         self.videoPlayerView.setTimering(true)
         let duration:Int = self.videoPlayerView.getDuration()
         //计算出拖动的当前秒数
@@ -122,7 +176,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.videoPlayerView.seekToTime(dragedSeconds)
     }
     
-    func backAction(){
+    //返回按钮操作
+    func backButtonAction(){
         self.dismissViewControllerAnimated(true,completion: nil)
     }
     
@@ -136,20 +191,20 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     //准备完成
     func onPreparedCompetion(playView:AVPlayerView) {
-        print("onPreparedCompetion")
         self.controlView.loadingView.stopAnimating()
         self.videoStatus = PlayerStatus.PLAY
     }
     
     //播放错误
     func onError(playView:AVPlayerView) {
-        print("onError")
         self.videoStatus = PlayerStatus.ERROR
+        self.playNextDrama()
     }
     
     //缓冲变化
-    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Int) {
-        print("onUpdateBuffering")
+    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Float) {
+        print("onUpdateBuffering : \(bufferingValue)")
+        self.controlView.progressView.setProgress(bufferingValue, animated: true)
     }
     
     //加载信息
@@ -167,8 +222,12 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     }
     //结束
     func onCompletion(playView:AVPlayerView) {
-        print("onCompletion")
         self.videoStatus = PlayerStatus.COMPLETION
+        self.playNextDrama()
+    }
+    
+    //播放下一集
+    func playNextDrama(){
         self.controlView.resetControlView()
         self.controlView.loadingView.startAnimating()
         self.videoPlayerView.resetPlayer()
@@ -181,7 +240,13 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.videoPlayerView.play()
     }
     
+    func removeNotifications(){
+        self.removeObserver(self, forKeyPath: UIApplicationDidBecomeActiveNotification)
+        self.removeObserver(self, forKeyPath: UIApplicationWillResignActiveNotification)
+    }
+    
     override func viewWillDisappear(animated: Bool) {
+        self.removeNotifications()
         self.videoPlayerView.resetPlayer()
     }
     

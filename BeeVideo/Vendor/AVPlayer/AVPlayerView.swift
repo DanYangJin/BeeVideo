@@ -18,7 +18,7 @@ protocol AVPlayerDelegate {
     //播放错误
     func onError(playView:AVPlayerView)
     //缓冲变化
-    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Int)
+    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Float)
     //加载信息
     func onInfo(playView:AVPlayerView, value:Int)
     //结束
@@ -159,7 +159,10 @@ class AVPlayerView: UIView {
                 }
             case "loadedTimeRanges":
                 if delegate != nil {
-                    delegate.onUpdateBuffering(self, bufferingValue: 33)
+                    let timeInterval:Float        = Float.init(self.calcBufferingData())
+                    let duration:CMTime           = self.playerItem.duration;
+                    let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
+                    delegate.onUpdateBuffering(self, bufferingValue: timeInterval / totalDuration)
                 }
                 break
             case "playbackBufferEmpty":
@@ -181,12 +184,12 @@ class AVPlayerView: UIView {
     
     //播放进度
     func playerTimeAction(){
-        if playerItem.duration.timescale != 0 {
-            if delegate != nil {
-                delegate.onUpdateProgress(self, currentTime: self.getCurrentTime(), totalTime: self.getDuration())
-            }
+        if playerItem.duration.timescale == 0 {
+            return
         }
-        
+        if delegate != nil {
+            delegate.onUpdateProgress(self, currentTime: self.getCurrentTime(), totalTime: self.getDuration())
+        }
     }
     
     //播放结束
@@ -217,13 +220,26 @@ class AVPlayerView: UIView {
     }
     
     /**
-     * seek
+     * 快进到某一时间
      */
     func seekToTime(dragedSeconds:Int){
-        if self.player.currentItem!.status.hashValue == AVPlayerItemStatus.ReadyToPlay.hashValue {
-            let dragedCMTime:CMTime  = CMTimeMake(Int64(dragedSeconds), 1);
-            self.player.seekToTime(dragedCMTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        if self.getItemStatus() != .ReadyToPlay {
+            return
         }
+        let dragedCMTime:CMTime  = CMTimeMake(Int64(dragedSeconds), 1);
+        self.player.seekToTime(dragedCMTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+    }
+    
+    /**
+     *  计算缓冲进度
+     */
+    func calcBufferingData() -> NSTimeInterval{
+        let loadedTimeRanges:[NSValue]  = (self.player.currentItem?.loadedTimeRanges)!
+        let timeRange:CMTimeRange       = loadedTimeRanges[0].CMTimeRangeValue
+        let startSeconds:Float64        = CMTimeGetSeconds(timeRange.start);
+        let durationSeconds:Float64     = CMTimeGetSeconds(timeRange.duration);
+        let result:NSTimeInterval       = startSeconds + durationSeconds;// 计算缓冲总进度
+        return result
     }
     
     //获取当前时间
@@ -242,5 +258,9 @@ class AVPlayerView: UIView {
         return Int(playerItem.duration.value) / Int(playerItem.duration.timescale)
     }
     
+    // 获取当前播放状态
+    func getItemStatus() -> AVPlayerItemStatus{
+        return self.player.currentItem!.status;
+    }
     
 }
