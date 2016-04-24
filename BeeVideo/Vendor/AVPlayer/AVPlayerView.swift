@@ -26,6 +26,11 @@ protocol AVPlayerDelegate {
     
 }
 
+//滑动屏幕协议
+protocol SliderViewDelegate {
+    
+}
+
 class AVPlayerView: UIView {
 
     private var videoUrl:String!
@@ -65,23 +70,23 @@ class AVPlayerView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initializeThePlayer()
+        initUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        initializeThePlayer()
+        initUI()
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        initializeThePlayer()
+        initUI()
     }
     
     /**
      * 初始化Player
      */
-    func initializeThePlayer(){
+    func initUI(){
         //
     }
     

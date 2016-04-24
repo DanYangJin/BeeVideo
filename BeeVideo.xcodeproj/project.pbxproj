@@ -61,6 +61,7 @@
 		2DB907351CC72EF200BABAFB /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB907341CC72EF200BABAFB /* PlayerViewController.swift */; };
 		2DB907371CC788DF00BABAFB /* TimeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB907361CC788DF00BABAFB /* TimeUtils.swift */; };
 		2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBD25E61CA166BE00E4BC86 /* ViewController.swift */; };
+		2DC9ABDC1CCC6AA800B34A4B /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DC9ABDB1CCC6AA800B34A4B /* ProgressView.swift */; };
 		2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */; };
 		2DE7CE5A1CA1315E004F0D68 /* HomeSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */; };
 		2DE7CE5C1CA131D5004F0D68 /* HomeItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */; };
@@ -191,6 +192,7 @@
 		2DB907341CC72EF200BABAFB /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		2DB907361CC788DF00BABAFB /* TimeUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeUtils.swift; sourceTree = "<group>"; };
 		2DBD25E61CA166BE00E4BC86 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2DC9ABDB1CCC6AA800B34A4B /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
 		2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpace.swift; sourceTree = "<group>"; };
 		2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeItem.swift; sourceTree = "<group>"; };
@@ -526,6 +528,7 @@
 				2DB907301CC729C600BABAFB /* AVPlayerView.swift */,
 				2DB907321CC729DB00BABAFB /* AVPlayerControlView.swift */,
 				2DB907341CC72EF200BABAFB /* PlayerViewController.swift */,
+				2DC9ABDB1CCC6AA800B34A4B /* ProgressView.swift */,
 			);
 			path = AVPlayer;
 			sourceTree = "<group>";
@@ -786,6 +789,7 @@
 				2DE7CE5E1CA1326D004F0D68 /* ExtraData.swift in Sources */,
 				2D54DDF51C9D3A20007362F2 /* LivePageView.swift in Sources */,
 				2D03D0FE1CA3E27F00ED8B7E /* AnimationBlockView.swift in Sources */,
+				2DC9ABDC1CCC6AA800B34A4B /* ProgressView.swift in Sources */,
 				2DE7CE5C1CA131D5004F0D68 /* HomeItem.swift in Sources */,
 				2D54DDF11C9D339C007362F2 /* BlockView.swift in Sources */,
 				2D9163CB1CC4DA5A0045163A /* UIImage+WebP.m in Sources */,

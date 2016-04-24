@@ -18,14 +18,24 @@ public enum PlayerStatus {
     case COMPLETION
 }
 
+public enum PanDirection {
+    case PanDirectionInit //初始
+    case PanDirectionHorizontalMoved //横向移动
+    case PanDirectionVerticalMoved    //纵向移动
+}
+
 class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     private var videoPlayerView:AVPlayerView!
     private var controlView:AVPlayerControlView!
-    private var videoStatus:PlayerStatus!
+    private var progressView:ProgressView!
     
     //临时变量
+    private var screenWidth:CGFloat?,screenHeight:CGFloat?
     private var index:Int = 0
+    private var isVolumed:Bool = false
+    private var moveDirection:PanDirection!
+    private var videoStatus:PlayerStatus!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +59,14 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.controlView.changePlayButtonBg(false)
         self.view.addSubview(controlView)
         
-        videoStatus = PlayerStatus.INIT
+        self.progressView = ProgressView()
+        self.view.addSubview(progressView)
+        
+        self.screenWidth     = self.view.bounds.size.width
+        self.screenHeight    = self.view.bounds.size.height
+        
+        self.videoStatus     = PlayerStatus.INIT
+        self.moveDirection   = PanDirection.PanDirectionInit
 
     }
     
@@ -80,6 +97,9 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         let doubleTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onPauseOrPlay))
         doubleTap.numberOfTapsRequired = 2
         self.view.addGestureRecognizer(doubleTap);
+        //平移手势
+        let pan:UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panDirection))
+        self.view.addGestureRecognizer(pan)
     }
     
     //单击
@@ -91,8 +111,9 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         }
     }
     
+    
     /**
-     * 暂停或者播放
+     * 双击
      */
     func onPauseOrPlay(){
         switch videoStatus! {
@@ -106,6 +127,84 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     }
     
     /**
+     * 手势滑动
+     */
+    func panDirection(pan:UIPanGestureRecognizer){
+        let locationPoint:CGPoint   = pan.locationInView(self.view)
+        let veloctyPoint:CGPoint    = pan.velocityInView(self.view)
+        switch pan.state {
+        case .Began:
+            judgePanDirection(locationPoint, veloctyPoint: veloctyPoint)
+            break
+        case .Changed:
+            switch self.moveDirection! {
+            case .PanDirectionHorizontalMoved:
+                self.horizontalMoved(veloctyPoint.x) // 水平移动的方法只要x方向的值
+                break
+                
+            case .PanDirectionVerticalMoved:
+                self.verticalMoved(veloctyPoint.y) // 垂直移动方法只要y方向的值
+                break
+            default:
+                break
+            }
+            break
+        case .Ended:
+            //滑动结束重置MoveDirection
+            self.moveDirection = PanDirection.PanDirectionInit
+            switch self.moveDirection! {
+            case .PanDirectionHorizontalMoved:
+                self.resumePlay()
+                break
+            case .PanDirectionVerticalMoved:
+                self.isVolumed = false
+                break
+            default:
+                break
+            }
+            break
+        default:
+            break
+        }
+
+    }
+    
+    //判断滑动方向
+    func judgePanDirection(locationPoint:CGPoint, veloctyPoint:CGPoint){
+        let x:CGFloat = fabs(veloctyPoint.x);
+        let y:CGFloat = fabs(veloctyPoint.y);
+        
+        if x > y{ 
+            moveDirection = PanDirection.PanDirectionHorizontalMoved
+            self.pausePlay()
+        } else {
+            moveDirection = PanDirection.PanDirectionVerticalMoved
+            if locationPoint.x > self.screenWidth! / 2 {
+                self.isVolumed = true
+            }else {// 状态改为显示亮度调节
+                self.isVolumed = false
+            }
+        }
+    }
+    
+    //水平移动
+    func horizontalMoved(value:CGFloat){
+    
+    }
+    
+    //垂直移动 
+    func verticalMoved(value:CGFloat){
+        if self.isVolumed {
+            //
+        }else {
+            //
+            let progress:CGFloat = UIScreen.mainScreen().brightness - value/10000
+            UIScreen.mainScreen().brightness = progress
+            self.progressView.updateLongView(progress)
+        }
+    }
+    
+    /**
      * 播放
      */
     func resumePlay(){
@@ -114,6 +213,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         }
         self.videoStatus = PlayerStatus.PLAY
         self.videoPlayerView.play()
+        self.videoPlayerView.setTimering(true)
         self.controlView.changePlayButtonBg(false)
     }
     
@@ -126,6 +226,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         }
         self.videoStatus = PlayerStatus.PAUSE
         self.videoPlayerView.pause()
+        self.videoPlayerView.setTimering(false)
         self.controlView.changePlayButtonBg(true)
     }
     
@@ -150,7 +251,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
-        self.videoPlayerView.setTimering(false)
+        self.pausePlay()
+
     }
     
     func progressSliderValueChanged(slider:UISlider){
@@ -165,7 +267,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
-        self.videoPlayerView.setTimering(true)
+        self.resumePlay()
         let duration:Int = self.videoPlayerView.getDuration()
         //计算出拖动的当前秒数
         let dragedSeconds:Int = lrintf(Float(duration) * slider.value);
@@ -203,7 +305,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     //缓冲变化
     func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Float) {
-        print("onUpdateBuffering : \(bufferingValue)")
         self.controlView.progressView.setProgress(bufferingValue, animated: true)
     }
     
@@ -241,11 +342,10 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     }
     
     func removeNotifications(){
-        self.removeObserver(self, forKeyPath: UIApplicationDidBecomeActiveNotification)
-        self.removeObserver(self, forKeyPath: UIApplicationWillResignActiveNotification)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewDidDisappear(animated: Bool) {
         self.removeNotifications()
         self.videoPlayerView.resetPlayer()
     }

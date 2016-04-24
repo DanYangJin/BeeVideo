@@ -22,10 +22,15 @@ class AVPlayerControlView: UIView {
     internal var videoSlider:UISlider!
     internal var totalTimeLabel:UILabel!
     internal var backButton:UIButton!
+    internal var videoNameLabel:UILabel!
+    internal var systemTimeLabel:UILabel!
     internal var loadingView:UIActivityIndicatorView!
     
     //标记
     internal var isShowed:Bool = false
+    
+    //定时器
+    private var timer:NSTimer!
     
     
     override init(frame: CGRect) {
@@ -55,10 +60,13 @@ class AVPlayerControlView: UIView {
         self.bottomImageView.addSubview(self.initVideoSlider());
         
         self.topImageView.addSubview(self.initBackButton())
+        self.topImageView.addSubview(self.initVideoNameLabel())
+        self.topImageView.addSubview(self.initSystemTimeLabel())
 
         self.makeSubViewsConstraints()
         
-        hideControlView()
+        self.hideControlView()
+        self.refreshCurrentTime()
     }
     
     func makeSubViewsConstraints(){
@@ -94,14 +102,13 @@ class AVPlayerControlView: UIView {
         self.progressView.snp_makeConstraints{ (make) -> Void in
             make.leading.equalTo(self.currentTimeLabel.snp_trailing).offset(4);
             make.trailing.equalTo(self.totalTimeLabel.snp_leading).offset(-4);
-            
-            make.centerY.equalTo(self.playButton.snp_centerY)
+            //进度条偏移0.5
+            make.centerY.equalTo(self.playButton.snp_centerY).offset(0.5)
         }
         
         self.videoSlider.snp_makeConstraints{ (make) -> Void in
             make.leading.equalTo(self.currentTimeLabel.snp_trailing).offset(4);
             make.trailing.equalTo(self.totalTimeLabel.snp_leading).offset(-4);
-            
             make.centerY.equalTo(self.playButton.snp_centerY)
         }
         
@@ -109,6 +116,16 @@ class AVPlayerControlView: UIView {
             make.leading.equalTo(self.snp_leading).offset(15);
             make.top.equalTo(self.snp_top).offset(15);
             make.width.height.equalTo(30);
+        }
+        
+        self.videoNameLabel.snp_makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.backButton.snp_trailing).offset(15);
+            make.centerY.equalTo(self.backButton)
+        }
+        
+        self.systemTimeLabel.snp_makeConstraints{ (make) -> Void in
+            make.trailing.equalTo(self.snp_trailing).offset(-15);
+            make.centerY.equalTo(self.backButton)
         }
         
         self.loadingView.snp_makeConstraints{ (make) -> Void in
@@ -149,7 +166,7 @@ class AVPlayerControlView: UIView {
             currentTimeLabel.textColor          = UIColor.whiteColor()
             currentTimeLabel.font               = UIFont.boldSystemFontOfSize(12.0)
             currentTimeLabel.textAlignment      = NSTextAlignment.Center
-            currentTimeLabel.text               = "00:00:00"
+            currentTimeLabel.text               = "00:00"
         }
         return currentTimeLabel
     }
@@ -157,8 +174,7 @@ class AVPlayerControlView: UIView {
     func initProgressView() -> UIProgressView {
         if progressView == nil {
             progressView                    = UIProgressView(progressViewStyle: .Default)
-            progressView.progressTintColor  = UIColor.blackColor()
-//            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
+            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
             progressView.trackTintColor     = UIColor.clearColor()
         }
         return progressView
@@ -180,7 +196,7 @@ class AVPlayerControlView: UIView {
             totalTimeLabel.textColor          = UIColor.whiteColor()
             totalTimeLabel.font               = UIFont.boldSystemFontOfSize(12.0)
             totalTimeLabel.textAlignment      = NSTextAlignment.Center
-            totalTimeLabel.text               = "00:00:00"
+            totalTimeLabel.text               = "00:00"
         }
         return totalTimeLabel
     }
@@ -191,6 +207,28 @@ class AVPlayerControlView: UIView {
             backButton.setImage(UIImage(named: "play_back_full"), forState: .Normal)
         }
         return backButton
+    }
+    
+    func initVideoNameLabel() -> UILabel {
+        if videoNameLabel == nil {
+            videoNameLabel = UILabel()
+            videoNameLabel.textColor          = UIColor.whiteColor()
+            videoNameLabel.font               = UIFont.boldSystemFontOfSize(15.0)
+            videoNameLabel.textAlignment      = NSTextAlignment.Center
+            videoNameLabel.text               = "武神赵子龙"
+        }
+        return videoNameLabel
+    }
+    
+    func initSystemTimeLabel() -> UILabel {
+        if systemTimeLabel == nil {
+            systemTimeLabel = UILabel()
+            systemTimeLabel.textColor          = UIColor.whiteColor()
+            systemTimeLabel.font               = UIFont.boldSystemFontOfSize(15.0)
+            systemTimeLabel.textAlignment      = NSTextAlignment.Center
+            systemTimeLabel.text               = TimeUtils.formatCurrentDate()
+        }
+        return systemTimeLabel
     }
     
     func initIndicatorView() -> UIActivityIndicatorView{
@@ -270,13 +308,29 @@ class AVPlayerControlView: UIView {
     }
     
     /**
+     * 定时刷新当前时间
+     */
+    func refreshCurrentTime(){
+        if self.timer == nil {
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(1,
+                    target:self,
+                    selector:#selector(refreshCurrentTime),
+                    userInfo:nil,
+                    repeats:true )
+        }
+        self.systemTimeLabel.text = TimeUtils.formatCurrentDate()
+    }
+    
+    /**
      * 重置ControlView
      */
     func resetControlView(){
         self.videoSlider.value      = 0;
         self.progressView.progress  = 0;
-        self.currentTimeLabel.text  = "00:00:00";
-        self.totalTimeLabel.text    = "00:00:00";
+        self.currentTimeLabel.text  = "00:00";
+        self.totalTimeLabel.text    = "00:00";
+        self.timer.invalidate()
+        self.timer = nil
     }
     
 }

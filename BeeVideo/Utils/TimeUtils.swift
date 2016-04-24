@@ -8,6 +8,9 @@
 
 
 class TimeUtils {
+    
+    static let dateFormat:NSDateFormatter = NSDateFormatter()
+    
 
     static func formatTime(time:Int) -> String {
         if time <= 0 {
@@ -27,5 +30,9 @@ class TimeUtils {
         }
     }
    
+    static func formatCurrentDate() -> String{
+        dateFormat.dateFormat = "HH:mm"
+        return dateFormat.stringFromDate(NSDate())
+    }
 
 }
