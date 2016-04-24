@@ -75,6 +75,8 @@
 		B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505011CBF914100E6201C /* VideoDetailInfo.swift */; };
 		B3A505041CBF915000E6201C /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505031CBF915000E6201C /* Source.swift */; };
 		B3A505061CBF916300E6201C /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505051CBF916300E6201C /* Drama.swift */; };
+		B3B261371CCCA2350074F643 /* VerticalAlignmentLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B261361CCCA2350074F643 /* VerticalAlignmentLabel.swift */; };
+		B3B261381CCCAC300074F643 /* VerticalAlignmentLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B261361CCCA2350074F643 /* VerticalAlignmentLabel.swift */; };
 		B3B4521A1CC8BAE1003F54B5 /* VideoDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */; };
 		B3B4521C1CC8BE54003F54B5 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */; };
 		B3ECEF041CC60C9D00F25558 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEF031CC60C9D00F25558 /* AboutView.swift */; };
@@ -210,6 +212,7 @@
 		B3A505011CBF914100E6201C /* VideoDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfo.swift; sourceTree = "<group>"; };
 		B3A505031CBF915000E6201C /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		B3A505051CBF916300E6201C /* Drama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		B3B261361CCCA2350074F643 /* VerticalAlignmentLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalAlignmentLabel.swift; sourceTree = "<group>"; };
 		B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfoView.swift; sourceTree = "<group>"; };
 		B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		B3ECEF031CC60C9D00F25558 /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -426,6 +429,7 @@
 				B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */,
 				B3ECEF031CC60C9D00F25558 /* AboutView.swift */,
 				B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */,
+				B3B261361CCCA2350074F643 /* VerticalAlignmentLabel.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -777,6 +781,7 @@
 				B3ECEF041CC60C9D00F25558 /* AboutView.swift in Sources */,
 				B3ECEF0B1CC6369A00F25558 /* AboutSettingCell.swift in Sources */,
 				2D54DDF71C9D3A5A007362F2 /* SettingPageView.swift in Sources */,
+				B3B261371CCCA2350074F643 /* VerticalAlignmentLabel.swift in Sources */,
 				B3A505061CBF916300E6201C /* Drama.swift in Sources */,
 				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,
 				2D03D10A1CA3EE7C00ED8B7E /* UIView+Extension.swift in Sources */,
@@ -839,6 +844,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3B261381CCCAC300074F643 /* VerticalAlignmentLabel.swift in Sources */,
 				2D143BF91C9C566A00C11099 /* BeeVideoUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

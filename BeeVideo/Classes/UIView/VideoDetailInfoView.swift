@@ -25,18 +25,15 @@ class VideoDetailInfoView: UIView {
     private var actorLbl : UILabel!
     private var videoActorLbl : UILabel!
     private var descLbl : UILabel!
-    private var videoDescLbl : UILabel!
+    private var videoDescLbl : VerticalAlignmentLabel!
     var playBtn : ImageButton!
     var chooseBtn : ImageButton!
     var downloadBtn : ImageButton!
     var faviBtn : ImageButton!
     
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        print(self.bounds)
-        
         initView()
         setConstraint()
     }
@@ -127,10 +124,11 @@ class VideoDetailInfoView: UIView {
         setCommenAttr(descLbl)
         descLbl.text = "剧情介绍:"
         self.addSubview(descLbl)
-     
-        videoDescLbl = UILabel()
+        
+        videoDescLbl = VerticalAlignmentLabel()
         setCommenAttr(videoDescLbl)
         //videoDescLbl.backgroundColor = UIColor.yellowColor()
+        videoDescLbl.setVerticalAlignmentMode(VerticalAlignmentLabel.VerticalAlignmentMode.VerticalAlignmentTop)
         videoDescLbl.numberOfLines = 0
         self.addSubview(videoDescLbl)
         
@@ -250,7 +248,7 @@ class VideoDetailInfoView: UIView {
             make.left.equalTo(descLbl)
             make.right.equalTo(self).offset(-5)
             make.top.equalTo(descLbl.snp_bottom)
-//            make.bottom.equalTo(playBtn.snp_top).offset(-5)
+            make.bottom.equalTo(playBtn.snp_top).offset(-5)
         }
         playBtn.snp_makeConstraints { (make) in
             make.left.equalTo(backBtn)
@@ -285,14 +283,14 @@ class VideoDetailInfoView: UIView {
     }
     
     func setData(videoDetailInfo: VideoDetailInfo){
-//        videoNameLbl.text = videoDetailInfo.name
-//        directorNameLbl.text = videoDetailInfo.directorString
-//        cateDetailLbl.text = videoDetailInfo.category
-//        areaDetailLbl.text = videoDetailInfo.area
-//        publishTimeLbl.text = videoDetailInfo.publishTime
-//        durationDetailLbl.text = videoDetailInfo.duration
-//        actorNameLbl.text = videoDetailInfo.actorString
-//        descDetailLbl.text = videoDetailInfo.desc
+        //        videoNameLbl.text = videoDetailInfo.name
+        //        directorNameLbl.text = videoDetailInfo.directorString
+        //        cateDetailLbl.text = videoDetailInfo.category
+        //        areaDetailLbl.text = videoDetailInfo.area
+        //        publishTimeLbl.text = videoDetailInfo.publishTime
+        //        durationDetailLbl.text = videoDetailInfo.duration
+        //        actorNameLbl.text = videoDetailInfo.actorString
+        //        descDetailLbl.text = videoDetailInfo.desc
         videoTitleLbl.text = videoDetailInfo.name
         videoDirectorLbl.text = videoDetailInfo.directorString
         videoCateLbl.text = videoDetailInfo.category

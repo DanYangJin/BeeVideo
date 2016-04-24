@@ -43,6 +43,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         mContentScrollView.showsVerticalScrollIndicator = false
         mContentScrollView.pagingEnabled = true
         mContentScrollView.delegate = self
+        mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
         mContentScrollView.snp_makeConstraints{ (make) -> Void in
@@ -55,6 +56,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
+        remmondedPageView.backgroundColor = UIColor.blueColor()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.mContentScrollView.addSubview(self.remmondedPageView)
         

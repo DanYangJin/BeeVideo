@@ -17,7 +17,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         case RECOMMENDED_REQUEST_ID
         case SEARCH_REQUEST_ID
     }
-
+    
     //上一层页面传递的参数
     var extras:[ExtraData]!
     
@@ -83,6 +83,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             make.bottom.equalTo(divider.snp_top).offset(-10)
             make.top.equalTo(self.view).offset(20)
             make.width.equalTo((height * 2/3 - 30) * 2/3)
+            print(posterImg.frame.height)
         }
         
         divider.snp_makeConstraints { (make) in
@@ -371,7 +372,11 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     }
     
     func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
-        print(index)
+        let detailController = VideoDetailViewController()
+        var extra = [ExtraData]()
+        extra.append(ExtraData(name: "", value: videoBriefItems[index].id))
+        detailController.extras = extra
+        self.presentViewController(detailController, animated: true, completion: nil)
     }
     
     func judgeStatus(status:String) -> Bool{
@@ -489,21 +494,21 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
 //        chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
 //        setButtonAttr(chooseBtn)
 //        chooseBtn.setImage(UIImage(named: "v2_video_detail_op_choose_drama_bg_normal"), forState: .Normal)
-//        chooseBtn.setTitle("选集", forState: .Normal)
-//        self.view.addSubview(chooseBtn)
-//        
-//        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
-//        setButtonAttr(downloadBtn)
-//        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
-//        downloadBtn.setTitle("下载", forState: .Normal)
-//        self.view.addSubview(downloadBtn)
-//        
-//        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
-//        setButtonAttr(faviBtn)
-//        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
-//        faviBtn.setTitle("收藏", forState: .Normal)
-//        self.view.addSubview(faviBtn)
+        chooseBtn.setTitle("选集", forState: .Normal)
+        self.view.addSubview(chooseBtn)
         
+        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
+        setButtonAttr(downloadBtn)
+        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
+        downloadBtn.setTitle("下载", forState: .Normal)
+        self.view.addSubview(downloadBtn)
+        
+        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
+        setButtonAttr(faviBtn)
+        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
+        faviBtn.setTitle("收藏", forState: .Normal)
+        self.view.addSubview(faviBtn)
+     
      
      divider = UIView()//frame: CGRectMake(30, 205, 518, 1))
      divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
