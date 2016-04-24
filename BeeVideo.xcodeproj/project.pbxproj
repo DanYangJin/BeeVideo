@@ -195,6 +195,7 @@
 		2DB907361CC788DF00BABAFB /* TimeUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeUtils.swift; sourceTree = "<group>"; };
 		2DBD25E61CA166BE00E4BC86 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2DC9ABDB1CCC6AA800B34A4B /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		2DC9ABDD1CCCA24000B34A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2DDD4B901CA4D00800CD7F45 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DE7CE591CA1315E004F0D68 /* HomeSpace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpace.swift; sourceTree = "<group>"; };
 		2DE7CE5B1CA131D5004F0D68 /* HomeItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeItem.swift; sourceTree = "<group>"; };
@@ -556,6 +557,7 @@
 		EB13B2A8EC69E148BBD52AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2DC9ABDD1CCCA24000B34A4B /* AVFoundation.framework */,
 				2D91646E1CC4DFFD0045163A /* libiconv.tbd */,
 				2D91646C1CC4DFEB0045163A /* libbz2.tbd */,
 				2D91646A1CC4DF9B0045163A /* libz.tbd */,

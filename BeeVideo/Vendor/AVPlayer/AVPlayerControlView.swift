@@ -66,7 +66,11 @@ class AVPlayerControlView: UIView {
         self.makeSubViewsConstraints()
         
         self.hideControlView()
-        self.refreshCurrentTime()
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1,
+                                                            target:self,
+                                                            selector:#selector(refreshCurrentTime),
+                                                            userInfo:nil,
+                                                            repeats:true )
     }
     
     func makeSubViewsConstraints(){
@@ -311,13 +315,6 @@ class AVPlayerControlView: UIView {
      * 定时刷新当前时间
      */
     func refreshCurrentTime(){
-        if self.timer == nil {
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(1,
-                    target:self,
-                    selector:#selector(refreshCurrentTime),
-                    userInfo:nil,
-                    repeats:true )
-        }
         self.systemTimeLabel.text = TimeUtils.formatCurrentDate()
     }
     
@@ -329,8 +326,14 @@ class AVPlayerControlView: UIView {
         self.progressView.progress  = 0;
         self.currentTimeLabel.text  = "00:00";
         self.totalTimeLabel.text    = "00:00";
-        self.timer.invalidate()
-        self.timer = nil
+    }
+    
+    deinit{
+        self.resetControlView()
+        if self.timer != nil {
+            self.timer.invalidate()
+            self.timer = nil
+        }
     }
     
 }

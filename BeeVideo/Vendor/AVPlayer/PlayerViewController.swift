@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import MediaPlayer
 
 public enum PlayerStatus {
     case INIT
@@ -29,47 +30,89 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     private var videoPlayerView:AVPlayerView!
     private var controlView:AVPlayerControlView!
     private var progressView:ProgressView!
+    private var volumeViewSlider:UISlider!
+    internal var horizontalLabel:UILabel!
     
     //临时变量
-    private var screenWidth:CGFloat?,screenHeight:CGFloat?
+    private var screenWidth:CGFloat!,screenHeight:CGFloat!
     private var index:Int = 0
     private var isVolumed:Bool = false
     private var moveDirection:PanDirection!
     private var videoStatus:PlayerStatus!
+    private var sumTime:CGFloat = 0
+    private var lastSlideValue:CGFloat = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initUI()
         self.addNotifications()
+        self.configVolume()
     }
     
     func initUI(){
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.videoPlayerView         = AVPlayerView()
-        self.videoPlayerView.frame   = self.view.frame
-        self.videoPlayerView.setDataSource(Constants.URLS[index])
-        self.videoPlayerView.setDelegate(self)
-        self.videoPlayerView.play()
-        self.view.addSubview(videoPlayerView)
-        
-        self.controlView         = AVPlayerControlView()
-        self.controlView.frame   = self.view.frame
-        self.controlView.animationShow()
-        self.controlView.changePlayButtonBg(false)
-        self.view.addSubview(controlView)
-        
-        self.progressView = ProgressView()
-        self.view.addSubview(progressView)
-        
         self.screenWidth     = self.view.bounds.size.width
         self.screenHeight    = self.view.bounds.size.height
         
+        self.view.addSubview(self.initAVPlayerView())
+        self.view.addSubview(self.initControlView())
+        self.view.addSubview(self.initHorizontalLabel())
+        self.view.addSubview(self.initProgressView())
+    
         self.videoStatus     = PlayerStatus.INIT
         self.moveDirection   = PanDirection.PanDirectionInit
+        
+        self.makeSubViewsConstraints()
+        
+        self.videoPlayerView.play()
 
     }
+    func makeSubViewsConstraints(){
+        self.horizontalLabel.snp_makeConstraints{ (make) -> Void in
+            make.width.equalTo(160)
+            make.height.equalTo(40)
+            make.center.equalTo(self.view)
+        }
+    }
+
+    func initAVPlayerView() -> AVPlayerView{
+        if self.videoPlayerView == nil {
+            self.videoPlayerView         = AVPlayerView()
+            self.videoPlayerView.frame   = self.view.frame
+            self.videoPlayerView.setDataSource(Constants.URLS[index])
+            self.videoPlayerView.setDelegate(self)
+        }
+        return self.videoPlayerView
+    }
     
+    func initControlView() -> AVPlayerControlView{
+        if self.controlView == nil {
+            self.controlView         = AVPlayerControlView()
+            self.controlView.frame   = self.view.frame
+            self.controlView.animationShow()
+            self.controlView.changePlayButtonBg(false)
+        }
+        return self.controlView
+    }
+    
+    func initHorizontalLabel() -> UILabel{
+        if horizontalLabel == nil {
+            horizontalLabel                 = UILabel()
+            horizontalLabel.textColor       = UIColor.whiteColor()
+            horizontalLabel.textAlignment   = NSTextAlignment.Center
+            horizontalLabel.backgroundColor = UIColor.init(patternImage: UIImage(named: "Management_Mask")!)
+            horizontalLabel.alpha           = 0.0
+        }
+        return horizontalLabel
+    }
+    
+    func initProgressView() -> ProgressView{
+        if self.progressView == nil {
+            self.progressView = ProgressView()
+        }
+        return self.progressView
+    }
     
     func addNotifications(){
         //APP进入前台
@@ -151,10 +194,12 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
             break
         case .Ended:
             //滑动结束重置MoveDirection
-            self.moveDirection = PanDirection.PanDirectionInit
             switch self.moveDirection! {
             case .PanDirectionHorizontalMoved:
+                self.horizontalLabel.alpha           = 0.0
                 self.resumePlay()
+                self.videoPlayerView.seekToTime(Int.init(self.sumTime))
+                self.sumTime = 0
                 break
             case .PanDirectionVerticalMoved:
                 self.isVolumed = false
@@ -162,6 +207,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
             default:
                 break
             }
+            self.moveDirection = PanDirection.PanDirectionInit
             break
         default:
             break
@@ -174,11 +220,13 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         let x:CGFloat = fabs(veloctyPoint.x);
         let y:CGFloat = fabs(veloctyPoint.y);
         
-        if x > y{ 
-            moveDirection = PanDirection.PanDirectionHorizontalMoved
+        if x > y{
+            self.horizontalLabel.alpha           = 1.0
+            self.moveDirection = PanDirection.PanDirectionHorizontalMoved
+            self.sumTime = CGFloat.init(self.videoPlayerView.getCurrentTime())
             self.pausePlay()
         } else {
-            moveDirection = PanDirection.PanDirectionVerticalMoved
+            self.moveDirection = PanDirection.PanDirectionVerticalMoved
             if locationPoint.x > self.screenWidth! / 2 {
                 self.isVolumed = true
             }else {// 状态改为显示亮度调节
@@ -190,20 +238,57 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     //水平移动
     func horizontalMoved(value:CGFloat){
     
+        // 快进快退的方法
+        var style:String = ""
+        
+        if (value < 0) {
+            style.appendContentsOf("<<");
+        } else if (value > 0){
+            style.appendContentsOf(">>");
+        }
+        // 每次滑动需要叠加时间
+        self.sumTime += value / 200
+        
+        // 需要限定sumTime的范围
+        let totalTime:CGFloat = CGFloat.init(self.videoPlayerView.getDuration())
+        if (self.sumTime > totalTime) {
+            self.sumTime = totalTime;
+        }else if (self.sumTime < 0){
+            self.sumTime = 0;
+        }
+        
+        let nowTime:String = TimeUtils.formatTime(Int.init(self.sumTime))
+        let durationTime:String = TimeUtils.formatTime(Int.init(totalTime))
+        self.horizontalLabel.text = String.init(format: "%@ %@ / %@", style, nowTime, durationTime)
+        self.controlView.currentTimeLabel.text = nowTime
     }
     
     //垂直移动 
     func verticalMoved(value:CGFloat){
         if self.isVolumed {
-            //
+            self.volumeViewSlider.value      -=  Float.init(value / 10000)
         }else {
-            //
-            let progress:CGFloat = UIScreen.mainScreen().brightness - value/10000
-            UIScreen.mainScreen().brightness = progress
-            self.progressView.updateLongView(progress)
+            UIScreen.mainScreen().brightness -= value / 10000
         }
     }
     
+    func configVolume(){
+        let volumeView:MPVolumeView = MPVolumeView()
+        volumeViewSlider = nil;
+        for view in volumeView.subviews{
+            if view is UISlider {
+                volumeViewSlider = view as! UISlider
+                break;
+            }
+        }
+        // 使用这个category的应用不会随着手机静音键打开而静音，可在手机静音下播放声音
+        do {
+            try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        } catch {
+           //
+        }
+
+    }
     /**
      * 播放
      */
@@ -259,8 +344,22 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
-        let currentTime:Int = self.videoPlayerView.getCurrentTime()
-        self.controlView.currentTimeLabel.text = TimeUtils.formatTime(currentTime)
+        let value:CGFloat = CGFloat(slider.value) - self.lastSlideValue
+        var style:String = ""
+        if (value < 0) {
+            style.appendContentsOf("<<");
+        } else if (value > 0){
+            style.appendContentsOf(">>");
+        }
+        self.lastSlideValue = CGFloat(slider.value)
+        let duration:Int = self.videoPlayerView.getDuration()
+        var dragedSeconds:Int = lrintf(Float(duration) * slider.value);
+        if dragedSeconds >= duration {
+            dragedSeconds = duration
+        }
+        self.horizontalLabel.alpha = 1.0
+        self.horizontalLabel.text = String.init(format: "%@ %@ / %@", style, TimeUtils.formatTime(dragedSeconds), TimeUtils.formatTime(duration))
+        self.controlView.currentTimeLabel.text = TimeUtils.formatTime(dragedSeconds)
     }
     
     func progressSliderTouchEnded(slider:UISlider){
@@ -268,6 +367,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
             return
         }
         self.resumePlay()
+        self.lastSlideValue = 0
         let duration:Int = self.videoPlayerView.getDuration()
         //计算出拖动的当前秒数
         let dragedSeconds:Int = lrintf(Float(duration) * slider.value);
@@ -275,6 +375,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
             onCompletion(self.videoPlayerView)
             return
         }
+        self.horizontalLabel.alpha = 0.0
         self.videoPlayerView.seekToTime(dragedSeconds)
     }
     

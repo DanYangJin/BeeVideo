@@ -9,9 +9,6 @@
 import UIKit
 
 class ProgressView: UIView {
-
-    private var screenWidth:CGFloat     = UIScreen.mainScreen().bounds.size.width
-    private var screenHeight:CGFloat    = UIScreen.mainScreen().bounds.size.height
     
     private var toolBar:UIToolbar!
     private var properyImage:UIImageView!
@@ -19,7 +16,10 @@ class ProgressView: UIView {
     private var longView:UIView!
     
     //临时变量
+    private var screenWidth:CGFloat!
+    private var screenHeight:CGFloat!
     private var images:[UIImageView]!
+    private var timer:NSTimer!
     
     
     override init(frame: CGRect) {
@@ -38,11 +38,13 @@ class ProgressView: UIView {
     }
     
     func initUI(){
+        self.screenWidth     = UIScreen.mainScreen().bounds.size.width
+        self.screenHeight    = UIScreen.mainScreen().bounds.size.height
         //自定义View
-        self.frame                  = CGRectMake(screenWidth * 0.35, screenHeight * 0.3, 155, 155)
+        self.frame                  = CGRectMake(screenWidth * 0.36, screenHeight * 0.26, 155, 155)
         self.layer.cornerRadius     = 10;
         self.layer.masksToBounds    = true;
-        self.alpha                  = 1.0
+        self.alpha                  = 0.0
         //使用UIToolbar实现毛玻璃效果
         self.addSubview(self.initToolBar())
         self.addSubview(self.initProperyName())
@@ -50,6 +52,7 @@ class ProgressView: UIView {
         self.addSubview(self.initLongView())
         //
         self.createImages()
+        self.addObserver()
         
     }
     
@@ -112,6 +115,10 @@ class ProgressView: UIView {
         self.updateLongView(UIScreen.mainScreen().brightness)
     }
     
+    func addObserver(){
+        UIScreen.mainScreen().addObserver(self, forKeyPath: "brightness", options: .New, context: nil)
+    }
+    
     func updateLongView(progress:CGFloat){
         let stage:CGFloat = 1 / 15.0
         let level:Int = Int.init(progress / stage)
@@ -123,6 +130,53 @@ class ProgressView: UIView {
                 image.hidden = true
             }
         }
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        let brightness:CGFloat = CGFloat((change!["new"]?.floatValue)!)
+        self.showProgressView()
+        self.updateLongView(brightness)
+    }
+    
+    func showProgressView(){
+        if self.alpha == 0.0 {
+            self.alpha = 1.0
+            self.updateTimer()
+        }
+    }
+    
+    func addTimer(){
+        if self.timer != nil {
+            return
+        }
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1,target:self,selector:#selector(hideProgressView),userInfo:nil,repeats:true)
+        NSRunLoop.currentRunLoop().addTimer(self.timer, forMode: NSRunLoopCommonModes)
+    }
+    
+    func removeTimer(){
+        if self.timer != nil {
+            self.timer.invalidate()
+            self.timer = nil
+        }
+    }
+    
+    func updateTimer(){
+        self.removeTimer()
+        self.addTimer()
+    }
+    
+    func hideProgressView(){
+        if self.alpha == 1.0 {
+            UIView.animateWithDuration(0.8, animations: {
+                    self.alpha = 0.0
+                }, completion: { (falg:Bool) in
+            
+            })
+        }
+    }
+    
+    deinit{
+        UIScreen.mainScreen().removeObserver(self, forKeyPath: "brightness")
     }
     
 }
