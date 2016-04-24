@@ -19,10 +19,10 @@ class VideoDetailInfo{
     var publishTime : String!//上映时间
     var directorString : String = "" //导演
     var directors : [String]!
-    var actorString : String!//演员
+    var actorString : String = ""//演员
     var actors : [String]!
     var isFavorite : Bool!//是否收藏
-    var desc : String! //影片详情 annotation
+    var desc : String = "" //影片详情 annotation
     var poster : String! //影片图片  smallImage
     var resolutionType : Int! //视频清晰度，对应most
     var count : Int! // 视频集数 对应totalInfo

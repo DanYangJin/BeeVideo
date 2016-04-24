@@ -9,9 +9,20 @@
 import UIKit
 
 class BaseViewController: UIViewController {
+    
+    private var backgroundImg : UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        backgroundImg = UIImageView()
+        backgroundImg.contentMode = .ScaleToFill
+        self.view.addSubview(backgroundImg)
+        backgroundImg.snp_makeConstraints { (make) in
+            make.top.equalTo(self.view)
+            make.bottom.equalTo(self.view)
+            make.left.equalTo(self.view)
+            make.right.equalTo(self.view)
+        }
         setBackground()
     }
 
@@ -24,7 +35,8 @@ class BaseViewController: UIViewController {
     }
     
     func setBackground(){
-        self.view.backgroundColor = UIColor.init(patternImage: UIImage(named: "background")!)
+        backgroundImg.image = UIImage(named: "background")
+        //self.view.backgroundColor = UIColor.init(patternImage: UIImage(named: "background")!)
     
     }
     

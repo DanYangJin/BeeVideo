@@ -23,6 +23,8 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     var videoId : String = "2554"
     var from : String = ""
+    var height : CGFloat!
+    var width : CGFloat!
     
     var currentElement : String! //xml节点名字
     var dramas : [Drama]!
@@ -36,20 +38,22 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     var params : Dictionary<String,String>!
     
     private var posterImg : UIImageView!
-    private var videoNameLbl : UILabel!
-    private var directorNameLbl : UILabel!
-    private var cateDetailLbl : UILabel!
-    private var publishTimeLbl : UILabel!
-    private var areaDetailLbl : UILabel!
-    private var durationDetailLbl : UILabel!
-    private var actorNameLbl : UILabel!
-    private var descDetailLbl : UILabel!
-    
-    private var playButton : ImageButton!
-    private var chooseBtn : ImageButton!
-    private var downloadBtn : ImageButton!
-    private var faviBtn : ImageButton!
-    private var backBtn : UIButton!
+//    private var videoNameLbl : UILabel!
+//    private var directorNameLbl : UILabel!
+//    private var cateDetailLbl : UILabel!
+//    private var publishTimeLbl : UILabel!
+//    private var areaDetailLbl : UILabel!
+//    private var durationDetailLbl : UILabel!
+//    private var actorNameLbl : UILabel!
+//    private var descDetailLbl : UILabel!
+    private var divider : UIView!
+    private var detailView : VideoDetailInfoView!
+//
+//    private var playButton : ImageButton!
+//    private var chooseBtn : ImageButton!
+//    private var downloadBtn : ImageButton!
+//    private var faviBtn : ImageButton!
+//    private var backBtn : UIButton!
     
     private var recommendTab : UITableView!
     private var horizontalTab : ZXOptionBar!
@@ -58,13 +62,48 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         super.viewDidLoad()
         
         videoId = extras[0].value
+        height = self.view.frame.height
+        width = self.view.frame.width
         
-        initBaseView()
+        posterImg = UIImageView()
+        //posterImg.frame = CGRectMake(30, 20, 120, 180)
+        posterImg.layer.cornerRadius = 10
+        posterImg.layer.masksToBounds = true
+        self.view.addSubview(posterImg)
+        
+        detailView = VideoDetailInfoView(frame: CGRectMake(0, 0, width - (height * 2/3 - 30) * 2/3 - 50, height * 2/3 - 30))
+        self.view.addSubview(detailView)
+        
+        divider = UIView()//frame: CGRectMake(30, 205, 518, 1))
+        divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
+        self.view.addSubview(divider)
+        
+        posterImg.snp_makeConstraints { (make) in
+            make.right.equalTo(self.view.snp_right).offset(-30)
+            make.bottom.equalTo(divider.snp_top).offset(-10)
+            make.top.equalTo(self.view).offset(20)
+            make.width.equalTo((height * 2/3 - 30) * 2/3)
+        }
+        
+        divider.snp_makeConstraints { (make) in
+            make.left.equalTo(view).offset(30)
+            make.right.equalTo(view).offset(-30)
+            make.top.equalTo(view).offset(height * 2/3)
+            make.height.equalTo(1)
+        }
+        
+        detailView.snp_makeConstraints { (make) in
+            make.left.equalTo(divider)
+            make.right.equalTo(posterImg.snp_left).offset(-10)
+            make.top.equalTo(posterImg)
+            make.bottom.equalTo(posterImg)
+        }
+       // initBaseView()
         initTableView()
         initOptionBar()
 
         getVideoDetailRequest()
-        getRecommendRequest()
+        //getRecommendRequest()
         
     }
     
@@ -217,15 +256,17 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     //结束解析
     func parserDidEndDocument(parser: NSXMLParser) {
         if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
-            posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster))
-            videoNameLbl.text = videoDetailInfo.name
-            directorNameLbl.text = videoDetailInfo.directorString
-            cateDetailLbl.text = videoDetailInfo.category
-            areaDetailLbl.text = videoDetailInfo.area
-            publishTimeLbl.text = videoDetailInfo.publishTime
-            durationDetailLbl.text = videoDetailInfo.duration
-            actorNameLbl.text = videoDetailInfo.actorString
-            descDetailLbl.text = videoDetailInfo.desc
+            posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+//            videoNameLbl.text = videoDetailInfo.name
+//            directorNameLbl.text = videoDetailInfo.directorString
+//            cateDetailLbl.text = videoDetailInfo.category
+//            areaDetailLbl.text = videoDetailInfo.area
+//            publishTimeLbl.text = videoDetailInfo.publishTime
+//            durationDetailLbl.text = videoDetailInfo.duration
+//            actorNameLbl.text = videoDetailInfo.actorString
+//            descDetailLbl.text = videoDetailInfo.desc
+            detailView.setData(videoDetailInfo)
+            addClick()
             if videoDetailInfo.directors != nil{
                 recommends.appendContentsOf(videoDetailInfo.directors)
             }
@@ -233,6 +274,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
                 recommends.appendContentsOf(videoDetailInfo.actors)
             }
             recommendTab.reloadData()
+            getRecommendRequest()
         }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID || requestId == NetRequestId.SEARCH_REQUEST_ID{
             
             if horizontalTab != nil {
@@ -262,6 +304,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         cell?.textLabel?.text = recommends[indexPath.row]
         cell?.textLabel?.textColor = UIColor.whiteColor()
         cell?.textLabel?.textAlignment = .Center
+        cell?.textLabel?.lineBreakMode = .ByClipping
         cell?.backgroundColor = UIColor.clearColor()
         cell?.selectionStyle = .None
         cell?.textLabel?.font = UIFont.systemFontOfSize(14)
@@ -311,7 +354,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         }
         cell?.backgroundColor = UIColor.clearColor()
         cell?.videoNameLbl.text = videoBriefItems[index].name
-        cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg))
+        cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
         cell?.durationLbl.text = videoBriefItems[index].duration
         let average = videoBriefItems[index].score
         if average.isEmpty {
@@ -324,7 +367,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     }
     
     func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
-        return 80
+        return Float(recommendTab.frame.height * 3/4)
     }
     
     func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
@@ -339,21 +382,28 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         return false
     }
     
+    /*
     func initBaseView(){
         
         posterImg = UIImageView()
-        posterImg.frame = CGRectMake(30, 20, 120, 180)
+        //posterImg.frame = CGRectMake(30, 20, 120, 180)
         posterImg.layer.cornerRadius = 10
         posterImg.layer.masksToBounds = true
         self.view.addSubview(posterImg)
+        posterImg.snp_makeConstraints { (make) in
+            make.left.equalTo(self.view).offset(30)
+            make.width.equalTo(120)
+            make.top.equalTo(self.view).offset(20)
+            make.height.equalTo(180)
+        }
         
-        backBtn = UIButton(frame: CGRectMake(0, 0, 20, 20))
-        backBtn.setImage(UIImage(named: "v2_play_setting_left_arrow_selected"), forState: .Normal)
+        backBtn = UIButton(frame: CGRectMake(5, 5, 20, 20))
+        backBtn.setImage(UIImage(named: "play_back_full"), forState: .Normal)
         backBtn.addTarget(self, action: (#selector(VideoDetailViewController.dissMissController)), forControlEvents: .TouchUpInside)
         self.view.addSubview(backBtn)
         
         videoNameLbl = UILabel(frame: CGRectMake(160, 20, 418, 16))
-        videoNameLbl.text = "我们相爱吧第二季"
+        //videoNameLbl.text = "我们相爱吧第二季"
         videoNameLbl.textColor = UIColor.whiteColor()
         self.view.addSubview(videoNameLbl)
         
@@ -425,35 +475,50 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         self.view.addSubview(descDetailLbl)
         
         playButton = ImageButton(frame: CGRectMake(160, 165, 65, 35))
-        setButtonAttr(playButton)
-        playButton.setImage(UIImage(named: "v2_video_detail_op_play_bg_normal"), forState: .Normal)
-        playButton.setTitle("第1集", forState: .Normal)
-        playButton.addTarget(self, action: (#selector(VideoDetailViewController.toPlayController)), forControlEvents: .TouchUpInside)
+        //setButtonAttr(playButton)
+//        playButton.layer.cornerRadius = 8
+//        playButton.layer.borderWidth = 0.5
+//        playButton.layer.borderColor = UIColor.whiteColor().CGColor
+      //  playButton.backgroundColor = UIColor(patternImage: UIImage(named: "v2_block_home_cycle_show_bg")!)
+        playButton.setImage("v2_video_detail_op_play_bg_normal")
+        playButton.setTitle("第1集")
+        playButton.addOnClickListener(self, action: (#selector(VideoDetailViewController.toPlayController)))
+//        playButton.addTarget(self, action: (#selector(VideoDetailViewController.toPlayController)), forControlEvents: .TouchUpInside)
         self.view.addSubview(playButton)
         
-        chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
-        setButtonAttr(chooseBtn)
-        chooseBtn.setImage(UIImage(named: "v2_video_detail_op_choose_drama_bg_normal"), forState: .Normal)
-        chooseBtn.setTitle("选集", forState: .Normal)
-        self.view.addSubview(chooseBtn)
+//        chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
+//        setButtonAttr(chooseBtn)
+//        chooseBtn.setImage(UIImage(named: "v2_video_detail_op_choose_drama_bg_normal"), forState: .Normal)
+//        chooseBtn.setTitle("选集", forState: .Normal)
+//        self.view.addSubview(chooseBtn)
+//        
+//        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
+//        setButtonAttr(downloadBtn)
+//        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
+//        downloadBtn.setTitle("下载", forState: .Normal)
+//        self.view.addSubview(downloadBtn)
+//        
+//        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
+//        setButtonAttr(faviBtn)
+//        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
+//        faviBtn.setTitle("收藏", forState: .Normal)
+//        self.view.addSubview(faviBtn)
         
-        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
-        setButtonAttr(downloadBtn)
-        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
-        downloadBtn.setTitle("下载", forState: .Normal)
-        self.view.addSubview(downloadBtn)
-        
-        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
-        setButtonAttr(faviBtn)
-        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
-        faviBtn.setTitle("收藏", forState: .Normal)
-        self.view.addSubview(faviBtn)
-        
-        let divider = UIView(frame: CGRectMake(30, 205, 518, 1))
-        divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
-        self.view.addSubview(divider)
+     
+     divider = UIView()//frame: CGRectMake(30, 205, 518, 1))
+     divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
+     self.view.addSubview(divider)
+     
+     
+        divider.snp_makeConstraints { (make) in
+            make.left.equalTo(view).offset(30)
+            make.right.equalTo(view).offset(-30)
+            make.top.equalTo(view).offset(view.frame.height * 2/3)
+            make.height.equalTo(1)
+        }
         
     }
+ */
     
     func getVideoDetailRequest(){
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action", parameters: ["videoId": extras[0].value]).response{ request, response, data, error in
@@ -498,20 +563,36 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     //初始化推荐名字列表
     func initTableView(){
-        recommendTab = UITableView(frame: CGRectMake(10, 210, 90, 110), style: .Plain)
+        recommendTab = UITableView()//frame: CGRectMake(10, 210, 90, 110), style: .Plain)
         recommendTab.delegate = self
         recommendTab.dataSource = self
         recommendTab.backgroundColor = UIColor.clearColor()
         recommendTab.showsVerticalScrollIndicator = false
         recommendTab.separatorStyle = .None
         self.view.addSubview(recommendTab)
+        
+        recommendTab.snp_makeConstraints { (make) in
+            make.top.equalTo(divider).offset(5)
+            make.bottom.equalTo(view).offset(-5)
+            make.left.equalTo(self.view).offset(20)
+            make.width.equalTo(90)
+        }
     }
     
     // 初始化横向TableView
     func initOptionBar(){
-        horizontalTab = ZXOptionBar(frame: CGRectMake(100, 210, 448, 110), barDelegate: self, barDataSource: self)
+        let height = recommendTab.frame.height
+        horizontalTab = ZXOptionBar(frame: CGRectMake(0, 0, recommendTab.frame.height * 3/4, height), barDelegate: self, barDataSource: self)
         horizontalTab.backgroundColor = UIColor.clearColor()
         self.view.addSubview(horizontalTab)
+        
+        horizontalTab.snp_makeConstraints { (make) in
+//            make.left.equalTo(recommendTab).offset(recommendTab.frame.width + 10)
+            make.leading.equalTo(recommendTab.snp_trailing)
+            make.right.equalTo(view).offset(-30)
+            make.top.equalTo(recommendTab)
+            make.bottom.equalTo(recommendTab)
+        }
     }
     
     /**
@@ -541,6 +622,11 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         button.layer.borderColor = UIColor.whiteColor().CGColor
         button.layer.borderWidth = 0.5
         button.titleLabel?.font = UIFont.systemFontOfSize(14)
+    }
+    
+    func addClick(){
+        detailView.playBtn.addOnClickListener(self, action: (#selector(self.toPlayController)))
+        detailView.backBtn.addOnClickListener(self, action: (#selector(self.dissMissController)))
     }
     
     //播放按钮点击事件
