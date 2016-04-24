@@ -20,7 +20,9 @@ class BaseTableViewCell: ZXOptionBarCell {
     }()
     
     let icon: CornerImageView = {
-        return CornerImageView(frame: CGRectZero)
+        let img = CornerImageView(frame: CGRectZero)
+        img.contentMode = .ScaleToFill
+        return img
     }()
     
     private let lineView: UIView = {
@@ -71,12 +73,25 @@ class BaseTableViewCell: ZXOptionBarCell {
     
     override init(style: ZXOptionBarCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+       // print(self.frame.height)
         self.addSubview(icon)
         self.addSubview(videoNameLbl)
         self.addSubview(durationLbl)
         self.addSubview(lineView)
         self.addSubview(averageLbl)
+        
+//        icon.snp_makeConstraints { (make) in
+//            make.top.equalTo(self).offset(5)
+//            make.bottom.equalTo(self).offset(-5)
+//            make.left.equalTo(self).offset(5)
+//            make.right.equalTo(self).offset(-5)
+//        }
+        
+//        videoNameLbl.snp_makeConstraints { (make) in
+//            make.left.equalTo(icon)
+//            make.right.equalTo(icon)
+//            make.top.equalTo(<#T##other: CGFloat##CGFloat#>)
+//        }
     }
     
     required init?(coder aDecoder: NSCoder) {

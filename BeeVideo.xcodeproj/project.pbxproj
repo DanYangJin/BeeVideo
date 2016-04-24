@@ -75,6 +75,8 @@
 		B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505011CBF914100E6201C /* VideoDetailInfo.swift */; };
 		B3A505041CBF915000E6201C /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505031CBF915000E6201C /* Source.swift */; };
 		B3A505061CBF916300E6201C /* Drama.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A505051CBF916300E6201C /* Drama.swift */; };
+		B3B4521A1CC8BAE1003F54B5 /* VideoDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */; };
+		B3B4521C1CC8BE54003F54B5 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */; };
 		B3ECEF041CC60C9D00F25558 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEF031CC60C9D00F25558 /* AboutView.swift */; };
 		B3ECEF0B1CC6369A00F25558 /* AboutSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3ECEF091CC6369A00F25558 /* AboutSettingCell.swift */; };
 		B3ECEF0C1CC6369A00F25558 /* AboutSettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */; };
@@ -207,6 +209,8 @@
 		B3A505011CBF914100E6201C /* VideoDetailInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfo.swift; sourceTree = "<group>"; };
 		B3A505031CBF915000E6201C /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		B3A505051CBF916300E6201C /* Drama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drama.swift; sourceTree = "<group>"; };
+		B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoDetailInfoView.swift; sourceTree = "<group>"; };
+		B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		B3ECEF031CC60C9D00F25558 /* AboutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		B3ECEF091CC6369A00F25558 /* AboutSettingCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutSettingCell.swift; path = TableCell/AboutSettingCell.swift; sourceTree = "<group>"; };
 		B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AboutSettingCell.xib; path = TableCell/AboutSettingCell.xib; sourceTree = "<group>"; };
@@ -379,6 +383,7 @@
 				2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */,
 				B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */,
 				2D03D0F91CA3B42000ED8B7E /* LauncherViewController.swift */,
+				B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -419,6 +424,7 @@
 				B3F009491CC092DB00B4D109 /* ImageButton.swift */,
 				B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */,
 				B3ECEF031CC60C9D00F25558 /* AboutView.swift */,
+				B3B452191CC8BAE1003F54B5 /* VideoDetailInfoView.swift */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -745,6 +751,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3B4521C1CC8BE54003F54B5 /* TestViewController.swift in Sources */,
 				2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */,
 				2D03D1051CA3EDEF00ED8B7E /* BaseRequest.swift in Sources */,
 				2D9163E01CC4DA5A0045163A /* UIImageView+WebCache.m in Sources */,
@@ -800,6 +807,7 @@
 				B3F24C4F1CC21D7C00ED73FA /* ZXOptionBar.swift in Sources */,
 				2D54DDED1C9D2865007362F2 /* DataFactory.swift in Sources */,
 				2DE7CE621CA154D7004F0D68 /* ChannelProgram.swift in Sources */,
+				B3B4521A1CC8BAE1003F54B5 /* VideoDetailInfoView.swift in Sources */,
 				B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */,
 				2D9163D31CC4DA5A0045163A /* NSData+ImageContentType.m in Sources */,
 				B3F184C81CC479FB0099B28A /* BaseTableViewCell.swift in Sources */,

@@ -63,6 +63,7 @@ class ZXOptionBar: UIScrollView {
         
         var layoutSubviewsReentrancyGuard: Bool = true
     }
+
     
     // MARK: Method
     convenience init(frame: CGRect, barDelegate: ZXOptionBarDelegate, barDataSource:ZXOptionBarDataSource ) {
@@ -91,7 +92,6 @@ class ZXOptionBar: UIScrollView {
         reusableOptionCells = Dictionary<String, NSMutableArray>()
         visibleItems = Dictionary<String, ZXOptionBarCell>()
 
-        
     }
     
     internal func selectColumnAtIndex(index: Int, origin:ZXOptionBarOrigin) {
