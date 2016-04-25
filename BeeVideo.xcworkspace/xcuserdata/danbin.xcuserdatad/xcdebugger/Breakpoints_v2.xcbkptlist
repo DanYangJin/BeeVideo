@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BeeVideo/Vendor/AVPlayer/AVPlayerView.swift"
-            timestampString = "483263673.708752"
+            timestampString = "483264906.446487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "265"
-            endingLineNumber = "265"
+            startingLineNumber = "268"
+            endingLineNumber = "268"
             landmarkName = "getCurrentTime()"
             landmarkType = "5">
          </BreakpointContent>
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BeeVideo/Vendor/AVPlayer/AVPlayerControlView.swift"
-            timestampString = "483181349.830247"
+            timestampString = "483264984.072253"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "282"
+            endingLineNumber = "282"
             landmarkName = "animationShow()"
             landmarkType = "5">
          </BreakpointContent>

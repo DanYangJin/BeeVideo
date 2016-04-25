@@ -163,13 +163,13 @@ class AVPlayerView: UIView {
                     }
                 }
             case "loadedTimeRanges":
-//                if delegate != nil {
+                if delegate != nil {
 //                    print("loadedTimeRanges")
-//                    let timeInterval:Float        = Float.init(self.calcBufferingData())
-//                    let duration:CMTime           = self.playerItem.duration;
-//                    let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
-//                    delegate.onUpdateBuffering(self, bufferingValue: timeInterval / totalDuration)
-//                }
+                    let timeInterval:Float        = Float.init(self.calcBufferingData())
+                    let duration:CMTime           = self.playerItem.duration;
+                    let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
+                    delegate.onUpdateBuffering(self, bufferingValue: timeInterval / totalDuration)
+                }
                 break
             case "playbackBufferEmpty":
 //                print("playbackBufferEmpty")
@@ -252,6 +252,9 @@ class AVPlayerView: UIView {
      */
     func calcBufferingData() -> NSTimeInterval{
         let loadedTimeRanges:[NSValue]  = (self.player.currentItem?.loadedTimeRanges)!
+        if loadedTimeRanges.count == 0 {
+            return 0
+        }
         let timeRange:CMTimeRange       = loadedTimeRanges[0].CMTimeRangeValue
         let startSeconds:Float64        = CMTimeGetSeconds(timeRange.start);
         let durationSeconds:Float64     = CMTimeGetSeconds(timeRange.duration);

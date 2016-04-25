@@ -178,7 +178,8 @@ class AVPlayerControlView: UIView {
     func initProgressView() -> UIProgressView {
         if progressView == nil {
             progressView                    = UIProgressView(progressViewStyle: .Default)
-            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
+            progressView.progressTintColor = UIColor.blackColor()
+//            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
             progressView.trackTintColor     = UIColor.clearColor()
         }
         return progressView
