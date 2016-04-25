@@ -23,9 +23,8 @@ class TimeUtils {
             return String.init(format: "%02zd:%02zd", minute, second)
         } else {
             let hour:Int = time / 3600
-            let minute:Int = time % 60
-            let second :Int = time % 3600
-            print("time : \(time) hour :\(hour) minute:\(minute) second : \(second)")
+            let minute:Int = time % 3600 / 60
+            let second :Int = time % 3600 % 60
             return String.init(format: "%02zd:%02zd:%02zd", hour, minute, second)
         }
     }

@@ -59,7 +59,7 @@ class AVPlayerView: UIView {
     }
 
     //标记
-    private var isReadyed:Bool = false
+//    private var isReadyed:Bool = false
     
     //回调
     private var delegate:AVPlayerDelegate!
@@ -114,7 +114,6 @@ class AVPlayerView: UIView {
         NSNotificationCenter.defaultCenter().removeObserver(self)
         // 关闭定时器
         self.setTimering(false)
-        self.isReadyed = false
         // 暂停
         self.pause()
         // 替换PlayerItem为nil
@@ -152,30 +151,34 @@ class AVPlayerView: UIView {
             switch keyPath! {
             case "status":
                 if self.player.currentItem!.status == .ReadyToPlay {
-                    if delegate != nil && !isReadyed {
-                        isReadyed = true
+//                    print("onPreparedCompetion : ReadyToPlay")
+                    if delegate != nil {
                         self.layer.contents = nil
                         delegate.onPreparedCompetion(self)
                     }
                 } else if self.player.currentItem!.status == .Failed {
+//                    print("onPreparedCompetion : Failed")
                     if delegate != nil {
                         delegate.onError(self)
                     }
                 }
             case "loadedTimeRanges":
-                if delegate != nil {
-                    let timeInterval:Float        = Float.init(self.calcBufferingData())
-                    let duration:CMTime           = self.playerItem.duration;
-                    let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
-                    delegate.onUpdateBuffering(self, bufferingValue: timeInterval / totalDuration)
-                }
+//                if delegate != nil {
+//                    print("loadedTimeRanges")
+//                    let timeInterval:Float        = Float.init(self.calcBufferingData())
+//                    let duration:CMTime           = self.playerItem.duration;
+//                    let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
+//                    delegate.onUpdateBuffering(self, bufferingValue: timeInterval / totalDuration)
+//                }
                 break
             case "playbackBufferEmpty":
+//                print("playbackBufferEmpty")
                 if delegate != nil {
                     delegate.onInfo(self, value: 701)
                 }
                 break;
             case "playbackLikelyToKeepUp":
+//                print("playbackLikelyToKeepUp")
                 if delegate != nil {
                     delegate.onInfo(self, value: 702)
                 }
@@ -187,9 +190,18 @@ class AVPlayerView: UIView {
         }
     }
     
+    func bufferingSomeSecond(){
+        self.pause()
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(NSEC_PER_SEC)), dispatch_get_main_queue(), {
+            if !self.playerItem.playbackLikelyToKeepUp {
+                self.bufferingSomeSecond()
+            }
+        });
+    }
+    
     //播放进度
     func playerTimeAction(){
-        if playerItem.duration.timescale == 0 {
+        if playerItem == nil || playerItem.duration.timescale == 0 {
             return
         }
         if delegate != nil {

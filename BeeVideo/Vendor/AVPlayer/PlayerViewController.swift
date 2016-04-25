@@ -25,7 +25,7 @@ public enum PanDirection {
     case PanDirectionVerticalMoved    //纵向移动
 }
 
-class PlayerViewController: UIViewController, AVPlayerDelegate{
+class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate{
     
     private var videoPlayerView:AVPlayerView!
     private var controlView:AVPlayerControlView!
@@ -41,6 +41,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     private var videoStatus:PlayerStatus!
     private var sumTime:CGFloat = 0
     private var lastSlideValue:CGFloat = 0
+    private var lastPlayerPosition:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,7 +143,16 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.view.addGestureRecognizer(doubleTap);
         //平移手势
         let pan:UIPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panDirection))
+        pan.delegate = self
         self.view.addGestureRecognizer(pan)
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        if touch.view!.isKindOfClass(UISlider) {
+            return false
+        } else {
+            return true
+        }
     }
     
     //单击
@@ -252,7 +262,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         // 需要限定sumTime的范围
         let totalTime:CGFloat = CGFloat.init(self.videoPlayerView.getDuration())
         if (self.sumTime > totalTime) {
-            self.sumTime = totalTime;
+            self.sumTime = totalTime
         }else if (self.sumTime < 0){
             self.sumTime = 0;
         }
@@ -336,8 +346,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
+        self.lastPlayerPosition = self.videoPlayerView.getCurrentTime()
         self.pausePlay()
-
     }
     
     func progressSliderValueChanged(slider:UISlider){
@@ -366,7 +376,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
-        self.resumePlay()
         self.lastSlideValue = 0
         let duration:Int = self.videoPlayerView.getDuration()
         //计算出拖动的当前秒数
@@ -377,6 +386,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         }
         self.horizontalLabel.alpha = 0.0
         self.videoPlayerView.seekToTime(dragedSeconds)
+        self.resumePlay()
     }
     
     //返回按钮操作
@@ -386,6 +396,9 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     
     //播放进度
     func onUpdateProgress(playView:AVPlayerView, currentTime:Int, totalTime:Int){
+        if currentTime == self.lastPlayerPosition {
+            return
+        }
         self.controlView.updateProgress(currentTime, totalTime: totalTime)
         self.controlView.videoSlider.maximumValue   = 1
         let progress:Float = Float(currentTime) / Float(totalTime)
@@ -396,6 +409,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
     func onPreparedCompetion(playView:AVPlayerView) {
         self.controlView.loadingView.stopAnimating()
         self.videoStatus = PlayerStatus.PLAY
+        self.videoPlayerView.play()
     }
     
     //播放错误
@@ -433,6 +447,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate{
         self.controlView.resetControlView()
         self.controlView.loadingView.startAnimating()
         self.videoPlayerView.resetPlayer()
+        self.horizontalLabel.alpha = 0.0
         let size:Int = Constants.URLS.count
         index  += 1
         if index > size - 1 {
