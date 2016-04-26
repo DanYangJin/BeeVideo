@@ -56,7 +56,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
-        remmondedPageView.backgroundColor = UIColor.blueColor()
+        self.remmondedPageView.backgroundColor = UIColor.blueColor()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.mContentScrollView.addSubview(self.remmondedPageView)
         
