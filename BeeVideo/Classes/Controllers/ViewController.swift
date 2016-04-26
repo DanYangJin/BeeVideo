@@ -24,7 +24,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     private var liveScrollerView : UIScrollView!
     private var videoScrollerView : UIScrollView!
     private var settingScrollerView : UIScrollView!
-    
+
     internal var homeData:HomeData!
     
     
@@ -66,6 +66,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         
         settingScrollerView = UIScrollView()
         setScrollCommen(settingScrollerView)
+        settingScrollerView.scrollEnabled = false
         self.mContentScrollView.addSubview(settingScrollerView)
         
         self.remmondedPageView = RemmondedPageView()
@@ -106,7 +107,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: self.view.frame.height - 110)
         liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: self.view.frame.height - 110)
         settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: self.view.frame.height - 110)
-        
+       
         
     }
     
@@ -117,29 +118,35 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     
     func selectButtonIndex(index: Int) {
         NSLog("select button index : %d",index)
+         let width = UIScreen.mainScreen().bounds.width
         if mContentScrollView == nil {
             return
         }
-        mContentScrollView.contentOffset = CGPoint(x: calcTotalSizeByIndex(index), y: 0)
+        mContentScrollView.contentOffset = CGPoint(x: width * CGFloat(index), y: 0)
     }
     
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        //        NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
-        //        let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
-        //        mTableTitleView.setOnSelectButtonByPosition(index)
-        //        //TODO当达到整屏时手动设置contentOffset
-        //        mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+                NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
+        
+                //TODO当达到整屏时手动设置contentOffset
+               // mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+            let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
+            mTableTitleView.setOnSelectButtonByPosition(index)
+       
         
     }
     
     //获取当前滚动属于第几页
     func getScrollViewIndex(contentOffset:CGFloat) -> Int {
-        if contentOffset < calcTotalSizeByIndex(1) {
+        
+        let width = UIScreen.mainScreen().bounds.width
+        
+        if contentOffset < width {
             return 0
-        } else if contentOffset < calcTotalSizeByIndex(2) {
+        } else if contentOffset < 2 * width {
             return 1
-        } else if contentOffset < calcTotalSizeByIndex(3) {
+        } else if contentOffset < 3 * width {
             return 2
         } else {
             return 3
@@ -158,7 +165,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     func setScrollCommen(scrollerView:UIScrollView){
         scrollerView.showsHorizontalScrollIndicator = false
         scrollerView.showsVerticalScrollIndicator = false
-        scrollerView.delegate = self
+        //scrollerView.delegate = self
     }
     
     func setConstraints(){
