@@ -18,7 +18,7 @@ class ImageButton: UIView {
     }
     */
     
-    private var backgroundImge : UIImageView!
+    //private var backgroundImge : UIImageView!
     private var iconImg : UIImageView!
     private var titleLbl : UILabel!
     
@@ -34,10 +34,10 @@ class ImageButton: UIView {
     
     func initView(){
         
-        backgroundImge = UIImageView()
-        backgroundImge.contentMode = .ScaleToFill
-        backgroundImge.image = UIImage(named: "item_normal_bg.9")
-        self.addSubview(backgroundImge)
+//        backgroundImge = UIImageView()
+//        backgroundImge.contentMode = .ScaleAspectFit
+//        backgroundImge.image = UIImage(named: "normal_bg_2")
+//        self.addSubview(backgroundImge)
         
         iconImg = UIImageView()
         iconImg.contentMode = .ScaleAspectFill
@@ -49,19 +49,23 @@ class ImageButton: UIView {
         titleLbl.font = UIFont.systemFontOfSize(14)
         //titleLbl.backgroundColor = UIColor.redColor()
         self.addSubview(titleLbl)
+        
+        self.layer.cornerRadius = 5
+        self.layer.borderWidth = 0.3
+        self.layer.borderColor = UIColor.whiteColor().CGColor
     }
     
     func setConstraint(){
-        backgroundImge.snp_makeConstraints { (make) in
-            make.top.equalTo(self)
-            make.bottom.equalTo(self)
-            make.left.equalTo(self)
-            make.right.equalTo(self)
-        }
+//        backgroundImge.snp_makeConstraints { (make) in
+//            make.top.equalTo(self)
+//            make.bottom.equalTo(self)
+//            make.left.equalTo(self)
+//            make.right.equalTo(self)
+//        }
         iconImg.snp_makeConstraints { (make) in
-            make.top.equalTo(backgroundImge).offset(3)
-            make.bottom.equalTo(backgroundImge).offset(-5)
-            make.left.equalTo(backgroundImge).offset(3)
+            make.centerY.equalTo(self)
+            make.height.equalTo(20)
+            make.left.equalTo(self).offset(3)
             make.width.equalTo(25)
         }
         

@@ -219,6 +219,9 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         let viewController:ViewController = ViewController()
         viewController.homeData = self.homeData
         self.presentViewController(viewController, animated: true, completion: nil)
+//        let viewController = TestViewController()
+//        viewController.homeData = self.homeData
+//        self.presentViewController(viewController,animated: true,completion: nil)
     }
 
 }
