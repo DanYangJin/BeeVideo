@@ -10,7 +10,7 @@ import UIKit
 import SpriteKit
 
 
-class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate{
+class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate, BlockViewDelegate{
     
     private var cycleImage:CornerImageView!
     private var cycleTableView:UITableView!
@@ -89,6 +89,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             let blockSmall = AnimationBlockView()
             blockSmall.initFrame(325, y: CGFloat(115 * index), width: 110, height: 105)
             blockSmall.initView(super.homeSpace![index + 4])
+            blockSmall.setDelegate(self)
             addSubview(blockSmall)
         }
 
@@ -96,6 +97,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             let blockMiddle = AnimationBlockView()
             blockMiddle.initFrame(440, y: CGFloat(115 * index), width: 150, height: 105)
             blockMiddle.initView(super.homeSpace![index + 6])
+            blockMiddle.setDelegate(self)
             addSubview(blockMiddle)
         }
 
@@ -103,6 +105,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         let blockLarge = AnimationBlockView()
         blockLarge.initFrame(595, y: 0, width: 150, height: 220)
         blockLarge.initView(super.homeSpace![8])
+        blockLarge.setDelegate(self)
         addSubview(blockLarge)
         //setConstraint()
         
@@ -159,6 +162,21 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             make.height.equalTo(cycleImage)
             make.width.equalTo(cycleImage.snp_width).dividedBy(2)
         }
+    }
+    
+    
+//    func toDetailController(extras:String){
+//        let videoDetailViewController = VideoDetailViewController()
+//        //videoDetailViewController.extras = extras
+//        self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
+//    }
+    
+    func clickListener(homeSpace: HomeSpace) {
+        
+        let detailViewController = VideoDetailViewController()
+        detailViewController.extras = homeSpace.items[0].extras
+        self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
+
     }
     
     

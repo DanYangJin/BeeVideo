@@ -8,16 +8,21 @@
 
 import UIKit
 
+protocol BlockViewDelegate {
+    func clickListener(homeSpace:HomeSpace)
+}
+
 
 class BlockView: UIView {
 
-    private var homeSpace:HomeSpace!
+    internal var homeSpace:HomeSpace!
     private var blockImage:CornerImageView!
     private var blockName:UILabel!
     private var x:CGFloat!
     private var y:CGFloat!
     private var width:CGFloat!
     private var height:CGFloat!
+    private var delegate : BlockViewDelegate!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,11 +71,20 @@ class BlockView: UIView {
         addSubview(blockName)
     }
     
+    func setDelegate(delegate:BlockViewDelegate){
+        self.delegate = delegate
+    }
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesBegan.......")
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if delegate == nil {
+            return
+        }
+       
+        delegate.clickListener(homeSpace)
         print("touchesEnded.......")
     }
 

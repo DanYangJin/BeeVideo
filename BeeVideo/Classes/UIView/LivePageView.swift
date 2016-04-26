@@ -94,6 +94,7 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
         cell?.videoNameLbl.text = livePrograms![index].name
         cell?.icon.sd_setImageWithURL(NSURL(string: livePrograms![index].iconId))
         cell?.durationLbl.text = livePrograms![index].timeStart
+        cell?.averageLbl.hidden = true
         return cell!
     }
     
