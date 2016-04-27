@@ -33,8 +33,8 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         set{
             if newValue {
                 timer = NSTimer.scheduledTimerWithTimeInterval(2,
-                    target:self,selector:#selector(RemmondedPageView.tickDown),
-                    userInfo:nil,repeats:true)
+                                                               target:self,selector:#selector(RemmondedPageView.tickDown),
+                                                               userInfo:nil,repeats:true)
             } else {
                 if timer != nil {
                     timer.invalidate()
@@ -42,7 +42,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
                 }
             }
         }
-    
+        
     }
     
     /**
@@ -56,7 +56,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "girl"))
         cyclePosition += 1
     }
-   
+    
     
     override func initView(){
         super.initView()
@@ -92,7 +92,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             blockSmall.setDelegate(self)
             addSubview(blockSmall)
         }
-
+        
         for index in 0 ..< 2 {
             let blockMiddle = AnimationBlockView()
             blockMiddle.initFrame(440, y: CGFloat(115 * index), width: 150, height: 105)
@@ -100,8 +100,8 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             blockMiddle.setDelegate(self)
             addSubview(blockMiddle)
         }
-
-
+        
+        
         let blockLarge = AnimationBlockView()
         blockLarge.initFrame(595, y: 0, width: 150, height: 220)
         blockLarge.initView(super.homeSpace![8])
@@ -126,7 +126,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) 
+        let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath)
         tableViewCell.backgroundColor = UIColor.clearColor()
         tableViewCell.selectionStyle = .None
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
@@ -165,18 +165,21 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     
-//    func toDetailController(extras:String){
-//        let videoDetailViewController = VideoDetailViewController()
-//        //videoDetailViewController.extras = extras
-//        self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
-//    }
+    //    func toDetailController(extras:String){
+    //        let videoDetailViewController = VideoDetailViewController()
+    //        //videoDetailViewController.extras = extras
+    //        self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
+    //    }
     
     func clickListener(homeSpace: HomeSpace) {
         
-        let detailViewController = VideoDetailViewController()
-        detailViewController.extras = homeSpace.items[0].extras
-        self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
-
+        let action:String = homeSpace.items[0].action
+        if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION"{
+            let detailViewController = VideoDetailViewController()
+            detailViewController.extras = homeSpace.items[0].extras
+            self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
+        }
+        
     }
     
     
