@@ -8,16 +8,20 @@
 
 import UIKit
 
+protocol BlockViewDelegate {
+    func clickBlockView(homeSpace:HomeSpace)
+}
 
 class BlockView: UIView {
 
-    private var homeSpace:HomeSpace!
+    internal var homeSpace:HomeSpace!
     private var blockImage:CornerImageView!
     private var blockName:UILabel!
     private var x:CGFloat!
     private var y:CGFloat!
     private var width:CGFloat!
     private var height:CGFloat!
+    private var delegate:BlockViewDelegate!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -49,6 +53,10 @@ class BlockView: UIView {
         frame = CGRectMake(x, y, width, height)
     }
     
+    func setDelegate(delegate:BlockViewDelegate){
+        self.delegate = delegate
+    }
+    
     func initImage(url:String){
         blockImage = CornerImageView(frame: CGRectMake(0, 0, width, height))
         blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "cycle1.jpg"));
@@ -67,7 +75,11 @@ class BlockView: UIView {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("touchesBegan.......")
+        print("touchesBegan.......\(self.homeSpace.tableName)")
+        
+        if delegate != nil {
+            delegate.clickBlockView(self.homeSpace)
+        }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {

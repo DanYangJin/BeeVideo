@@ -115,7 +115,7 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
     
     
     override func getViewWidth() -> CGFloat {
-        return 725
+        return 770
     }
     
 

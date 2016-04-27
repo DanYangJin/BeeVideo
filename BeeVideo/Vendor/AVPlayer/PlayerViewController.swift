@@ -469,7 +469,5 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
 
 }

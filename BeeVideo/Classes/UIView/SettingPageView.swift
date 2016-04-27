@@ -68,7 +68,7 @@ class SettingPageView: BasePageView {
     
     
     override func getViewWidth() -> CGFloat {
-        return 650
+        return 600
     }
 
 }

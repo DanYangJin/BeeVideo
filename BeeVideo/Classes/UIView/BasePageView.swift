@@ -11,13 +11,13 @@ import UIKit
 class BasePageView: UIView {
 
     internal var homeSpace:[HomeSpace]!
-    internal var viewController:ViewController!
+    internal var viewController:UIViewController!
     
     func initView(){
        initData()
     }
     
-    func setController(viewController:ViewController){
+    func setController(viewController:UIViewController){
        self.viewController = viewController
     }
     

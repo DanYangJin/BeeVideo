@@ -10,14 +10,15 @@ import UIKit
 import SpriteKit
 
 
-class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate{
+class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate, BlockViewDelegate{
     
     private var cycleImage:CornerImageView!
     private var cycleTableView:UITableView!
-    private var blockView:[BlockView]!
-    private var blockSmall:[CornerImageView]!
-    private var blockMiddle:[CornerImageView]!
-    private var blockLarge:CornerImageView!
+    //private var blockView:[BlockView]!
+    //private var blockSmall:[CornerImageView]!
+    //private var blockMiddle:[CornerImageView]!
+    //private var blockLarge:CornerImageView!
+    private var myVideoBlock : BlockView!
     
     //data
     private var cycleItems:HomeSpace!
@@ -70,12 +71,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleTableView.backgroundColor = UIColor.clearColor()
         cycleTableView.dataSource = self
         cycleTableView.delegate = self
+        cycleTableView.scrollEnabled = false
         cycleTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
         addSubview(cycleTableView)
         
+        
         for index in 0 ..< 3 {
             let blockView = BlockView()
-            blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 50)
+            blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 60)
             blockView.initView(super.homeSpace![index + 1])
             addSubview(blockView)
         }
@@ -84,24 +87,27 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
         for index in 0 ..< 2 {
             let blockSmall = AnimationBlockView()
-            blockSmall.initFrame(325, y: CGFloat(110 * index), width: 110, height: 100)
-            blockSmall.initView(super.homeSpace![index + 5])
+            blockSmall.initFrame(325, y: CGFloat(115 * index), width: 110, height: 105)
+            blockSmall.initView(super.homeSpace![index + 4])
+            blockSmall.setDelegate(self)
             addSubview(blockSmall)
         }
 
         for index in 0 ..< 2 {
             let blockMiddle = AnimationBlockView()
-            blockMiddle.initFrame(440, y: CGFloat(110 * index), width: 150, height: 100)
-            blockMiddle.initView(super.homeSpace![index + 7])
+            blockMiddle.initFrame(440, y: CGFloat(115 * index), width: 150, height: 105)
+            blockMiddle.initView(super.homeSpace![index + 6])
+            blockMiddle.setDelegate(self)
             addSubview(blockMiddle)
         }
 
 
         let blockLarge = AnimationBlockView()
-        blockLarge.initFrame(595, y: 0, width: 150, height: 210)
-        blockLarge.initView(super.homeSpace![9])
+        blockLarge.initFrame(595, y: 0, width: 150, height: 220)
+        blockLarge.initView(super.homeSpace![8])
+        blockLarge.setDelegate(self)
         addSubview(blockLarge)
-    
+        //setConstraint()
         
         isCycling = true
     }
@@ -124,6 +130,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         tableViewCell.backgroundColor = UIColor.clearColor()
         tableViewCell.selectionStyle = .None
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
+        tableViewCell.textLabel?.lineBreakMode = .ByClipping
         tableViewCell.textLabel?.text = cycleItems.items[indexPath.row].name
         return tableViewCell
     }
@@ -142,8 +149,27 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
     }
     
+    private func setConstraint(){
+        cycleImage.snp_makeConstraints { (make) in
+            make.left.equalTo(self).offset(40)
+            make.top.equalTo(self)
+            make.height.equalTo(self.snp_height).multipliedBy(0.6)
+            make.width.equalTo(cycleImage.snp_height).dividedBy(0.6)
+        }
+        cycleTableView.snp_makeConstraints { (make) in
+            make.left.equalTo(cycleImage.snp_right).offset(2)
+            make.top.equalTo(cycleImage)
+            make.height.equalTo(cycleImage)
+            make.width.equalTo(cycleImage.snp_width).dividedBy(2)
+        }
+    }
+    
+    func clickBlockView(homeSpace: HomeSpace) {
+        print("homeSopace : \(homeSpace.items.count)" )
+    }
+    
     override func getViewWidth() -> CGFloat {
-        return 745
+        return 800
     }
     
     override func initData(){

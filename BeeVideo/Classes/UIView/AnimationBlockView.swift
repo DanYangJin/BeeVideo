@@ -10,6 +10,7 @@ class AnimationBlockView: BlockView {
 
     override func initView(homeSpace: HomeSpace) {
         setFrame()
+        self.homeSpace = homeSpace
         initImage(homeSpace.items[0].icon)
     }
     

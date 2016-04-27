@@ -53,7 +53,7 @@ class VideoPageView: BasePageView {
     }
     
     override func getViewWidth() -> CGFloat {
-        return 555
+        return 600
     }
 
 }
