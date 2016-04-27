@@ -164,6 +164,9 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
     }
     
+    func clickBlockView(homeSpace: HomeSpace) {
+        print("homeSopace : \(homeSpace.items.count)" )
+    }
     
     //    func toDetailController(extras:String){
     //        let videoDetailViewController = VideoDetailViewController()

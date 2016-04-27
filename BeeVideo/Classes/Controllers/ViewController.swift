@@ -50,8 +50,6 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         //mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
-        
-        
         recommondScrollerView = UIScrollView()
         setScrollCommen(recommondScrollerView)
         self.mContentScrollView.addSubview(recommondScrollerView)
@@ -92,23 +90,19 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.liveScrollerView.addSubview(self.livePageView)
         
         
-        
         self.settingPageView = SettingPageView()
         self.settingPageView.initView()
         self.mPagesWidth.append(self.settingPageView.getViewWidth())
         self.settingScrollerView.addSubview(self.settingPageView)
         
         
-        setConstraints()
+        self.setConstraints()
         
         mContentScrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.width * 4, height: self.view.frame.height - 110)
-        
         recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: self.view.frame.height - 110)
         videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: self.view.frame.height - 110)
         liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: self.view.frame.height - 110)
         settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: self.view.frame.height - 110)
-       
-        
     }
     
     
@@ -127,10 +121,9 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-                NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
-        
-                //TODO当达到整屏时手动设置contentOffset
-               // mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+            NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
+            //TODO当达到整屏时手动设置contentOffset
+            // mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
             let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
             mTableTitleView.setOnSelectButtonByPosition(index)
        
@@ -139,9 +132,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     
     //获取当前滚动属于第几页
     func getScrollViewIndex(contentOffset:CGFloat) -> Int {
-        
         let width = UIScreen.mainScreen().bounds.width
-        
         if contentOffset < width {
             return 0
         } else if contentOffset < 2 * width {
@@ -224,15 +215,14 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
             make.width.equalTo(self.livePageView.getViewWidth());
         }
         
-        
         self.settingPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.settingScrollerView)
             make.topMargin.equalTo(self.settingScrollerView).offset(0)
             make.leftMargin.equalTo(self.settingScrollerView).offset(30)
         }
         
-        
     }
+    
 
 }
 
