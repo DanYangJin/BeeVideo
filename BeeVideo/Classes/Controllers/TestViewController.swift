@@ -24,6 +24,8 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
     private var videoScrollerView : UIScrollView!
     private var settingScrollerView : UIScrollView!
     
+    
+    var button : UIButton!
     internal var homeData:HomeData!
     
     
@@ -49,8 +51,13 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
         //mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
-       
-        
+//       
+//        button = UIButton(10,10,30,30)
+//        self.view.addSubview(button)
+//        
+//        button.addTarget(AnyObject?, action: <#T##Selector#>, forControlEvents: UIControlEvents)
+//        
+//        
         recommondScrollerView = UIScrollView()
         setScrollCommen(recommondScrollerView)
         self.mContentScrollView.addSubview(recommondScrollerView)

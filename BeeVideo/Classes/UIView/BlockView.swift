@@ -78,9 +78,9 @@ class BlockView: UIView {
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if delegate != nil {
-            delegate.clickListener(self.homeSpace)
-        }
+//        if delegate != nil {
+//            delegate.clickListener(self.homeSpace)
+//        }
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {

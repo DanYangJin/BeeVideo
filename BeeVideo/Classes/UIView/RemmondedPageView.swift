@@ -185,7 +185,6 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
     }
     
-    
     override func getViewWidth() -> CGFloat {
         return 800
     }
