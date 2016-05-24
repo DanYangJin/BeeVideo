@@ -63,7 +63,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     
     //开始解析
     func parserDidStartDocument(parser: NSXMLParser) {
-        print("parserDidStartDocument")
+        //print("parserDidStartDocument")
     }
     
     // 监听解析节点的属性
@@ -216,12 +216,9 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     }
     //解析结束
     func parserDidEndDocument(parser: NSXMLParser) {
-        let viewController:ViewController = ViewController()
+        let viewController = ViewController()
         viewController.homeData = self.homeData
-        self.presentViewController(viewController, animated: true, completion: nil)
-//        let viewController = TestViewController()
-//        viewController.homeData = self.homeData
-//        self.presentViewController(viewController,animated: true,completion: nil)
+        self.presentViewController(viewController,animated: true,completion: nil)
     }
 
 }

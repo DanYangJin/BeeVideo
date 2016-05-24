@@ -2,13 +2,13 @@
 //  LivePageView.swift
 //  BeeVideo
 //
-//  Created by DanBin on 16/3/19.
+//  Created by JinZhang on 16/5/4.
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
 import UIKit
 
-class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZXOptionBarDelegate, ZXOptionBarDataSource{
+class LivePageView: BasePageView,UITableViewDataSource, UITableViewDelegate, ZXOptionBarDelegate, ZXOptionBarDataSource {
     
     private var favChannels:[ChannelInfo]?
     private var livePrograms:[ChannelProgram]?;
@@ -18,24 +18,34 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
     var favTableView:UITableView!
     var liveTableView : ZXOptionBar!
     
+    private var blockView1 : BlockView!
+    private var blockView2 : BlockView!
+    private var blockView3 : BlockView!
+    
     
     override func initView(){
         super.initView()
         
-        image = CornerImageView(frame: CGRectMake(0, 0, 205, 140))
+        image = CornerImageView()
+        image.setCorner(4.0)
         image.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"), placeholderImage: UIImage(named: "girl"))
         addSubview(image)
         
-        for index in 0 ..< 3 {
-            let blockView = BlockView()
-            blockView.initFrame(CGFloat(70 * index), y: 150, width: 65, height: 60)
-            blockView.initView(super.homeSpace![index + 1])
-            
-            addSubview(blockView)
-        }
+        blockView1 = BlockView()
+        blockView1.initView(homeSpace[1])
+        addSubview(blockView1)
+        
+        blockView2 = BlockView()
+        blockView2.initView(homeSpace[2])
+        addSubview(blockView2)
+        
+        blockView3 = BlockView()
+        blockView3.initView(homeSpace[3])
+        addSubview(blockView3)
+        
         
         favTableView = UITableView()
-        favTableView.frame = CGRect(x: 205, y: 0, width: 140, height: 210)
+        // favTableView.frame = CGRect(x: 205, y: 0, width: 140, height: 210)
         favTableView.separatorStyle = UITableViewCellSeparatorStyle.None
         favTableView.backgroundColor = UIColor.clearColor()
         favTableView.backgroundView = UIImageView(image: UIImage(named: "v2_live_fav_list_bg"))
@@ -49,6 +59,8 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
         liveTableView.backgroundColor = UIColor.clearColor()
         addSubview(liveTableView)
         
+        setConstraint()
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -60,11 +72,11 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 35.0
+        return height/6
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-
+        
         let  favTableView:FavTableViewCell = tableView.dequeueReusableCellWithIdentifier("FavTableCell", forIndexPath: indexPath) as! FavTableViewCell
         favTableView.backgroundColor = UIColor.clearColor()
         favTableView.selectionStyle = .None
@@ -99,11 +111,51 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
     }
     
     func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
-        return 120
+        return Float(height * 2/3)
     }
     
     func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         //
+    }
+    
+    func setConstraint(){
+        image.snp_makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.top.equalTo(self)
+            make.width.equalTo(height)
+            make.height.equalTo(height * 0.65)
+        }
+        blockView1.snp_makeConstraints { (make) in
+            make.left.equalTo(image)
+            make.height.width.equalTo(height * 0.32)
+            make.bottom.equalTo(self)
+        }
+        blockView2.snp_makeConstraints { (make) in
+            make.top.equalTo(blockView1)
+            make.bottom.equalTo(blockView1)
+            make.left.equalTo(height * 0.34)
+            make.width.equalTo(blockView1)
+        }
+        
+        blockView3.snp_makeConstraints { (make) in
+            make.top.equalTo(blockView1)
+            make.bottom.equalTo(blockView1)
+            make.left.equalTo(height * 0.68)
+            make.width.equalTo(blockView1)
+        }
+        favTableView.snp_makeConstraints { (make) in
+            make.top.equalTo(image)
+            make.bottom.equalTo(blockView1)
+            make.left.equalTo(image.snp_right).offset(10)
+            make.width.equalTo(height * 2/3)
+        }
+        liveTableView.snp_makeConstraints { (make) in
+            make.top.equalTo(favTableView)
+            make.bottom.equalTo(favTableView)
+            make.left.equalTo(favTableView.snp_right).offset(10)
+            make.width.equalTo(2 * height)
+        }
+        
     }
     
     
@@ -116,8 +168,8 @@ class LivePageView: BasePageView ,UITableViewDataSource, UITableViewDelegate, ZX
     
     
     override func getViewWidth() -> CGFloat {
-        return 770
+        return height * 11/3 + 80
     }
     
-
+    
 }

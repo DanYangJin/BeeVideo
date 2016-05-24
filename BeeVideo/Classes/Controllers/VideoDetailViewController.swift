@@ -12,7 +12,7 @@ import Alamofire
 
 class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource, ZXOptionBarDelegate, ZXOptionBarDataSource {
     
-    enum NetRequestId{
+    private enum NetRequestId{
         case VIDEO_DETAIL_REQUEST_ID
         case RECOMMENDED_REQUEST_ID
         case SEARCH_REQUEST_ID
@@ -32,28 +32,16 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     var currentDepth : Int = 1 //解析xml文件的节点层数
     var videoDetailInfo : VideoDetailInfo!
     var recommends : [String] = ["相关推荐"]
-    var requestId : NetRequestId!
+    private var requestId : NetRequestId!
     var videoBriefItems : [VideoBriefItem] = Array()
     var videoBriefItem : VideoBriefItem!
     var params : Dictionary<String,String>!
     
     private var posterImg : UIImageView!
-//    private var videoNameLbl : UILabel!
-//    private var directorNameLbl : UILabel!
-//    private var cateDetailLbl : UILabel!
-//    private var publishTimeLbl : UILabel!
-//    private var areaDetailLbl : UILabel!
-//    private var durationDetailLbl : UILabel!
-//    private var actorNameLbl : UILabel!
-//    private var descDetailLbl : UILabel!
+
     private var divider : UIView!
     private var detailView : VideoDetailInfoView!
-//
-//    private var playButton : ImageButton!
-//    private var chooseBtn : ImageButton!
-//    private var downloadBtn : ImageButton!
-//    private var faviBtn : ImageButton!
-//    private var backBtn : UIButton!
+
     
     private var recommendTab : UITableView!
     private var horizontalTab : ZXOptionBar!
@@ -258,14 +246,6 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     func parserDidEndDocument(parser: NSXMLParser) {
         if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
             posterImg.sd_setImageWithURL(NSURL(string: videoDetailInfo.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-//            videoNameLbl.text = videoDetailInfo.name
-//            directorNameLbl.text = videoDetailInfo.directorString
-//            cateDetailLbl.text = videoDetailInfo.category
-//            areaDetailLbl.text = videoDetailInfo.area
-//            publishTimeLbl.text = videoDetailInfo.publishTime
-//            durationDetailLbl.text = videoDetailInfo.duration
-//            actorNameLbl.text = videoDetailInfo.actorString
-//            descDetailLbl.text = videoDetailInfo.desc
             detailView.setData(videoDetailInfo)
             addClick()
             if videoDetailInfo.directors != nil{
@@ -361,6 +341,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         if average.isEmpty {
             cell?.averageLbl.hidden = true
         }else{
+            cell?.averageLbl.hidden = false
             cell?.averageLbl.text = videoBriefItems[index].score
         }
         
@@ -377,6 +358,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         extra.append(ExtraData(name: "", value: videoBriefItems[index].id))
         detailController.extras = extra
         self.presentViewController(detailController, animated: true, completion: nil)
+        //self.dismissViewControllerAnimated(false,completion: nil)
     }
     
     func judgeStatus(status:String) -> Bool{
@@ -387,143 +369,6 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         return false
     }
     
-    /*
-    func initBaseView(){
-        
-        posterImg = UIImageView()
-        //posterImg.frame = CGRectMake(30, 20, 120, 180)
-        posterImg.layer.cornerRadius = 10
-        posterImg.layer.masksToBounds = true
-        self.view.addSubview(posterImg)
-        posterImg.snp_makeConstraints { (make) in
-            make.left.equalTo(self.view).offset(30)
-            make.width.equalTo(120)
-            make.top.equalTo(self.view).offset(20)
-            make.height.equalTo(180)
-        }
-        
-        backBtn = UIButton(frame: CGRectMake(5, 5, 20, 20))
-        backBtn.setImage(UIImage(named: "play_back_full"), forState: .Normal)
-        backBtn.addTarget(self, action: (#selector(VideoDetailViewController.dissMissController)), forControlEvents: .TouchUpInside)
-        self.view.addSubview(backBtn)
-        
-        videoNameLbl = UILabel(frame: CGRectMake(160, 20, 418, 16))
-        //videoNameLbl.text = "我们相爱吧第二季"
-        videoNameLbl.textColor = UIColor.whiteColor()
-        self.view.addSubview(videoNameLbl)
-        
-        let directorLbl = UILabel(frame: CGRectMake(160, 46, 30, 12))
-        setCommenAttr(directorLbl)
-        directorLbl.text = "导演:"
-        self.view.addSubview(directorLbl)
-        
-        directorNameLbl = UILabel(frame: CGRectMake(191, 46, 105, 12))
-        setCommenAttr(directorNameLbl)
-        self.view.addSubview(directorNameLbl)
-        
-        let cateLbl = UILabel(frame: CGRectMake(297, 46, 30, 12))
-        setCommenAttr(cateLbl)
-        cateLbl.text = "类型:"
-        self.view.addSubview(cateLbl)
-        
-        cateDetailLbl = UILabel(frame: CGRectMake(328, 46, 105, 12))
-        setCommenAttr(cateDetailLbl)
-        self.view.addSubview(cateDetailLbl)
-        
-        let areaLbl = UILabel(frame: CGRectMake(434, 46, 30, 12))
-        setCommenAttr(areaLbl)
-        areaLbl.text = "地区:"
-        self.view.addSubview(areaLbl)
-        
-        areaDetailLbl = UILabel(frame: CGRectMake(465, 46, 105, 12))
-        setCommenAttr(areaDetailLbl)
-        self.view.addSubview(areaDetailLbl)
-        
-        let timeLbl = UILabel(frame: CGRectMake(160, 64, 30, 12))
-        setCommenAttr(timeLbl)
-        timeLbl.text = "年代:"
-        self.view.addSubview(timeLbl)
-        
-        publishTimeLbl = UILabel(frame: CGRectMake(191, 64, 105, 12))
-        setCommenAttr(publishTimeLbl)
-        self.view.addSubview(publishTimeLbl)
-        
-        let durationLbl = UILabel(frame: CGRectMake(297, 64, 30, 12))
-        setCommenAttr(durationLbl)
-        durationLbl.text = "时长:"
-        self.view.addSubview(durationLbl)
-        
-        durationDetailLbl = UILabel(frame: CGRectMake(328, 64, 105, 12))
-        setCommenAttr(durationDetailLbl)
-        durationDetailLbl.textColor = UIColor.orangeColor()
-        self.view.addSubview(durationDetailLbl)
-        
-        let actorLbl = UILabel(frame: CGRectMake(160, 84, 30, 12))
-        setCommenAttr(actorLbl)
-        actorLbl.text = "演员:"
-        self.view.addSubview(actorLbl)
-        
-        actorNameLbl = UILabel(frame: CGRectMake(191, 84, 357, 12))
-        setCommenAttr(actorNameLbl)
-        actorNameLbl.lineBreakMode = .ByTruncatingTail
-        self.view.addSubview(actorNameLbl)
-        
-        let descLbl = UILabel(frame: CGRectMake(160, 104, 55, 12))
-        setCommenAttr(descLbl)
-        descLbl.text = "剧情介绍:"
-        self.view.addSubview(descLbl)
-        
-        descDetailLbl = UILabel(frame: CGRectMake(160, 116, 388, 44))
-        descDetailLbl.numberOfLines = 3
-        descDetailLbl.lineBreakMode = .ByTruncatingTail
-        setCommenAttr(descDetailLbl)
-        self.view.addSubview(descDetailLbl)
-        
-        playButton = ImageButton(frame: CGRectMake(160, 165, 65, 35))
-        //setButtonAttr(playButton)
-//        playButton.layer.cornerRadius = 8
-//        playButton.layer.borderWidth = 0.5
-//        playButton.layer.borderColor = UIColor.whiteColor().CGColor
-      //  playButton.backgroundColor = UIColor(patternImage: UIImage(named: "v2_block_home_cycle_show_bg")!)
-        playButton.setImage("v2_video_detail_op_play_bg_normal")
-        playButton.setTitle("第1集")
-        playButton.addOnClickListener(self, action: (#selector(VideoDetailViewController.toPlayController)))
-//        playButton.addTarget(self, action: (#selector(VideoDetailViewController.toPlayController)), forControlEvents: .TouchUpInside)
-        self.view.addSubview(playButton)
-        
-//        chooseBtn = ImageButton(frame: CGRectMake(230, 165, 65, 35))
-//        setButtonAttr(chooseBtn)
-//        chooseBtn.setImage(UIImage(named: "v2_video_detail_op_choose_drama_bg_normal"), forState: .Normal)
-        chooseBtn.setTitle("选集", forState: .Normal)
-        self.view.addSubview(chooseBtn)
-        
-        downloadBtn = ImageButton(frame: CGRectMake(300, 165, 65, 35))
-        setButtonAttr(downloadBtn)
-        downloadBtn.setImage(UIImage(named: "v2_my_video_download_bg_normal"), forState: .Normal)
-        downloadBtn.setTitle("下载", forState: .Normal)
-        self.view.addSubview(downloadBtn)
-        
-        faviBtn = ImageButton(frame: CGRectMake(370, 165, 65, 35))
-        setButtonAttr(faviBtn)
-        faviBtn.setImage(UIImage(named: "vod_menu_fav"), forState: .Normal)
-        faviBtn.setTitle("收藏", forState: .Normal)
-        self.view.addSubview(faviBtn)
-     
-     
-     divider = UIView()//frame: CGRectMake(30, 205, 518, 1))
-     divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
-     self.view.addSubview(divider)
-     
-     
-        divider.snp_makeConstraints { (make) in
-            make.left.equalTo(view).offset(30)
-            make.right.equalTo(view).offset(-30)
-            make.top.equalTo(view).offset(view.frame.height * 2/3)
-            make.height.equalTo(1)
-        }
-        
-    }
- */
     
     func getVideoDetailRequest(){
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/video_detail_info.action", parameters: ["videoId": extras[0].value]).response{ request, response, data, error in
@@ -631,17 +476,13 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func addClick(){
         detailView.playBtn.addOnClickListener(self, action: (#selector(self.toPlayController)))
-        detailView.backBtn.addOnClickListener(self, action: (#selector(self.dissMissController)))
+        detailView.backBtn.addOnClickListener(self, action: (#selector(self.dismissViewController)))
     }
     
     //播放按钮点击事件
     func  toPlayController(){
         let viewController:PlayerViewController = PlayerViewController()
         self.presentViewController(viewController, animated: true, completion: nil)
-    }
-    
-    func dissMissController(){
-        self.dismissViewControllerAnimated(true,completion: nil)
     }
     
     

@@ -55,6 +55,8 @@ class ZXOptionBar: UIScrollView {
 
     private var flags: ZXOptionBarFlag = ZXOptionBarFlag()
     
+    private var dividerWidth : Float = 0.0
+    
     // MARK: Private ZXOptionBarFlag
     private struct ZXOptionBarFlag {
         
@@ -85,7 +87,6 @@ class ZXOptionBar: UIScrollView {
             for i in 0...(self.columnCount()-1) {
                 totleWidth += self.columnWidthAtIndex(i)
             }
-
         }
         self.contentSize = CGSizeMake(CGFloat(totleWidth), self.bounds.size.height);
         
@@ -174,6 +175,11 @@ class ZXOptionBar: UIScrollView {
         self.layoutSubviews()
     }
     
+    
+    func setDividerWidth(dividerWidth width: Float){
+        self.dividerWidth = width
+        reloadData()
+    }
     
 }
 
@@ -298,9 +304,13 @@ extension ZXOptionBar {
         return self.barDataSource!.numberOfColumnsInOptionBar(self)
     }
     
+    
     private func columnWidthAtIndex(index: Int) -> Float {
         if let result = self.barDelegate!.optionBar?(self, widthForColumnsAtIndex: index) {
-            return result
+            if index == self.columnCount() - 1 {
+                return result
+            }
+            return result + dividerWidth
         }else{
             return 0.0
         }
@@ -308,8 +318,12 @@ extension ZXOptionBar {
     
     private func rectForColumnAtIndex(index: Int) -> CGRect {
         let width: Float = self.columnWidthAtIndex(index);
-        return CGRectMake(CGFloat(width * Float(index)), 0, CGFloat(width), self.bounds.size.height)
+        if index == columnCount() - 1 {
+            return CGRectMake(CGFloat((width + dividerWidth) * Float(index)), 0, CGFloat(width), self.bounds.size.height)
+        }
+        return CGRectMake(CGFloat(width * Float(index)), 0, CGFloat(width - dividerWidth), self.bounds.size.height)
     }
+
     
     private func cellForColumnAtIndex(index: Int) -> ZXOptionBarCell? {
         return self.visibleItems[self.identifyKeyFromIndex(index)]

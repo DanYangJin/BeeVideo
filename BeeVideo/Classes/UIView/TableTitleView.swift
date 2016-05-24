@@ -33,7 +33,7 @@ class TableTitleView: UIScrollView {
     
     func initTitleData(){
         if mDelegate == nil {
-            NSLog("this view must set delegate")
+            //NSLog("this view must set delegate")
             return
         }
         for index in 0 ..< mTitles.count {

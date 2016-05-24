@@ -1,21 +1,22 @@
 //
-//  TestViewController.swift
+//  ViewController.swift
 //  BeeVideo
 //
-//  Created by JinZhang on 16/4/21.
+//  Created by DanBin on 16/3/18.
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
-
+/*
 import UIKit
+import SnapKit
+import Alamofire
 
-class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollViewDelegate {
-    
+class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate{
     
     private var mTableTitleView:TableTitleView!
     private var mContentScrollView:UIScrollView!
-    private var remmondedPageView:RemmondedPageView!
-    private var livePageView:LivePageView!
-    private var videoPageView:VideoPageView!
+    private var remmondedPageView:RecommendPageView_Test!
+    private var livePageView:LivePageViewTest!
+    private var videoPageView:VideoPageView_Test!
     private var settingPageView:SettingPageView!
     private var mPagesWidth:[CGFloat] = Array()
     
@@ -24,8 +25,6 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
     private var videoScrollerView : UIScrollView!
     private var settingScrollerView : UIScrollView!
     
-    
-    var button : UIButton!
     internal var homeData:HomeData!
     
     
@@ -51,13 +50,6 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
         //mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
-//       
-//        button = UIButton(10,10,30,30)
-//        self.view.addSubview(button)
-//        
-//        button.addTarget(AnyObject?, action: <#T##Selector#>, forControlEvents: UIControlEvents)
-//        
-//        
         recommondScrollerView = UIScrollView()
         setScrollCommen(recommondScrollerView)
         self.mContentScrollView.addSubview(recommondScrollerView)
@@ -72,17 +64,20 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
         
         settingScrollerView = UIScrollView()
         setScrollCommen(settingScrollerView)
+        //settingScrollerView.scrollEnabled = false
         self.mContentScrollView.addSubview(settingScrollerView)
         
-        self.remmondedPageView = RemmondedPageView()
+        self.remmondedPageView = RecommendPageView_Test()
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
+        self.remmondedPageView.height = self.view.frame.height - 120
         //remmondedPageView.backgroundColor = UIColor.blueColor()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.recommondScrollerView.addSubview(self.remmondedPageView)
         
-        self.videoPageView = VideoPageView()
+        self.videoPageView = VideoPageView_Test()
+        self.videoPageView.height = self.view.frame.height - 120
         self.videoPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_VIDEO])
         self.videoPageView.initView()
         self.mPagesWidth.append(self.videoPageView.getViewWidth())
@@ -90,30 +85,28 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
         
         
         
-        self.livePageView = LivePageView()
+        self.livePageView = LivePageViewTest()
+        self.livePageView.height = self.view.frame.height - 120
         self.livePageView.setData(homeData.blockDatas[Constants.TABLE_NAME_LIVE], homeData.favChannels, homeData.livePrograms, homeData.dailyPrograms)
         self.livePageView.initView()
         self.mPagesWidth.append(self.livePageView.getViewWidth())
         self.liveScrollerView.addSubview(self.livePageView)
         
         
-        
         self.settingPageView = SettingPageView()
+        self.settingPageView.height = self.view.frame.height - 120
         self.settingPageView.initView()
         self.mPagesWidth.append(self.settingPageView.getViewWidth())
         self.settingScrollerView.addSubview(self.settingPageView)
-       
-        
-        setConstraints()
-        
-        mContentScrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.width * 4, height: self.view.frame.height - 110)
-        
-        recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: self.view.frame.height - 110)
-        videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: self.view.frame.height - 110)
-        liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: self.view.frame.height - 110)
-        settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: self.view.frame.height - 110)
         
         
+        self.setConstraints()
+        
+        mContentScrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.width * 4, height: self.view.frame.height - 120)
+        recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: self.view.frame.height - 120)
+        videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: self.view.frame.height - 120)
+        liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: self.view.frame.height - 120)
+        settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: self.view.frame.height - 120)
     }
     
     
@@ -123,29 +116,32 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
     
     func selectButtonIndex(index: Int) {
         NSLog("select button index : %d",index)
+        let width = UIScreen.mainScreen().bounds.width
         if mContentScrollView == nil {
             return
         }
-        mContentScrollView.contentOffset = CGPoint(x: calcTotalSizeByIndex(index), y: 0)
+        mContentScrollView.contentOffset = CGPoint(x: width * CGFloat(index), y: 0)
     }
     
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-//        NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
-//        let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
-//        mTableTitleView.setOnSelectButtonByPosition(index)
-//        //TODO当达到整屏时手动设置contentOffset
-//        mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+        NSLog("scrollViewDidEndDecelerating........%f",scrollView.contentOffset.x)
+        //TODO当达到整屏时手动设置contentOffset
+        // mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+        let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
+        mTableTitleView.setOnSelectButtonByPosition(index)
+        
         
     }
     
     //获取当前滚动属于第几页
     func getScrollViewIndex(contentOffset:CGFloat) -> Int {
-        if contentOffset < calcTotalSizeByIndex(1) {
+        let width = UIScreen.mainScreen().bounds.width
+        if contentOffset < width {
             return 0
-        } else if contentOffset < calcTotalSizeByIndex(2) {
+        } else if contentOffset < 2 * width {
             return 1
-        } else if contentOffset < calcTotalSizeByIndex(3) {
+        } else if contentOffset < 3 * width {
             return 2
         } else {
             return 3
@@ -164,14 +160,16 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
     func setScrollCommen(scrollerView:UIScrollView){
         scrollerView.showsHorizontalScrollIndicator = false
         scrollerView.showsVerticalScrollIndicator = false
-        scrollerView.delegate = self
+        
+        //scrollerView.delegate = self
     }
     
     func setConstraints(){
         mContentScrollView.snp_makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
-            make.height.equalTo(self.view.frame.height - 60)
-            make.topMargin.equalTo(self.mTableTitleView).offset(50)
+            make.bottom.equalTo(self.view).offset(-50)
+            make.top.equalTo(self.mTableTitleView.snp_bottom)
+            make.left.equalTo(self.view)
         }
         
         recommondScrollerView.snp_makeConstraints { (make) in
@@ -223,15 +221,15 @@ class TestViewController: BaseViewController,TableTitleViewDelegate, UIScrollVie
             make.width.equalTo(self.livePageView.getViewWidth());
         }
         
-        
         self.settingPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.settingScrollerView)
             make.topMargin.equalTo(self.settingScrollerView).offset(0)
             make.leftMargin.equalTo(self.settingScrollerView).offset(30)
         }
         
-        
     }
     
-
+    
 }
+
+*/

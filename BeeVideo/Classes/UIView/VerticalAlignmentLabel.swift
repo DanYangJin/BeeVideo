@@ -11,14 +11,14 @@ import UIKit
 class VerticalAlignmentLabel: UILabel {
     
     var verticalAlignmentMode : VerticalAlignmentMode = VerticalAlignmentMode.VerticalAlignmentMiddle
-
-
+    
+    
     internal enum VerticalAlignmentMode {
         case VerticalAlignmentTop
         case VerticalAlignmentMiddle
         case VerticalAligmentBottom
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         verticalAlignmentMode = VerticalAlignmentMode.VerticalAlignmentMiddle

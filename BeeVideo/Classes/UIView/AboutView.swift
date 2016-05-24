@@ -24,6 +24,7 @@ class AboutView: UIView,UITableViewDelegate,UITableViewDataSource {
         initQCodeImg()
         initTableView()
         initLbl()
+        setConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,7 +56,7 @@ class AboutView: UIView,UITableViewDelegate,UITableViewDataSource {
     
     
     private func initTableView(){
-        infoTable = UITableView(frame: CGRectMake((frame.width - 100)/2, 120, (frame.width + 100)/2, 60))
+        infoTable = UITableView()//frame: CGRectMake((frame.width - 100)/2, 120, (frame.width + 100)/2, 60))
         infoTable.delegate = self
         infoTable.dataSource = self
         infoTable.registerNib(UINib(nibName: "AboutSettingCell", bundle: nil), forCellReuseIdentifier: "AboutSettingCell")
@@ -67,32 +68,67 @@ class AboutView: UIView,UITableViewDelegate,UITableViewDataSource {
     
     
     private func initBackgroundView(){
-        backgroundImg = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
-        backgroundImg.contentMode = .ScaleAspectFill
+        backgroundImg = UIImageView()//frame: CGRectMake(0, 0, frame.width, frame.height))
+        backgroundImg.contentMode = .ScaleToFill
         backgroundImg.image = UIImage(named: "v2_setting_about_bg")
         addSubview(backgroundImg)
     }
     
     private func initQCodeImg(){
-        qCodeImg = UIImageView(frame: CGRectMake((frame.width - 100)/2, 20, 100, 100))
+        qCodeImg = UIImageView()//frame: CGRectMake((frame.width - 100)/2, 20, 100, 100))
         qCodeImg.image = UIImage(named: "v2_setting_about_qr_code")
         addSubview(qCodeImg)
     }
     
     private func initLbl(){
-        aboutLbl = UILabel(frame: CGRectMake(0, frame.height - 20, frame.width/2, 20))
+        aboutLbl = UILabel()//frame: CGRectMake(0, frame.height - 20, frame.width/2, 20))
         aboutLbl.textColor = UIColor.whiteColor()
         aboutLbl.text = "关于|升级"
         aboutLbl.textAlignment = .Right
         aboutLbl.font = UIFont.systemFontOfSize(12)
         addSubview(aboutLbl)
         
-        versionLbl = UILabel(frame: CGRectMake(frame.width/2 + 5, frame.height - 20, frame.width/2 - 5, 20))
+        versionLbl = UILabel()//frame: CGRectMake(frame.width/2 + 5, frame.height - 20, frame.width/2 - 5, 20))
         versionLbl.textColor = UIColor.grayColor()
         versionLbl.text = "1.0.0"
         versionLbl.font = UIFont.systemFontOfSize(11)
         addSubview(versionLbl)
     }
+    
+    private func setConstraints(){
+        backgroundImg.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self)
+            make.top.bottom.equalTo(self)
+        }
+        
+        qCodeImg.snp_makeConstraints { (make) in
+            make.centerX.equalTo(backgroundImg)
+            make.top.equalTo(backgroundImg).offset(30)
+            make.width.height.equalTo(backgroundImg.snp_width).multipliedBy(0.6)
+        }
+        
+        infoTable.snp_makeConstraints { (make) in
+            make.left.equalTo(qCodeImg)
+            make.top.equalTo(qCodeImg.snp_bottom).offset(5)
+            make.right.equalTo(backgroundImg)
+            make.bottom.equalTo(backgroundImg).offset(-20)
+        }
+        
+        aboutLbl.snp_makeConstraints { (make) in
+            make.top.equalTo(backgroundImg.snp_bottom).offset(-20)
+            make.bottom.equalTo(backgroundImg)
+            make.left.equalTo(backgroundImg)
+            make.width.equalTo(backgroundImg.snp_width).dividedBy(2)
+        }
+        
+        versionLbl.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(aboutLbl)
+            make.left.equalTo(aboutLbl.snp_right).offset(5)
+            make.right.equalTo(backgroundImg)
+        }
+    }
+    
+    
     
     
 }

@@ -16,6 +16,7 @@ class BaseViewController: UIViewController {
         super.viewDidLoad()
         backgroundImg = UIImageView()
         backgroundImg.contentMode = .ScaleToFill
+        backgroundImg.image = UIImage(named: "background")
         self.view.addSubview(backgroundImg)
         backgroundImg.snp_makeConstraints { (make) in
             make.top.equalTo(self.view)
@@ -23,7 +24,6 @@ class BaseViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
         }
-        setBackground()
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,12 +34,13 @@ class BaseViewController: UIViewController {
         return true
     }
     
-    func setBackground(){
-        backgroundImg.image = UIImage(named: "background")
-        //self.view.backgroundColor = UIColor.init(patternImage: UIImage(named: "background")!)
-    
+    func setBackgroundImg(imgURL: String){
+        backgroundImg.sd_setImageWithURL(NSURL(string: imgURL), placeholderImage: UIImage(named: "background"))
     }
     
+    func dismissViewController(){
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
     func onClick(){}
 }

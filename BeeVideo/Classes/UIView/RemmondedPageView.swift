@@ -2,9 +2,10 @@
 //  RemmondedPageView.swift
 //  BeeVideo
 //
-//  Created by DanBin on 16/3/19.
+//  Created by JinZhang on 16/5/3.
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
+
 
 import UIKit
 import SpriteKit
@@ -14,17 +15,22 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     
     private var cycleImage:CornerImageView!
     private var cycleTableView:UITableView!
-    //private var blockView:[BlockView]!
-    //private var blockSmall:[CornerImageView]!
-    //private var blockMiddle:[CornerImageView]!
-    //private var blockLarge:CornerImageView!
+    
     private var myVideoBlock : BlockView!
+    private var weekHotBlock : BlockView!
+    private var newVideoBlock : BlockView!
+    private var block1 : BlockView!
+    private var block2 : BlockView!
+    private var block3 : BlockView!
+    private var block4 : BlockView!
+    private var block5 : BlockView!
     
     //data
     private var cycleItems:HomeSpace!
     
     //
     private var cyclePosition:Int = 0
+    private var currentPosition : Int = 0
     private var timer:NSTimer!
     private var isCycling:Bool {
         get{
@@ -32,7 +38,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
         set{
             if newValue {
-                timer = NSTimer.scheduledTimerWithTimeInterval(2,
+                timer = NSTimer.scheduledTimerWithTimeInterval(3,
                                                                target:self,selector:#selector(RemmondedPageView.tickDown),
                                                                userInfo:nil,repeats:true)
             } else {
@@ -53,7 +59,8 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         if cyclePosition > cycleItems.items.count - 1 {
             cyclePosition = 0
         }
-        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "girl"))
+        currentPosition = cyclePosition
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
         cyclePosition += 1
     }
     
@@ -61,8 +68,10 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     override func initView(){
         super.initView()
         
-        cycleImage = CornerImageView(frame: CGRectMake(0, 0, 220, 150))
-        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "girl"))
+        cycleImage = CornerImageView()
+        cycleImage.setCorner(4.0)
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+        cycleImage.addOnClickListener(self, action: #selector(RemmondedPageView.clickCycleImg))
         addSubview(cycleImage)
         
         cycleTableView = UITableView()
@@ -75,39 +84,55 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
         addSubview(cycleTableView)
         
+        myVideoBlock = BlockView()
+        myVideoBlock.initView(homeSpace[1])
+        myVideoBlock.setDelegate(self)
+        addSubview(myVideoBlock)
         
-        for index in 0 ..< 3 {
-            let blockView = BlockView()
-            blockView.initFrame(CGFloat(110 * index), y: 160, width: 100, height: 60)
-            blockView.initView(super.homeSpace![index + 1])
-            addSubview(blockView)
-        }
+        weekHotBlock = BlockView()
+        weekHotBlock.initView(homeSpace[2])
+        weekHotBlock.setDelegate(self)
+        addSubview(weekHotBlock)
+        
+        newVideoBlock = BlockView()
+        newVideoBlock.initView(homeSpace[3])
+        newVideoBlock.setDelegate(self)
+        addSubview(newVideoBlock)
+        
+        block1 = BlockView()
+        block1.initView(homeSpace[4])
+        block1.hiddenLbl(true)
+        block1.setDelegate(self)
+        addSubview(block1)
+        
+        block2 = BlockView()
+        block2.initView(homeSpace[5])
+        block2.hiddenLbl(true)
+        block2.setDelegate(self)
+        addSubview(block2)
+        
+        block3 = BlockView()
+        block3.initView(homeSpace[6])
+        block3.hiddenLbl(true)
+        block3.setDelegate(self)
+        addSubview(block3)
+        
+        block4 = BlockView()
+        block4.initView(homeSpace[7])
+        block4.hiddenLbl(true)
+        block4.setDelegate(self)
+        addSubview(block4)
+        
+        block5 = BlockView()
+        block5.initView(homeSpace[8])
+        block5.hiddenLbl(true)
+        block5.setDelegate(self)
+        addSubview(block5)
+        
+        setConstraint()
         
         
         
-        for index in 0 ..< 2 {
-            let blockSmall = AnimationBlockView()
-            blockSmall.initFrame(325, y: CGFloat(115 * index), width: 110, height: 105)
-            blockSmall.initView(super.homeSpace![index + 4])
-            blockSmall.setDelegate(self)
-            addSubview(blockSmall)
-        }
-        
-        for index in 0 ..< 2 {
-            let blockMiddle = AnimationBlockView()
-            blockMiddle.initFrame(440, y: CGFloat(115 * index), width: 150, height: 105)
-            blockMiddle.initView(super.homeSpace![index + 6])
-            blockMiddle.setDelegate(self)
-            addSubview(blockMiddle)
-        }
-        
-        
-        let blockLarge = AnimationBlockView()
-        blockLarge.initFrame(595, y: 0, width: 150, height: 220)
-        blockLarge.initView(super.homeSpace![8])
-        blockLarge.setDelegate(self)
-        addSubview(blockLarge)
-        //setConstraint()
         
         isCycling = true
     }
@@ -121,7 +146,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 25.0
+        return height * 0.64 / 6
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -132,13 +157,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         tableViewCell.textLabel?.textColor = UIColor.grayColor()
         tableViewCell.textLabel?.lineBreakMode = .ByClipping
         tableViewCell.textLabel?.text = cycleItems.items[indexPath.row].name
+        tableViewCell.textLabel?.font = UIFont.systemFontOfSize(12)
         return tableViewCell
     }
     
     //点击事件
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
-        print(cycleItems.items[indexPath.row].action)
+        //print(cycleItems.items[indexPath.row].action)
         
         let action:String = cycleItems.items[indexPath.row].action
         
@@ -151,42 +177,100 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     
     private func setConstraint(){
         cycleImage.snp_makeConstraints { (make) in
-            make.left.equalTo(self).offset(40)
+            make.left.equalTo(self)
             make.top.equalTo(self)
-            make.height.equalTo(self.snp_height).multipliedBy(0.6)
+            make.height.equalTo(self.snp_height).multipliedBy(0.64)
             make.width.equalTo(cycleImage.snp_height).dividedBy(0.6)
         }
         cycleTableView.snp_makeConstraints { (make) in
-            make.left.equalTo(cycleImage.snp_right).offset(2)
+            make.left.equalTo(cycleImage.snp_right).multipliedBy(1.02)
             make.top.equalTo(cycleImage)
             make.height.equalTo(cycleImage)
             make.width.equalTo(cycleImage.snp_width).dividedBy(2)
         }
-    }
-    
-    func clickBlockView(homeSpace: HomeSpace) {
-        print("homeSopace : \(homeSpace.items.count)" )
-    }
-    
-    //    func toDetailController(extras:String){
-    //        let videoDetailViewController = VideoDetailViewController()
-    //        //videoDetailViewController.extras = extras
-    //        self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
-    //    }
-    
-    func clickListener(homeSpace: HomeSpace) {
-        
-        let action:String = homeSpace.items[0].action
-        if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION"{
-            let detailViewController = VideoDetailViewController()
-            detailViewController.extras = homeSpace.items[0].extras
-            self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
+        myVideoBlock.snp_makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.height.equalTo(self.snp_height).multipliedBy(0.32)
+            //make.top.equalTo(cycleImage.snp_bottom).offset(5)
+            make.bottom.equalTo(self)
+            make.width.equalTo(cycleImage.snp_width).multipliedBy(0.48)
+        }
+        weekHotBlock.snp_makeConstraints { (make) in
+            make.right.equalTo(cycleImage)
+            make.top.equalTo(myVideoBlock)
+            make.bottom.equalTo(myVideoBlock)
+            make.width.equalTo(myVideoBlock)
+        }
+        newVideoBlock.snp_makeConstraints { (make) in
+            make.right.equalTo(cycleTableView)
+            make.width.equalTo(weekHotBlock)
+            make.top.bottom.equalTo(weekHotBlock)
+        }
+        block1.snp_makeConstraints { (make) in
+            make.top.equalTo(cycleImage)
+            make.height.equalTo(self.snp_height).multipliedBy(0.48)
+            make.width.equalTo(block1.snp_height)
+            make.left.equalTo(cycleTableView.snp_right).offset(10)
+        }
+        block2.snp_makeConstraints { (make) in
+            make.bottom.equalTo(newVideoBlock)
+            make.height.equalTo(block1)
+            make.left.equalTo(block1)
+            make.right.equalTo(block1)
+        }
+        block3.snp_makeConstraints { (make) in
+            make.top.equalTo(block1)
+            make.bottom.equalTo(block1)
+            make.left.equalTo(block1.snp_right).offset(5)
+            make.width.equalTo(block3.snp_height).multipliedBy(1.5)
+        }
+        block4.snp_makeConstraints { (make) in
+            make.top.equalTo(block2)
+            make.bottom.equalTo(block2)
+            make.left.equalTo(block3)
+            make.right.equalTo(block3)
+        }
+        block5.snp_makeConstraints { (make) in
+            make.top.equalTo(block1)
+            make.bottom.equalTo(block2)
+            make.left.equalTo(block3.snp_right).offset(5)
+            make.width.equalTo(block3)
         }
         
     }
     
+    
+    func blockClick(homeSpace: HomeSpace) {
+        
+        let action:String = homeSpace.items[0].action
+        //print(action)
+        if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION"{
+            let detailViewController = VideoDetailViewController()
+            detailViewController.extras = homeSpace.items[0].extras
+            self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
+        }else if action == "com.mipt.videohj.intent.action.SPECIAL_DETAIL"{
+            let categoryController = VideoCategoryController()
+            categoryController.extras = homeSpace.items[0].extras
+            self.viewController.presentViewController(categoryController, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func clickCycleImg(){
+        let action : String = cycleItems.items[currentPosition].action
+        if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION" {
+            let detailViewController = VideoDetailViewController()
+            detailViewController.extras = cycleItems.items[currentPosition].extras
+            self.viewController.presentViewController(detailViewController, animated: true, completion: nil)
+        }else if action == "com.mipt.videohj.intent.action.SPECIAL_DETAIL"{
+            let categoryController = VideoCategoryController()
+            categoryController.extras = cycleItems.items[currentPosition].extras
+            self.viewController.presentViewController(categoryController, animated: true, completion: nil)
+        }
+    }
+    
     override func getViewWidth() -> CGFloat {
-        return 800
+        return 4 * height
     }
     
     override func initData(){

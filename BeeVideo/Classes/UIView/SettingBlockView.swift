@@ -27,7 +27,7 @@ class SettingBlockView: UIView {
         initBackgroundImg()
         initTitleLbl()
         initInco()
-        
+        setConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,6 +52,24 @@ class SettingBlockView: UIView {
         inco = UIImageView(frame: CGRectMake(0, 10, frame.width, frame.height - 20))
         inco.contentMode = .ScaleAspectFill
         addSubview(inco)
+    }
+    
+    private func setConstraints(){
+        backgroundImg.snp_makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.left.equalTo(self)
+            make.height.width.equalTo(self)
+        }
+        inco.snp_makeConstraints { (make) in
+            make.centerX.centerY.equalTo(self)
+            make.height.width.equalTo(self)
+        }
+        titleLbl.snp_makeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.left.equalTo(self)
+            make.right.equalTo(self)
+            make.height.equalTo(self.snp_height).dividedBy(6)
+        }
     }
     
     func setBackgroundImg(image: UIImage){

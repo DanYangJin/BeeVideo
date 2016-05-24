@@ -22,6 +22,8 @@ class BaseTableViewCell: ZXOptionBarCell {
     let icon: CornerImageView = {
         let img = CornerImageView(frame: CGRectZero)
         img.contentMode = .ScaleToFill
+        img.layer.cornerRadius = 4
+        img.layer.masksToBounds = true
         return img
     }()
     
