@@ -10,15 +10,16 @@
  用于视频列表的cell
  */
 
-import UIKit
-
 class ItemView: UIView {
 
-    var nameLbl : UILabel!
-    var durationLbl : MyUILabel!
-    var averageLbl : MyUILabel!
-    var poster : UIImageView!
+    private var isFlagImgHidden : Bool = true
+    
+    private var nameLbl : UILabel!
+    private var durationLbl : MyUILabel!
+    private var averageLbl : MyUILabel!
+    private var poster : UIImageView!
     private var lineView : UIView!
+    private var flagImg : UIImageView!
     
     private var data : VideoBriefItem!
     
@@ -62,8 +63,12 @@ class ItemView: UIView {
         averageLbl.font = UIFont.systemFontOfSize(12)
         averageLbl.textColor = UIColor.orangeColor()
         averageLbl.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
-        averageLbl.text = "9.8"
         self.addSubview(averageLbl)
+        
+        flagImg = UIImageView()
+        flagImg.contentMode = .ScaleToFill
+        flagImg.hidden = true
+        self.addSubview(flagImg)
         
         lineView = UIView()
         lineView.backgroundColor = UIColor.whiteColor()
@@ -92,6 +97,12 @@ class ItemView: UIView {
             make.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
+        flagImg.snp_makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.right.equalTo(self)
+            make.width.equalTo(self).multipliedBy(0.4)
+            make.height.equalTo(self.snp_width).multipliedBy(0.4)
+        }
         averageLbl.snp_makeConstraints { (make) in
             make.top.equalTo(0)
             make.left.equalTo(15)
@@ -112,6 +123,18 @@ class ItemView: UIView {
             averageLbl.hidden = false
             averageLbl.text = data.score
         }
+        if !isFlagImgHidden {
+            if data.resolutionType == 4 {
+                flagImg.image = UIImage(named: "v2_video_flag_sd")
+            }else if data.resolutionType == 3{
+                flagImg.image = UIImage(named: "v2_video_flag_hd")
+            }
+        }
+    }
+    
+    func setFlagHidden(hidden: Bool){
+        isFlagImgHidden = hidden
+        flagImg.hidden = hidden
     }
     
     //设置label指定圆角

@@ -10,8 +10,6 @@
   左下和右下角为圆角的label
  */
 
-import UIKit
-
 class MyUILabel: UILabel {
     
     override func drawRect(rect: CGRect) {

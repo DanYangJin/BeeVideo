@@ -110,7 +110,6 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
-        print(mBackgroundUrl)
         self.setBackgroundImg(mBackgroundUrl)
         mOptionBar.reloadData()
     }
@@ -121,38 +120,12 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     
     func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         let cellId = "optionCell"
-//        var cell : BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? BaseTableViewCell
-//        if cell == nil {
-//            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
-//        }
-//        cell?.backgroundColor = UIColor.clearColor()
-//        cell?.videoNameLbl.text = mDataList[index].name
-//        cell?.icon.sd_setImageWithURL(NSURL(string: mDataList[index].posterImg),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-//        cell?.durationLbl.text = mDataList[index].duration
-//        let average = mDataList[index].score
-//        if average.isEmpty {
-//            cell?.averageLbl.hidden = true
-//        }else{
-//            cell?.averageLbl.hidden = false
-//            cell?.averageLbl.text = average
-//        }
         
         var cell : VideoCategoryCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? VideoCategoryCell
         if cell == nil {
             cell = VideoCategoryCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
         }
-//        let average = mDataList[index].score
-//        if average.isEmpty {
-//            cell?.itemView.averageLbl.hidden = true
-//        }else{
-//            cell?.itemView.averageLbl.hidden = false
-//            cell?.itemView.averageLbl.text = mDataList[index].score
-//        }
-//        let itemData = mDataList[index]
-//        cell?.itemView.poster.sd_setImageWithURL(NSURL(string: itemData.posterImg),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-//        cell?.itemView.nameLbl.text = itemData.name
-//        cell?.itemView.durationLbl.text = itemData.duration
-        
+
         cell?.itemView.setData(mDataList[index])
         
         return cell!

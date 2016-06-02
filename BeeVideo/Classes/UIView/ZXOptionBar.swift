@@ -2,8 +2,7 @@
 //  ZXOptionBar.swift
 //  ZXOptionBar-Swift
 //
-//  Created by 子循 on 14-9-30.
-//  Copyright (c) 2014年 zixun. All rights reserved.
+//
 //
 
 import UIKit

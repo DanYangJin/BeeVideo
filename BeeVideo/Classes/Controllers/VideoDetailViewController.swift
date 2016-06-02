@@ -61,6 +61,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         
         detailView = VideoDetailInfoView(frame: CGRectMake(0, 0, width - (height * 2/3 - 30) * 2/3 - 50, height * 2/3 - 30))
         self.view.addSubview(detailView)
+        addClick()
         
         divider = UIView()//frame: CGRectMake(30, 205, 518, 1))
         divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
@@ -71,7 +72,6 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             make.bottom.equalTo(divider.snp_top).offset(-10)
             make.top.equalTo(self.view).offset(20)
             make.width.equalTo((height * 2/3 - 30) * 2/3)
-            print(posterImg.frame.height)
         }
         
         divider.snp_makeConstraints { (make) in
@@ -265,10 +265,6 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             //horizontalTab.contentOffset = CGPoint(x: 0, y: 0)
             horizontalTab.reloadData()
         }
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

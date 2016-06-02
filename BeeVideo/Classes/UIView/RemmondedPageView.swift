@@ -252,6 +252,9 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             let categoryController = VideoCategoryController()
             categoryController.extras = homeSpace.items[0].extras
             self.viewController.presentViewController(categoryController, animated: true, completion: nil)
+        }else if action == "com.mipt.videohj.intent.action.WEEKLY_RANK"{
+            let weekHotController = WeekHotViewController()
+            viewController.presentViewController(weekHotController, animated: true, completion: nil)
         }
         
     }

@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ 可在垂直方向进行上、中、下调整内容的label
+ 
+ */
+
 class VerticalAlignmentLabel: UILabel {
     
     var verticalAlignmentMode : VerticalAlignmentMode = VerticalAlignmentMode.VerticalAlignmentMiddle

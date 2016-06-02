@@ -24,5 +24,4 @@ class VideoSourceInfo {
     var played : Bool = false // 记住该源是否已经尝试过，在轮询源的时候使用
     var source : Source?//视频源信息
     
-
 }

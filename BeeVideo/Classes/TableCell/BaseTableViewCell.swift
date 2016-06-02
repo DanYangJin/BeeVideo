@@ -81,19 +81,6 @@ class BaseTableViewCell: ZXOptionBarCell {
         self.addSubview(durationLbl)
         self.addSubview(lineView)
         self.addSubview(averageLbl)
-        
-//        icon.snp_makeConstraints { (make) in
-//            make.top.equalTo(self).offset(5)
-//            make.bottom.equalTo(self).offset(-5)
-//            make.left.equalTo(self).offset(5)
-//            make.right.equalTo(self).offset(-5)
-//        }
-        
-//        videoNameLbl.snp_makeConstraints { (make) in
-//            make.left.equalTo(icon)
-//            make.right.equalTo(icon)
-//            make.top.equalTo(<#T##other: CGFloat##CGFloat#>)
-//        }
     }
     
     required init?(coder aDecoder: NSCoder) {

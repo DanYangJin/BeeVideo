@@ -283,14 +283,6 @@ class VideoDetailInfoView: UIView {
     }
     
     func setData(videoDetailInfo: VideoDetailInfo){
-        //        videoNameLbl.text = videoDetailInfo.name
-        //        directorNameLbl.text = videoDetailInfo.directorString
-        //        cateDetailLbl.text = videoDetailInfo.category
-        //        areaDetailLbl.text = videoDetailInfo.area
-        //        publishTimeLbl.text = videoDetailInfo.publishTime
-        //        durationDetailLbl.text = videoDetailInfo.duration
-        //        actorNameLbl.text = videoDetailInfo.actorString
-        //        descDetailLbl.text = videoDetailInfo.desc
         videoTitleLbl.text = videoDetailInfo.name
         videoDirectorLbl.text = videoDetailInfo.directorString
         videoCateLbl.text = videoDetailInfo.category

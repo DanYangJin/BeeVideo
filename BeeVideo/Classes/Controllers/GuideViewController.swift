@@ -39,7 +39,6 @@ class GuideViewController: BaseViewController,UIScrollViewDelegate {
         
         enterBtn = UIButton()
         enterBtn.enabled = false
-        //enterBtn.backgroundColor = UIColor.blueColor()
         enterBtn.addTarget(self, action: #selector(self.toLauncherController), forControlEvents: .TouchUpInside)
         self.view.addSubview(enterBtn)
         enterBtn.snp_makeConstraints { (make) in

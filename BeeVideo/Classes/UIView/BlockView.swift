@@ -12,11 +12,6 @@ protocol BlockViewDelegate {
     func blockClick(homeSpace:HomeSpace)
 }
 
-enum BlockViewMode {
-    case Center
-    case Left
-    case Right
-}
 
 
 class BlockView: UIView {
@@ -24,10 +19,6 @@ class BlockView: UIView {
     internal var homeSpace:HomeSpace!
     private var blockImage:CornerImageView!
     private var blockName:UILabel!
-    private var x:CGFloat!
-    private var y:CGFloat!
-    private var width:CGFloat!
-    private var height:CGFloat!
     private var delegate : BlockViewDelegate!
     private var blockViewMode : BlockViewMode = BlockViewMode.Center
     
@@ -40,15 +31,7 @@ class BlockView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    //初始化Frame
-//    func initFrame(x:CGFloat, y:CGFloat, width:CGFloat, height:CGFloat){
-//        self.x = x
-//        self.y = y
-//        self.width = width
-//        self.height = height
-//
-//    }
+
     
     //初始化view
     func initView(homeSpace:HomeSpace){
@@ -58,10 +41,7 @@ class BlockView: UIView {
         initLabel(homeSpace.items[0].name)
         setConstriants()
     }
-    
-//    func setFrame(){
-//        frame = CGRectMake(x, y, width, height)
-//    }
+
     
     func setDelegate(delegate:BlockViewDelegate){
         self.delegate = delegate
@@ -127,20 +107,12 @@ class BlockView: UIView {
             }
         }
     }
-
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//        if delegate != nil {
-//            delegate.clickListener(self.homeSpace)
-//        }
-    }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if delegate == nil {
             return
         }
-       
         delegate.blockClick(homeSpace)
-        //print("touchesEnded.......")
     }
 
 }

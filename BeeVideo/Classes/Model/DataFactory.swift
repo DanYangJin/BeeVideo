@@ -28,6 +28,12 @@ class DataFactory{
         CycleItemInfo(desp: "@蜜蜂视频", picUrl: "v2_setting_about_weibo_icon"),
         CycleItemInfo(desp: "QQ群:290127149", picUrl: "v2_setting_about_qq_icon")
     ]
-    
 
+    static var weekHotItems:[LeftViewTableData] = [
+        LeftViewTableData(title: "电影", unSelectPic: "v2_week_hot_film_default_img", selectedPic: "v2_week_hot_film_selected_img"),
+        LeftViewTableData(title: "电视剧", unSelectPic: "v2_week_hot_tvplay_default_img", selectedPic: "v2_week_hot_tvplay_selected_img"),
+        LeftViewTableData(title: "综艺", unSelectPic: "v2_week_hot_tvshow_default_img", selectedPic: "v2_week_hot_tvshow_selected_img"),
+        LeftViewTableData(title: "动漫", unSelectPic: "v2_week_hot_cartoon_default_img", selectedPic: "v2_week_hot_cartoon_selected_img")
+    ]
+    
 }
