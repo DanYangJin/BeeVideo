@@ -31,6 +31,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     private var pageNum : Int = 1
     private var maxPage : Int = 0
     private var leftWidth : Float!
+    private var lastPosition = 4
     
     private var contentView : UIScrollView!
     private var leftView : VodLeftView!
@@ -39,7 +40,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     private var backImg : UIImageView!
     private var titleLbl : UILabel!
     private var countLbl : UILabel!
-    // private var rightView : VodRightView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +57,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         leftView = VodLeftView()
         leftView.tableView.dataSource = self
         leftView.tableView.delegate = self
+        leftView.tableView.bounces = false
         leftView.tableView.tag = 1
         contentView.addSubview(leftView)
         leftView.snp_makeConstraints { (make) in
@@ -65,7 +66,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             make.height.equalTo(contentView)
             make.width.equalTo(leftWidth)
         }
-        
         
         strinkView = UIImageView()
         strinkView.contentMode = .ScaleAspectFit
@@ -119,7 +119,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     private func initCollectionView(){
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = self.view.frame.height - 80 - (self.view.frame.width - 80)/6 * 14/5
-       // videoCollection = UICollectionView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height), collectionViewLayout: layout)
         videoCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         videoCollection.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "collection")
         videoCollection.dataSource = self
@@ -142,38 +141,66 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellId = "tableCell"
-        var cell : UITableViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId)
+        let cellId2 = "iconCell"
+        if indexPath.row == 0 || indexPath.row == 1 {
+            var cell : VodVideoTableIconCell? = tableView.dequeueReusableCellWithIdentifier(cellId2) as? VodVideoTableIconCell
+            if cell == nil {
+                cell = VodVideoTableIconCell(style: .Default, reuseIdentifier: cellId2)
+                cell?.backgroundColor = UIColor.clearColor()
+                cell?.selectionStyle = .None
+            }
+            cell?.titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].name
+            if indexPath.row == 0 {
+                cell?.icon.image = UIImage(named: "v2_vod_category_filter_normal")
+            }else if indexPath.row == 1{
+                cell?.icon.image = UIImage(named: "vod_index_serch")
+            }
+            return cell!
+        }
+        var cell : VodVideoTableViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? VodVideoTableViewCell
         if cell == nil {
-            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellId)
+            cell = VodVideoTableViewCell(style: .Default, reuseIdentifier: cellId)
             cell?.backgroundColor = UIColor.clearColor()
             cell?.selectionStyle = .None
         }
         
-        cell?.textLabel?.text = vodCategoryGather.vodCategoryList[indexPath.row].name
-        cell?.textLabel?.textColor = UIColor.whiteColor()
+        cell?.titleLbl?.text = vodCategoryGather.vodCategoryList[indexPath.row].name
+        cell?.titleLbl?.textColor = UIColor.whiteColor()
         if lastPosition == indexPath.row {
-            cell?.textLabel?.textColor = UIColor.blueColor()
+            cell?.titleLbl?.textColor = UIColor.blueColor()
         }
         
         return cell!
     }
     
-    private var lastPosition = 4
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         if lastPosition == indexPath.row {
             return
         }
-        
-        let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
-        lastCell?.textLabel?.textColor = UIColor.whiteColor()
-        let cuttentCell = tableView.cellForRowAtIndexPath(indexPath)
-        cuttentCell?.textLabel?.textColor = UIColor.blueColor()
+        if lastPosition >= 2 {
+            let lastCell:VodVideoTableViewCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableViewCell
+            if lastCell != nil {
+                lastCell!.titleLbl?.textColor = UIColor.whiteColor()
+            }
+        }else{
+            let lastCell:VodVideoTableIconCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableIconCell
+            if lastCell != nil{
+                lastCell!.titleLbl?.textColor = UIColor.whiteColor()
+            }
+        }
+        if indexPath.row >= 2{
+            let currentCell:VodVideoTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! VodVideoTableViewCell
+            currentCell.titleLbl?.textColor = UIColor.blueColor()
+        }else{
+            let currentCell:VodVideoTableIconCell? = tableView.cellForRowAtIndexPath(indexPath) as? VodVideoTableIconCell
+            currentCell!.titleLbl?.textColor = UIColor.blueColor()
+        }
         lastPosition = indexPath.row
         
         titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].title
         
-        SDImageCache.sharedImageCache().clearDisk()
+        SDImageCache.sharedImageCache().clearMemory()
         videoCollection.removeFromSuperview()
         videoCollection = nil
         initCollectionView()
@@ -182,8 +209,15 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         
     }
     
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == 0 {
+            leftView.topArrow.hidden = true
+        }else if indexPath.row == vodCategoryGather.vodCategoryList.count - 1 {
+            leftView.bottomArrow.hidden = true
+        }
+    }
+    
     //collectionview相关
-   
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return videoPageData.videoList.count
     }
@@ -221,7 +255,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-     
+        
         let videoId = videoPageData.videoList[indexPath.row].id
         var extras:[ExtraData] = [ExtraData]()
         extras.append(ExtraData(name: "",value:videoId))
@@ -354,7 +388,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
     }
     
-    
+    //获取分类列表
     private func getVideoCategoryData(){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_CATOGORY_LIST_ACTION)!,parameters: ["channelId":channelId,"version":"1"]).response{
             _,_,data,error in
@@ -370,7 +404,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
     }
     
-    
+    //获取视频列表
     private func getVideoListData(params: [String:AnyObject]){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
             _,_,data,error in

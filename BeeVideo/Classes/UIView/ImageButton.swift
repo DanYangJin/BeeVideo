@@ -35,7 +35,7 @@ class ImageButton: UIView {
     func initView(){
         
         backgroundImge = UIImageView()
-        //backgroundImge.contentMode = .ScaleAspectFill
+        backgroundImge.contentMode = .Redraw
         backgroundImge.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsetsMake(30, 30, 30, 30))
         self.addSubview(backgroundImge)
         

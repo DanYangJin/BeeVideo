@@ -12,8 +12,6 @@ protocol BlockViewDelegate {
     func blockClick(homeSpace:HomeSpace)
 }
 
-
-
 class BlockView: UIView {
 
     internal var homeSpace:HomeSpace!

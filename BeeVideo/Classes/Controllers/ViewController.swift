@@ -27,8 +27,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     private var settingScrollerView : UIScrollView!//设置
     
     internal var homeData:HomeData!
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,7 +43,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
             make.leftMargin.equalTo(20)
         }
         
-        let scrollerHeight = self.view.frame.height - 100
+        let scrollerHeight = self.view.frame.height * 0.9 - 70
         
         mContentScrollView = UIScrollView()
         setScrollCommen(mContentScrollView)
@@ -65,17 +64,11 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         setScrollCommen(liveScrollerView)
         self.mContentScrollView.addSubview(liveScrollerView)
         
-        settingScrollerView = UIScrollView()
-        setScrollCommen(settingScrollerView)
-        //settingScrollerView.scrollEnabled = false
-        self.mContentScrollView.addSubview(settingScrollerView)
-        
         self.remmondedPageView = RemmondedPageView()
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
         self.remmondedPageView.height = scrollerHeight
-        //remmondedPageView.backgroundColor = UIColor.blueColor()
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.recommondScrollerView.addSubview(self.remmondedPageView)
         
@@ -98,9 +91,9 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.settingPageView = SettingPageView()
         self.settingPageView.height = scrollerHeight
         self.settingPageView.initView()
+        settingPageView.viewController = self
         self.mPagesWidth.append(self.settingPageView.getViewWidth())
-        self.settingScrollerView.addSubview(self.settingPageView)
-        
+        self.mContentScrollView.addSubview(self.settingPageView)
         
         self.setConstraints()
         
@@ -108,7 +101,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: scrollerHeight)
         videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: scrollerHeight)
         liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: scrollerHeight)
-        settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: scrollerHeight)
+        //settingScrollerView.contentSize = CGSize(width: mPagesWidth[3],height: scrollerHeight)
     }
     
     
@@ -169,7 +162,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     func setConstraints(){
         mContentScrollView.snp_makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
-            make.bottom.equalTo(self.view).offset(-30)
+            make.bottom.equalTo(self.view).multipliedBy(0.9)
             make.top.equalTo(self.mTableTitleView.snp_bottom)
             make.left.equalTo(self.view)
         }
@@ -195,13 +188,6 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
             make.leading.equalTo(videoScrollerView.snp_trailing)
         }
         
-        settingScrollerView.snp_makeConstraints { (make) in
-            make.width.equalTo(self.view)
-            make.height.equalTo(mContentScrollView)
-            make.top.equalTo(mContentScrollView)
-            make.leading.equalTo(liveScrollerView.snp_trailing)
-        }
-        
         self.remmondedPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.recommondScrollerView)
             make.topMargin.equalTo(self.recommondScrollerView).offset(0)
@@ -224,13 +210,12 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         }
         
         self.settingPageView.snp_makeConstraints{ (make) -> Void in
-            make.height.equalTo(self.settingScrollerView)
-            make.topMargin.equalTo(self.settingScrollerView).offset(0)
-            make.leftMargin.equalTo(self.settingScrollerView).offset(30)
+            make.height.equalTo(self.liveScrollerView)
+            make.topMargin.equalTo(self.liveScrollerView).offset(0)
+            make.leftMargin.equalTo(self.liveScrollerView.snp_right).offset(30)
+            make.width.equalTo(liveScrollerView)
         }
-        
     }
-    
 
 }
 

@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol SettingBlockViewClickDelegate{
+    func settingBlockViewClick(settingData:SettingBlockData)
+}
+
 class SettingBlockView: UIView {
     
     private var titleLbl : UILabel!
     private var inco : UIImageView!
     private var backgroundImg : UIImageView!
+    var settingData:SettingBlockData!
+    var clickDelegate:SettingBlockViewClickDelegate!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -64,6 +70,14 @@ class SettingBlockView: UIView {
         }
     }
     
+    func setData(data:SettingBlockData){
+        self.settingData = data
+        setBackgroundImg(UIImage(named: settingData.backgroundImg)!)
+        setInco(UIImage(named: settingData.icon)!)
+        setTitle(settingData.title)
+    }
+    
+    
     func setBackgroundImg(image: UIImage){
         backgroundImg.image = image
     }
@@ -74,6 +88,14 @@ class SettingBlockView: UIView {
     
     func setTitle(title: String){
         titleLbl.text = title
+    }
+  
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if clickDelegate == nil{
+            return
+        }
+        clickDelegate.settingBlockViewClick(settingData)
     }
     
 

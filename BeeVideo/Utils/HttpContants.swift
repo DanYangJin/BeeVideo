@@ -20,7 +20,7 @@ class HttpContants {
     static let URL_SPECIAL_ALL = "/api/video2.0/subject_all.action"
     static let URL_WEEK_HOT = "/api/video2.0/listWeekHotVideo.action"
     static let URL_REST_VIDEO_ACTION = "/api/hometv2.0/listVideoCategoryBlock.action"
-    
+    static let URL_GET_RECOMM_APK_LIST = "/apprec/front/listAppRec.action"
     
     //Request param
     static let PARAM_CHANNEL_ID = "channelId"

@@ -8,100 +8,107 @@
 
 import UIKit
 
-class SettingPageView: BasePageView {
+class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
 
     private var cycleImage:UIImageView!
     
-    private var netCheckSetting : SettingBlockView!
-    private var moreSetting : SettingBlockView!
-    private var accountSetting : SettingBlockView!
-    private var playSetting : SettingBlockView!
-    private var recommendSetting : SettingBlockView!
-    private var wxShare : SettingBlockView!
+    private var multiControllerSettingBlock : SettingBlockView!
+    private var moreSettingBlock : SettingBlockView!
+    private var accountSettingBlock : SettingBlockView!
+    private var playSettingBlock : SettingBlockView!
+    private var recommendSettingBlock : SettingBlockView!
+    private var wxShareBlock : SettingBlockView!
     
     private var aboutView : AboutView!
     
     override func initView(){
         super.initView()
-        backgroundColor = UIColor.greenColor()
         
-        playSetting = SettingBlockView()//frame: CGRectMake(0, 0, 100, 100))
-        playSetting.setInco(UIImage(named: "v2_setting_player_icon")!)
-        playSetting.setTitle("播放设置")
-        playSetting.setBackgroundImg(UIImage(named: "v2_laucher_block_green_bg")!)
-        addSubview(playSetting)
-        playSetting.snp_makeConstraints { (make) in
+        playSettingBlock = SettingBlockView()
+        let playSettingData = SettingBlockData(title: "播放设置", icon: "v2_setting_player_icon", backgroundImg: "v2_laucher_block_green_bg", targetController: nil)
+        playSettingBlock.setData(playSettingData)
+        playSettingBlock.clickDelegate = self
+        addSubview(playSettingBlock)
+        playSettingBlock.snp_makeConstraints { (make) in
             make.left.equalTo(self)
             make.top.equalTo(self)
-            make.height.width.equalTo(height * 0.49)
+            make.height.width.equalTo(self.snp_height).multipliedBy(0.49)
         }
         
-        wxShare = SettingBlockView()//frame: CGRectMake(110, 0, 100, 100))
-        wxShare.setInco(UIImage(named: "v2_setting_weixin_icon")!)
-        wxShare.setTitle("微信分享")
-        wxShare.setBackgroundImg(UIImage(named: "v2_laucher_block_purple_bg")!)
-        addSubview(wxShare)
-        wxShare.snp_makeConstraints { (make) in
-            make.top.equalTo(playSetting)
-            make.bottom.equalTo(playSetting)
-            make.left.equalTo(playSetting.snp_right).offset(height * 0.02)
-            make.width.equalTo(playSetting)
+        multiControllerSettingBlock = SettingBlockView()
+        let mutiSettingData = SettingBlockData(title: "多屏互动", icon: "v2_setting_multi_control", backgroundImg: "v2_laucher_block_purple_bg", targetController: nil)
+        multiControllerSettingBlock.setData(mutiSettingData)
+        multiControllerSettingBlock.clickDelegate = self
+        addSubview(multiControllerSettingBlock)
+        multiControllerSettingBlock.snp_makeConstraints { (make) in
+            make.top.equalTo(playSettingBlock)
+            make.bottom.equalTo(playSettingBlock)
+            make.left.equalTo(playSettingBlock.snp_right).offset(height * 0.02)
+            make.width.equalTo(playSettingBlock)
         }
         
         
-        recommendSetting = SettingBlockView()//frame: CGRectMake(220, 0, 100, 100))
-        recommendSetting.setTitle("应用推荐")
-        recommendSetting.setBackgroundImg(UIImage(named: "v2_laucher_block_blue_bg")!)
-        recommendSetting.setInco(UIImage(named: "v2_setting_app_icon")!)
-        addSubview(recommendSetting)
-        recommendSetting.snp_makeConstraints { (make) in
-            make.top.equalTo(playSetting)
-            make.bottom.equalTo(playSetting)
-            make.left.equalTo(wxShare.snp_right).offset(height * 0.02)
-            make.width.equalTo(playSetting)
+        recommendSettingBlock = SettingBlockView()
+        let recommendSettingData = SettingBlockData(title: "应用推荐", icon: "v2_setting_app_icon", backgroundImg: "v2_laucher_block_blue_bg", targetController: AppRecommendViewController())
+        recommendSettingBlock.setData(recommendSettingData)
+        recommendSettingBlock.clickDelegate = self
+        addSubview(recommendSettingBlock)
+        recommendSettingBlock.snp_makeConstraints { (make) in
+            make.top.equalTo(playSettingBlock)
+            make.bottom.equalTo(playSettingBlock)
+            make.left.equalTo(multiControllerSettingBlock.snp_right).offset(height * 0.02)
+            make.width.equalTo(playSettingBlock)
         }
         
-        netCheckSetting = SettingBlockView()//frame: CGRectMake(0, 110, 100, 100))
-        netCheckSetting.setTitle("网络诊断")
-        netCheckSetting.setBackgroundImg(UIImage(named: "v2_laucher_block_blue_bg")!)
-        netCheckSetting.setInco(UIImage(named: "v2_setting_network_check")!)
-        addSubview(netCheckSetting)
-        netCheckSetting.snp_makeConstraints { (make) in
-            make.left.right.equalTo(playSetting)
-            make.top.equalTo(playSetting.snp_bottom).offset(height * 0.02)
-            make.height.equalTo(playSetting)
+        wxShareBlock = SettingBlockView()
+        let wxShareData = SettingBlockData(title: "微信分享", icon: "v2_setting_network_check", backgroundImg: "v2_laucher_block_blue_bg", targetController: nil)
+        wxShareBlock.setData(wxShareData)
+        wxShareBlock.clickDelegate = self
+        addSubview(wxShareBlock)
+        wxShareBlock.snp_makeConstraints { (make) in
+            make.left.right.equalTo(playSettingBlock)
+            make.top.equalTo(playSettingBlock.snp_bottom).offset(height * 0.02)
+            make.height.equalTo(playSettingBlock)
         }
         
-        accountSetting = SettingBlockView()//frame: CGRectMake(110, 110, 100, 100))
-        accountSetting.setTitle("账户")
-        accountSetting.setInco(UIImage(named: "v2_setting_acount_icon")!)
-        accountSetting.setBackgroundImg(UIImage(named: "v2_laucher_block_orange_bg")!)
-        addSubview(accountSetting)
-        accountSetting.snp_makeConstraints { (make) in
-            make.top.bottom.equalTo(netCheckSetting)
-            make.right.left.equalTo(wxShare)
+        accountSettingBlock = SettingBlockView()
+        let accountSettingData = SettingBlockData(title: "账户", icon: "v2_setting_acount_icon", backgroundImg: "v2_laucher_block_orange_bg", targetController: nil)
+        accountSettingBlock.setData(accountSettingData)
+        accountSettingBlock.clickDelegate = self
+        addSubview(accountSettingBlock)
+        accountSettingBlock.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(wxShareBlock)
+            make.right.left.equalTo(multiControllerSettingBlock)
         }
         
-        moreSetting = SettingBlockView()//frame: CGRectMake(220, 110, 100, 100))
-        moreSetting.setTitle("更多设置")
-        moreSetting.setInco(UIImage(named: "v2_setting_more_icon")!)
-        moreSetting.setBackgroundImg(UIImage(named: "v2_laucher_block_green_bg")!)
-        addSubview(moreSetting)
-        moreSetting.snp_makeConstraints { (make) in
-            make.top.bottom.equalTo(accountSetting)
-            make.left.equalTo(recommendSetting)
-            make.width.equalTo(recommendSetting)
+        moreSettingBlock = SettingBlockView()
+        let moreSettingData = SettingBlockData(title: "更多设置", icon: "v2_setting_more_icon", backgroundImg: "v2_laucher_block_green_bg", targetController: RestSettingViewController())
+        moreSettingBlock.setData(moreSettingData)
+        moreSettingBlock.clickDelegate = self
+        addSubview(moreSettingBlock)
+        moreSettingBlock.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(accountSettingBlock)
+            make.left.equalTo(recommendSettingBlock)
+            make.width.equalTo(recommendSettingBlock)
         }
         
-        aboutView = AboutView()//frame: CGRectMake(335, 0, 160, 210))
+        aboutView = AboutView()
         addSubview(aboutView)
         aboutView.snp_makeConstraints { (make) in
-            make.left.equalTo(moreSetting.snp_right).offset(height * 0.02)
-            make.top.equalTo(playSetting)
-            make.bottom.equalTo(moreSetting)
+            make.left.equalTo(moreSettingBlock.snp_right).offset(height * 0.02)
+            make.top.equalTo(playSettingBlock)
+            make.bottom.equalTo(moreSettingBlock)
             make.width.equalTo(height * 5/7)
         }
         
+    }
+    
+    func settingBlockViewClick(settingData: SettingBlockData) {
+        let controller = settingData.targetController
+        if controller == nil {
+            return
+        }
+        viewController.presentViewController(controller!, animated: true, completion: nil)
     }
     
     

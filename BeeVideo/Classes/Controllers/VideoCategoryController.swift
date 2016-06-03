@@ -125,7 +125,7 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
         if cell == nil {
             cell = VideoCategoryCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
         }
-
+        
         cell?.itemView.setData(mDataList[index])
         
         return cell!

@@ -11,6 +11,7 @@ import Alamofire
 class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZXOptionBarDelegate,ZXOptionBarDataSource,UITableViewDelegate,UITableViewDataSource {
     
     private var mOptionBar : ZXOptionBar!
+    private var lineView : UIView!
     private var menuTable : UITableView!
     
     private var channels:Array<WeekChannel> = Array<WeekChannel>()
@@ -48,6 +49,15 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
             make.left.right.equalTo(leftView)
             make.top.equalTo(leftView.snp_bottom).multipliedBy(0.2)
             make.bottom.equalTo(leftView)
+        }
+        
+        lineView = UIView()
+        lineView.backgroundColor = UIColor.grayColor()
+        leftView.addSubview(lineView)
+        lineView.snp_makeConstraints { (make) in
+            make.bottom.equalTo(menuTable.snp_top)
+            make.left.right.equalTo(leftView)
+            make.height.equalTo(0.5)
         }
         
         getData()

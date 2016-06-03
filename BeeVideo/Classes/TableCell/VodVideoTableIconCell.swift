@@ -1,19 +1,12 @@
 //
-//  LeftViewCell.swift
+//  VodVideoTableIconCell.swift
 //  BeeVideo
 //
-//  Created by JinZhang on 16/5/30.
+//  Created by JinZhang on 16/6/3.
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-enum LeftViewCellMode{
-    case IconMode
-    case TitleMode
-}
-
-
-class LeftViewCell: UITableViewCell {
-
+class VodVideoTableIconCell: UITableViewCell {
     var icon : UIImageView!
     var titleLbl : UILabel!
     
@@ -46,13 +39,5 @@ class LeftViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
-        let context:CGContextRef = UIGraphicsGetCurrentContext()!
-        CGContextSetFillColorWithColor(context, UIColor.clearColor().CGColor)
-        CGContextFillRect(context, rect)
-        CGContextSetStrokeColorWithColor(context, UIColor.grayColor().CGColor)
-        CGContextStrokeRect(context, CGRectMake(0, rect.size.height - 0.05, rect.size.width, 0.05))
-      }
-    
+
 }

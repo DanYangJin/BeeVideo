@@ -97,6 +97,8 @@
 		B3ECEF0C1CC6369A00F25558 /* AboutSettingCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */; };
 		B3EE83431CFE736100A306FE /* RestVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EE83421CFE736100A306FE /* RestVideoInfo.swift */; };
 		B3EE83461CFEBF4C00A306FE /* RestVideoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EE83451CFEBF4C00A306FE /* RestVideoCollectionCell.swift */; };
+		B3EE83481D00071800A306FE /* SettingBlockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EE83471D00071800A306FE /* SettingBlockData.swift */; };
+		B3EE834A1D001DBC00A306FE /* RestSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EE83491D001DBC00A306FE /* RestSettingViewController.swift */; };
 		B3F0094A1CC092DB00B4D109 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F009491CC092DB00B4D109 /* ImageButton.swift */; };
 		B3F184C81CC479FB0099B28A /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */; };
 		B3F184CA1CC47A0D0099B28A /* SimpleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */; };
@@ -104,6 +106,13 @@
 		B3F184D01CC4D9CA0099B28A /* SettingBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */; };
 		B3F24C491CC1DF5900ED73FA /* VideoBriefItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */; };
 		B3F24C4F1CC21D7C00ED73FA /* ZXOptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */; };
+		B3F6C1301D011A72002089E3 /* VodVideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C12F1D011A72002089E3 /* VodVideoTableViewCell.swift */; };
+		B3F6C1321D012DEB002089E3 /* VodVideoTableIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1311D012DEB002089E3 /* VodVideoTableIconCell.swift */; };
+		B3F6C1341D013247002089E3 /* AppRecommendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1331D013247002089E3 /* AppRecommendViewController.swift */; };
+		B3F6C1361D01549E002089E3 /* RecommendAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1351D01549E002089E3 /* RecommendAppInfo.swift */; };
+		B3F6C1381D015850002089E3 /* RecommendAppGather.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1371D015850002089E3 /* RecommendAppGather.swift */; };
+		B3F6C13A1D01669C002089E3 /* AppRecommendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1391D01669C002089E3 /* AppRecommendCell.swift */; };
+		B3F6C13C1D018F1C002089E3 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C13B1D018F1C002089E3 /* AccountViewController.swift */; };
 		B3F7E9361CE961A70089A0D8 /* GuideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7E9351CE961A70089A0D8 /* GuideViewController.swift */; };
 		B3F7E9381CE9B19F0089A0D8 /* VideoCategoryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F7E9371CE9B19F0089A0D8 /* VideoCategoryController.swift */; };
 		B3FA7C981CEC10DC0014EF88 /* MyUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FA7C971CEC10DC0014EF88 /* MyUILabel.swift */; };
@@ -266,6 +275,8 @@
 		B3ECEF0A1CC6369A00F25558 /* AboutSettingCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AboutSettingCell.xib; path = TableCell/AboutSettingCell.xib; sourceTree = "<group>"; };
 		B3EE83421CFE736100A306FE /* RestVideoInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestVideoInfo.swift; sourceTree = "<group>"; };
 		B3EE83451CFEBF4C00A306FE /* RestVideoCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RestVideoCollectionCell.swift; path = TableCell/RestVideoCollectionCell.swift; sourceTree = "<group>"; };
+		B3EE83471D00071800A306FE /* SettingBlockData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingBlockData.swift; sourceTree = "<group>"; };
+		B3EE83491D001DBC00A306FE /* RestSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestSettingViewController.swift; sourceTree = "<group>"; };
 		B3F009491CC092DB00B4D109 /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		B3F184C71CC479FB0099B28A /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewCell.swift; path = TableCell/BaseTableViewCell.swift; sourceTree = "<group>"; };
 		B3F184C91CC47A0D0099B28A /* SimpleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleTableViewCell.swift; path = TableCell/SimpleTableViewCell.swift; sourceTree = "<group>"; };
@@ -273,6 +284,13 @@
 		B3F184CF1CC4D9CA0099B28A /* SettingBlockView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingBlockView.swift; sourceTree = "<group>"; };
 		B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoBriefItem.swift; sourceTree = "<group>"; };
 		B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXOptionBar.swift; sourceTree = "<group>"; };
+		B3F6C12F1D011A72002089E3 /* VodVideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VodVideoTableViewCell.swift; path = TableCell/VodVideoTableViewCell.swift; sourceTree = "<group>"; };
+		B3F6C1311D012DEB002089E3 /* VodVideoTableIconCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VodVideoTableIconCell.swift; path = TableCell/VodVideoTableIconCell.swift; sourceTree = "<group>"; };
+		B3F6C1331D013247002089E3 /* AppRecommendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRecommendViewController.swift; sourceTree = "<group>"; };
+		B3F6C1351D01549E002089E3 /* RecommendAppInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendAppInfo.swift; sourceTree = "<group>"; };
+		B3F6C1371D015850002089E3 /* RecommendAppGather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendAppGather.swift; sourceTree = "<group>"; };
+		B3F6C1391D01669C002089E3 /* AppRecommendCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppRecommendCell.swift; path = TableCell/AppRecommendCell.swift; sourceTree = "<group>"; };
+		B3F6C13B1D018F1C002089E3 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		B3F7E9351CE961A70089A0D8 /* GuideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuideViewController.swift; sourceTree = "<group>"; };
 		B3F7E9371CE9B19F0089A0D8 /* VideoCategoryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCategoryController.swift; sourceTree = "<group>"; };
 		B3FA7C971CEC10DC0014EF88 /* MyUILabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUILabel.swift; sourceTree = "<group>"; };
@@ -455,17 +473,20 @@
 				2D143C0F1C9C5C5600C11099 /* BaseViewController.swift */,
 				B3A504FD1CBF8F6000E6201C /* VideoDetailViewController.swift */,
 				2D03D0F91CA3B42000ED8B7E /* LauncherViewController.swift */,
+				B3FAA46A1CED6F2000C00C2D /* VodVideoController.swift */,
 				B3B4521B1CC8BE54003F54B5 /* TestViewController.swift */,
 				B3F7E9351CE961A70089A0D8 /* GuideViewController.swift */,
 				B3F7E9371CE9B19F0089A0D8 /* VideoCategoryController.swift */,
 				B300FA311CF58A7500B9FC80 /* VideoHDCategoryController.swift */,
-				B3FAA46A1CED6F2000C00C2D /* VodVideoController.swift */,
 				B300FA331CF5B04C00B9FC80 /* VideoCategoryGroupController.swift */,
 				B3FC48DC1CF6F5FA003C1A12 /* VideoCategoryListController.swift */,
 				B384FEA71CF82D3A0012E8FA /* BaseHorizontalViewController.swift */,
 				B3FFB23C1CFBD20F006F2562 /* WeekHotViewController.swift */,
 				B3CEC45F1CFD968800A7D1EA /* BaseBackViewController.swift */,
 				B3CEC45D1CFD92A500A7D1EA /* RestVideoViewController.swift */,
+				B3EE83491D001DBC00A306FE /* RestSettingViewController.swift */,
+				B3F6C1331D013247002089E3 /* AppRecommendViewController.swift */,
+				B3F6C13B1D018F1C002089E3 /* AccountViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -495,6 +516,9 @@
 				B3FFB23E1CFBE212006F2562 /* WeekChannel.swift */,
 				B3FFB2401CFC29AA006F2562 /* LeftViewTableData.swift */,
 				B3EE83421CFE736100A306FE /* RestVideoInfo.swift */,
+				B3EE83471D00071800A306FE /* SettingBlockData.swift */,
+				B3F6C1351D01549E002089E3 /* RecommendAppInfo.swift */,
+				B3F6C1371D015850002089E3 /* RecommendAppGather.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -653,6 +677,9 @@
 				B3D74B371CEEB00B00A5DB1F /* VideoItemCell.swift */,
 				B3CEC45B1CFC3BC800A7D1EA /* LeftViewCell.swift */,
 				B3EE83451CFEBF4C00A306FE /* RestVideoCollectionCell.swift */,
+				B3F6C12F1D011A72002089E3 /* VodVideoTableViewCell.swift */,
+				B3F6C1311D012DEB002089E3 /* VodVideoTableIconCell.swift */,
+				B3F6C1391D01669C002089E3 /* AppRecommendCell.swift */,
 			);
 			name = TableCell;
 			sourceTree = "<group>";
@@ -857,6 +884,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3D74B461CEEFEEB00A5DB1F /* VodVideoPageData.swift in Sources */,
+				B3F6C1301D011A72002089E3 /* VodVideoTableViewCell.swift in Sources */,
 				B3B4521C1CC8BE54003F54B5 /* TestViewController.swift in Sources */,
 				2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */,
 				2D03D1051CA3EDEF00ED8B7E /* BaseRequest.swift in Sources */,
@@ -867,6 +895,7 @@
 				2D9163D01CC4DA5A0045163A /* UIColor+Separate.m in Sources */,
 				2D54DDE91C9D269C007362F2 /* BasePageView.swift in Sources */,
 				B3FAA46B1CED6F2000C00C2D /* VodVideoController.swift in Sources */,
+				B3EE834A1D001DBC00A306FE /* RestSettingViewController.swift in Sources */,
 				2D9163DE1CC4DA5A0045163A /* UIImage+WebP.m in Sources */,
 				B3A504FE1CBF8F6000E6201C /* VideoDetailViewController.swift in Sources */,
 				2D9163D51CC4DA5A0045163A /* SDWebImageCompat.m in Sources */,
@@ -892,6 +921,8 @@
 				B300FA341CF5B04C00B9FC80 /* VideoCategoryGroupController.swift in Sources */,
 				B3B261371CCCA2350074F643 /* VerticalAlignmentLabel.swift in Sources */,
 				B3A505061CBF916300E6201C /* Drama.swift in Sources */,
+				B3F6C13A1D01669C002089E3 /* AppRecommendCell.swift in Sources */,
+				B3F6C1341D013247002089E3 /* AppRecommendViewController.swift in Sources */,
 				2DBD25E71CA166BE00E4BC86 /* ViewController.swift in Sources */,
 				2D03D10A1CA3EE7C00ED8B7E /* UIView+Extension.swift in Sources */,
 				2D143C101C9C5C5600C11099 /* BaseViewController.swift in Sources */,
@@ -902,6 +933,7 @@
 				B3A505001CBF911000E6201C /* VideoSourceInfo.swift in Sources */,
 				B3FAA4671CED648900C00C2D /* HttpContants.swift in Sources */,
 				B3F0094A1CC092DB00B4D109 /* ImageButton.swift in Sources */,
+				B3F6C13C1D018F1C002089E3 /* AccountViewController.swift in Sources */,
 				B3F7E9381CE9B19F0089A0D8 /* VideoCategoryController.swift in Sources */,
 				2D9163DC1CC4DA5A0045163A /* UIImage+GIF.m in Sources */,
 				B3FA7C981CEC10DC0014EF88 /* MyUILabel.swift in Sources */,
@@ -922,6 +954,7 @@
 				2DC9ABDC1CCC6AA800B34A4B /* ProgressView.swift in Sources */,
 				2DE7CE5C1CA131D5004F0D68 /* HomeItem.swift in Sources */,
 				B3FC48DB1CF6A3D5003C1A12 /* CateGroupBlockView.swift in Sources */,
+				B3EE83481D00071800A306FE /* SettingBlockData.swift in Sources */,
 				B3FC48D71CF68973003C1A12 /* CategoryGroupItem.swift in Sources */,
 				B384FEAA1CF845A60012E8FA /* BackView.swift in Sources */,
 				2D54DDF11C9D339C007362F2 /* BlockView.swift in Sources */,
@@ -944,7 +977,9 @@
 				B300FA381CF5B9A400B9FC80 /* CategoryItem.swift in Sources */,
 				B3FC48DD1CF6F5FA003C1A12 /* VideoCategoryListController.swift in Sources */,
 				B3B4521A1CC8BAE1003F54B5 /* VideoDetailInfoView.swift in Sources */,
+				B3F6C1361D01549E002089E3 /* RecommendAppInfo.swift in Sources */,
 				B3A505021CBF914100E6201C /* VideoDetailInfo.swift in Sources */,
+				B3F6C1321D012DEB002089E3 /* VodVideoTableIconCell.swift in Sources */,
 				B3FAA4711CEDAB6900C00C2D /* VodCategoryGather.swift in Sources */,
 				2D9163D31CC4DA5A0045163A /* NSData+ImageContentType.m in Sources */,
 				B3F184C81CC479FB0099B28A /* BaseTableViewCell.swift in Sources */,
@@ -955,6 +990,7 @@
 				2D54DDEB1C9D27A5007362F2 /* RemmondedPageView.swift in Sources */,
 				B3D87C2A1CF4531200B43F95 /* VodRightView.swift in Sources */,
 				2D9163D71CC4DA5A0045163A /* SDWebImageDownloader.m in Sources */,
+				B3F6C1381D015850002089E3 /* RecommendAppGather.swift in Sources */,
 				2DB907351CC72EF200BABAFB /* PlayerViewController.swift in Sources */,
 				2D03D0FA1CA3B42000ED8B7E /* LauncherViewController.swift in Sources */,
 				2D9163D11CC4DA5A0045163A /* UIColor+Wonderful.m in Sources */,

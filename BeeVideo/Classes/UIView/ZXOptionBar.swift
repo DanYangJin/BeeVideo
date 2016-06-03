@@ -320,7 +320,7 @@ extension ZXOptionBar {
         if index == columnCount() - 1 {
             return CGRectMake(CGFloat((width + dividerWidth) * Float(index)), 0, CGFloat(width), self.bounds.size.height)
         }
-        return CGRectMake(CGFloat(width * Float(index)), 0, CGFloat(width - dividerWidth), self.bounds.size.height)
+        return CGRectMake(CGFloat((width) * Float(index)), 0, CGFloat(width - dividerWidth), self.bounds.size.height)
     }
 
     

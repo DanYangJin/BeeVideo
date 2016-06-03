@@ -8,10 +8,14 @@
 
 import Alamofire
 
+/**
+ 
+ 点播更多页面
+ */
+
 class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     private var mCollectionView:UICollectionView!
-    private var coll:UICollectionReusableView!
     
     private var restInfoes:Array<RestVideoInfo> = Array<RestVideoInfo>()
     private var restInfo:RestVideoInfo!
