@@ -12,7 +12,7 @@ protocol BlockViewDelegate {
     func blockClick(homeSpace:HomeSpace)
 }
 
-class BlockView: UIView {
+class BlockView: UIControl {
 
     internal var homeSpace:HomeSpace!
     private var blockImage:CornerImageView!
@@ -23,6 +23,7 @@ class BlockView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.addTarget(self, action: #selector(self.click), forControlEvents: .TouchUpInside)
     }
     
     
@@ -106,11 +107,23 @@ class BlockView: UIView {
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+//        print("cancelled.....")
+//    }
+//    
+//    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        if delegate == nil {
+//            return
+//        }
+//        delegate.blockClick(homeSpace)
+//    }
+    
+    func click(){
         if delegate == nil {
             return
         }
         delegate.blockClick(homeSpace)
     }
+    
 
 }

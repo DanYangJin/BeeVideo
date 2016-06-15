@@ -25,7 +25,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         super.initView()
         
         playSettingBlock = SettingBlockView()
-        let playSettingData = SettingBlockData(title: "播放设置", icon: "v2_setting_player_icon", backgroundImg: "v2_laucher_block_green_bg", targetController: nil)
+        let playSettingData = SettingBlockData(title: "播放设置", icon: "v2_setting_player_icon", backgroundImg: "v2_laucher_block_green_bg", targetController: PlaySettingViewController())
         playSettingBlock.setData(playSettingData)
         playSettingBlock.clickDelegate = self
         addSubview(playSettingBlock)

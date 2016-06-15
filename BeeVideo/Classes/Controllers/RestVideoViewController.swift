@@ -37,7 +37,7 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
         mCollectionView.snp_makeConstraints { (make) in
             make.left.equalTo(backView)
             make.right.equalTo(view)
-            make.top.equalTo(backView.snp_bottom).offset(30)
+            make.top.equalTo(backView.snp_bottom)
             make.bottom.equalTo(view)
         }
         
@@ -64,7 +64,11 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: 150, height: 150)
+        
+        let collWidth = collectionView.frame.width
+        let width = (collWidth - 40) / 4
+        
+        return CGSize(width: width, height: width)
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {

@@ -11,7 +11,9 @@ class CommenUtils{
     
     
     static let SCHEMA_HTTP : String = "http://"
-    
+    /**
+       拼凑访问的url
+     */
     static func fixRequestUrl(host: String,action: String) -> String?{
         if isStringInvalid(host) && isStringInvalid(action) {
             return nil
@@ -30,4 +32,20 @@ class CommenUtils{
     static func isStringInvalid(str: String) -> Bool {
         return str.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).isEmpty
     }
+    /**
+        根据 320*480 进行缩放
+     */
+    static func calculatScaleSize(size: CGFloat) -> CGFloat{
+        let screenHeight = UIScreen.mainScreen().bounds.height
+        let screenWidth = UIScreen.mainScreen().bounds.width
+        let scaleHeight = screenHeight > screenWidth ? screenWidth : screenHeight
+        
+        let ret = size * (scaleHeight / 320)
+        
+        return ret
+    }
+
+    
+    
+    
 }

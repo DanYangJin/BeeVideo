@@ -62,7 +62,7 @@ class TableTitleView: UIScrollView {
     func setOnSelectButtonByPosition(index:Int){
         self.mSelectButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
         self.mSelectButton.transform = CGAffineTransformIdentity
-        mButtons[index].setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+        mButtons[index].setTitleColor(UIColor.textBlueColor(), forState: UIControlState.Normal)
         mButtons[index].transform = CGAffineTransformMakeScale(1.1, 1.1)
         self.mSelectButton = mButtons[index]
     }
@@ -71,7 +71,7 @@ class TableTitleView: UIScrollView {
     func setOnSelectButton(button:UIButton){
         self.mSelectButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
         self.mSelectButton.transform = CGAffineTransformIdentity
-        button.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
+        button.setTitleColor(UIColor.textBlueColor(), forState: UIControlState.Normal)
         button.transform = CGAffineTransformMakeScale(1.1, 1.1)
         self.mSelectButton = button
     }

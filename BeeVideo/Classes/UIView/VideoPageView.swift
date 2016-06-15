@@ -20,7 +20,6 @@ class VideoPageView: BasePageView,BlockViewDelegate {
     private var block_poster5 : BlockView!
     private var block_poster6 : BlockView!
     private var block_poster7 : BlockView!
-  
     
     override func initView(){
         super.initView()

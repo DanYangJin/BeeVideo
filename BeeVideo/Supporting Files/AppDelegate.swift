@@ -17,12 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         NSThread.sleepForTimeInterval(0)
-        //self.window?.rootViewController = GuideViewController()
         let userDefault = NSUserDefaults.standardUserDefaults()
         let isFirstRun = userDefault.valueForKey("isFirstRun") as? Bool
-        //print(isFirstRun)
         if isFirstRun == nil || isFirstRun! {
-            //print("first run")
             self.window?.rootViewController = GuideViewController()
             userDefault.setBool(false, forKey: "isFirstRun")
         }else{

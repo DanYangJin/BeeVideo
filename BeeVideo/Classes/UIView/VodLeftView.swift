@@ -7,7 +7,7 @@
 //
 
 /**
- 
+ 点播列表左侧view
  */
 
 class VodLeftView: UIView {
@@ -15,7 +15,7 @@ class VodLeftView: UIView {
     var topArrow : UIImageView!
     var bottomArrow : UIImageView!
     var tableView : UITableView!
-    
+    private var backgroundImg : UIImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,6 +27,16 @@ class VodLeftView: UIView {
     }
     
     func initView(){
+        
+        backgroundImg = UIImageView()
+        backgroundImg.contentMode = .Redraw
+        backgroundImg.image = UIImage(named: "v2_search_keyboard_background")?.resizableImageWithCapInsets(UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .Stretch)
+        self.addSubview(backgroundImg)
+        backgroundImg.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(self)
+            make.left.right.equalTo(self)
+        }
+        
         topArrow = UIImageView()
         topArrow.image = UIImage(named: "v2_vod_list_arrow_top")
         topArrow.contentMode = .ScaleAspectFill

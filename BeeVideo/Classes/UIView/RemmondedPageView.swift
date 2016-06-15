@@ -13,6 +13,7 @@ import SpriteKit
 
 class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegate, BlockViewDelegate{
     
+    private var cycleView : UIImageView!
     private var cycleImage:CornerImageView!
     private var cycleTableView:UITableView!
     
@@ -59,8 +60,18 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         if cyclePosition > cycleItems.items.count - 1 {
             cyclePosition = 0
         }
+        var lastPositon = cyclePosition - 1
+        if lastPositon < 0 {
+            lastPositon = cycleItems.items.count - 1
+        }
+        
+        let lastCell = cycleTableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPositon, inSection: 0)) as! CycleTableCell
+        lastCell.setMarqueeStart(false)
+        
         currentPosition = cyclePosition
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+        let cell = cycleTableView.cellForRowAtIndexPath(NSIndexPath(forRow: cyclePosition, inSection: 0)) as! CycleTableCell
+        cell.setMarqueeStart(true)
         cyclePosition += 1
     }
     
@@ -68,11 +79,17 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     override func initView(){
         super.initView()
         
+        cycleView = UIImageView()
+        cycleView.contentMode = .ScaleToFill
+        cycleView.image = UIImage(named: "v2_block_home_cycle_show_bg")
+        addSubview(cycleView)
+        
         cycleImage = CornerImageView()
         cycleImage.setCorner(4.0)
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
         cycleImage.addOnClickListener(self, action: #selector(RemmondedPageView.clickCycleImg))
         addSubview(cycleImage)
+        isCycling = true
         
         cycleTableView = UITableView()
         cycleTableView.frame = CGRect(x: 220, y: 0, width: 100, height: 150)
@@ -81,7 +98,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleTableView.dataSource = self
         cycleTableView.delegate = self
         cycleTableView.scrollEnabled = false
-        cycleTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "CycleCell")
+        cycleTableView.registerClass(CycleTableCell.self, forCellReuseIdentifier: "CycleCell")
         addSubview(cycleTableView)
         
         myVideoBlock = BlockView()
@@ -131,37 +148,29 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         
         setConstraint()
         
-        
-        
-        
-        isCycling = true
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
+    //tableview
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return cycleItems.items.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return height * 0.64 / 6
+        return cycleImage.frame.height / 6
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let tableViewCell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath)
-        tableViewCell.backgroundColor = UIColor.clearColor()
-        tableViewCell.selectionStyle = .None
-        tableViewCell.textLabel?.textColor = UIColor.grayColor()
-        tableViewCell.textLabel?.lineBreakMode = .ByClipping
-        tableViewCell.textLabel?.text = cycleItems.items[indexPath.row].name
-        tableViewCell.textLabel?.font = UIFont.systemFontOfSize(12)
-        return tableViewCell
+        let cell:CycleTableCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) as! CycleTableCell
+        cell.backgroundColor = UIColor.clearColor()
+        cell.selectionStyle = .None
+        cell.marqueeLabel.text = cycleItems.items[indexPath.row].name
+        if indexPath.row == 0 {
+            cell.setMarqueeStart(true)
+        }
+        return cell
     }
-    
-    //点击事件
+
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         //
         //print(cycleItems.items[indexPath.row].action)
@@ -175,6 +184,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
     }
     
+    //约束
     private func setConstraint(){
         cycleImage.snp_makeConstraints { (make) in
             make.left.equalTo(self)
@@ -187,6 +197,11 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             make.top.equalTo(cycleImage)
             make.height.equalTo(cycleImage)
             make.width.equalTo(cycleImage.snp_width).dividedBy(2)
+        }
+        cycleView.snp_makeConstraints { (make) in
+            make.left.equalTo(cycleImage)
+            make.right.equalTo(cycleTableView)
+            make.top.bottom.equalTo(cycleImage)
         }
         myVideoBlock.snp_makeConstraints { (make) in
             make.left.equalTo(self)
@@ -243,7 +258,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     func blockClick(homeSpace: HomeSpace) {
         
         let action:String = homeSpace.items[0].action
-        //print(action)
+        
         if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION"{
             let detailViewController = VideoDetailViewController()
             detailViewController.extras = homeSpace.items[0].extras
@@ -255,6 +270,9 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }else if action == "com.mipt.videohj.intent.action.WEEKLY_RANK"{
             let weekHotController = WeekHotViewController()
             viewController.presentViewController(weekHotController, animated: true, completion: nil)
+        }else if action == "com.mipt.videohj.intent.action.PRIVATE_TRACE"{
+            let myVideoController = MyVideoViewController()
+            viewController.presentViewController(myVideoController, animated: true, completion: nil)
         }
         
     }

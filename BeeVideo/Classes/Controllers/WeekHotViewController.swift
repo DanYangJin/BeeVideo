@@ -11,7 +11,6 @@ import Alamofire
 class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZXOptionBarDelegate,ZXOptionBarDataSource,UITableViewDelegate,UITableViewDataSource {
     
     private var mOptionBar : ZXOptionBar!
-    private var lineView : UIView!
     private var menuTable : UITableView!
     
     private var channels:Array<WeekChannel> = Array<WeekChannel>()
@@ -23,7 +22,9 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
     private var lastPosition:Int = 0
 
     override func viewDidLoad() {
+        leftWidth = Float(view.frame.width * 0.2)
         super.viewDidLoad()
+        
         titleLbl.text = "周热播榜"
         
         mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self)
@@ -45,20 +46,20 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
         menuTable.scrollEnabled = false
         menuTable.registerClass(LeftViewCell.self, forCellReuseIdentifier: "weekHotCell")
         self.leftView.addSubview(menuTable)
+        menuTable.selectRowAtIndexPath(NSIndexPath(forRow: 0,inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition(rawValue: 0)!)
         menuTable.snp_makeConstraints { (make) in
             make.left.right.equalTo(leftView)
             make.top.equalTo(leftView.snp_bottom).multipliedBy(0.2)
             make.bottom.equalTo(leftView)
         }
         
-        lineView = UIView()
-        lineView.backgroundColor = UIColor.grayColor()
-        leftView.addSubview(lineView)
-        lineView.snp_makeConstraints { (make) in
-            make.bottom.equalTo(menuTable.snp_top)
-            make.left.right.equalTo(leftView)
-            make.height.equalTo(0.5)
+        loadingView = LoadingView()
+        self.contentView.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(mOptionBar)
+            make.height.width.equalTo(50)
         }
+        loadingView.startAnimat()
         
         getData()
         
@@ -115,24 +116,17 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
     func parserDidEndDocument(parser: NSXMLParser) {
         subTitleLbl.text = "\(channels[lastPosition].channelName) 共\(channels[lastPosition].videoItem.count)部"
         mOptionBar.reloadData()
+        loadingView.hidden = true
+        loadingView.stopAnimat()
     }
     
     //uitable datasource,delegate
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cellId = "weekHotCell"
-        var cell : LeftViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId,forIndexPath:  indexPath) as? LeftViewCell
-        if cell == nil {
-            cell = LeftViewCell(style: .Default, reuseIdentifier: cellId)
-        }
-         cell?.selectionStyle = .None
-        cell?.icon.image = UIImage(named: leftMenu[indexPath.row].unSelectPic)
-        cell?.titleLbl.text = leftMenu[indexPath.row].title
+        let cell : LeftViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId,forIndexPath:  indexPath) as? LeftViewCell
         
-        if lastPosition == indexPath.row {
-            cell?.icon.image = UIImage(named: leftMenu[lastPosition].selectedPic)
-            cell?.titleLbl.textColor = UIColor.blueColor()
-        }
+        cell?.setViewData(leftMenu[indexPath.row])
         
         return cell!
     }
@@ -150,13 +144,10 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
             return
         }
         
-        let selectCell:LeftViewCell = tableView.cellForRowAtIndexPath(indexPath) as! LeftViewCell
-        selectCell.titleLbl.textColor = UIColor.blueColor()
-        selectCell.icon.image = UIImage(named: leftMenu[indexPath.row].selectedPic)
-        
-        let lastCell:LeftViewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as! LeftViewCell
-        lastCell.titleLbl.textColor = UIColor.whiteColor()
-        lastCell.icon.image = UIImage(named: leftMenu[lastPosition].unSelectPic)
+        if channels.isEmpty {
+            return
+        }
+
         lastPosition = indexPath.row
     
         subTitleLbl.text = "\(channels[indexPath.row].channelName) 共\(channels[indexPath.row].videoItem.count)部"
@@ -177,11 +168,13 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
         if cell == nil {
             cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "weekOpt")
         }
-        let viewDetail = channels[lastPosition].videoItem[index]
-        cell?.averageLbl.hidden = true
-        cell?.icon.sd_setImageWithURL(NSURL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-        cell?.videoNameLbl.text = viewDetail.name
-        cell?.durationLbl.text = viewDetail.duration
+        if channels.count != 0{
+            let viewDetail = channels[lastPosition].videoItem[index]
+            cell?.averageLbl.hidden = true
+            cell?.icon.sd_setImageWithURL(NSURL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+            cell?.videoNameLbl.text = viewDetail.name
+            cell?.durationLbl.text = viewDetail.duration
+        }
         
         return cell!
     }

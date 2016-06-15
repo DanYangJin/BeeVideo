@@ -22,7 +22,7 @@ class AppRecommendCell: UICollectionViewCell {
         
         backgroundImg = UIImageView()
         backgroundImg.contentMode = .Redraw
-        backgroundImg.image = UIImage(named: "v2_app_item_background")!.resizableImageWithCapInsets(UIEdgeInsetsMake(20, 20, 20, 20), resizingMode: .Stretch)
+        backgroundImg.image = UIImage(named: "v2_app_item_background")!.resizableImageWithCapInsets(UIEdgeInsetsMake(20, 40, 20, 40), resizingMode: .Stretch)
         self.contentView.addSubview(backgroundImg)
         
         titleBkImg = UIImageView()
@@ -38,7 +38,6 @@ class AppRecommendCell: UICollectionViewCell {
         titleLabl = UILabel()
         titleLabl.textColor = UIColor.whiteColor()
         titleLabl.font = UIFont.systemFontOfSize(12)
-        //titleLabl.text = "测试测试"
         titleLabl.textAlignment = .Center
         self.contentView.addSubview(titleLabl)
         

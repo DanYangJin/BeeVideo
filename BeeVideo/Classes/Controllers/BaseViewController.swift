@@ -11,7 +11,8 @@ import UIKit
 class BaseViewController: UIViewController {
     
     private var backgroundImg : UIImageView!
-
+    var loadingView : LoadingView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundImg = UIImageView()
@@ -24,6 +25,7 @@ class BaseViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
         }
+        
     }
 
     override func didReceiveMemoryWarning() {

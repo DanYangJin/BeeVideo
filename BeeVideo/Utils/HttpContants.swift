@@ -8,14 +8,18 @@
 
 
 class HttpContants {
-    static let HOST:String = "www.beevideo.tv"
+    static let HOST = "www.beevideo.tv"
+    
+    
+    static let V20_VOD_VIDEO_CATOGORY_LIST_ACTION = "/api/video2.0/stb_area_cate.action"
+    static let V20_VOD_VIDEO_VIDEO_LIST_ACTION = "/api/video2.0/video_list.action"
+    static let V20_VOD_FILTRATE_CATEGORY_ACTION = "/api/video2.0/video_area_cate_years.action"
+    static let V20_SEARCH_VIDEO_RECOMMAND_KEY_ACTION = "/api/video2.0/video_search_hotkey.action"
+    static let V20_SEARCH_VIDEO_ACTION = "/api/video2.0/video_search.action"
     
     static let URL_HOME_DATA = "/api/hometv2.0/listBlockByVersion.action"
-    static let V20_VOD_VIDEO_CATOGORY_LIST_ACTION:String = "/api/video2.0/stb_area_cate.action"
-    static let V20_VOD_VIDEO_VIDEO_LIST_ACTION:String = "/api/video2.0/video_list.action"
-    static let V20_VOD_FILTRATE_CATEGORY_ACTION:String = "/api/video2.0/video_area_cate_years.action"
-    static let URL_HD_VIDEO:String = "/videoplus/hometv/video_hd.action"
-    static let URL_GET_CATEGORY_GROUP:String = "/api/hometv2.0/listSubjectBlock.action"
+    static let URL_HD_VIDEO = "/videoplus/hometv/video_hd.action"
+    static let URL_GET_CATEGORY_GROUP = "/api/hometv2.0/listSubjectBlock.action"
     static let URL_SPECIAL_RANK = "/api/video2.0/subject_rank.action"
     static let URL_SPECIAL_ALL = "/api/video2.0/subject_all.action"
     static let URL_WEEK_HOT = "/api/video2.0/listWeekHotVideo.action"

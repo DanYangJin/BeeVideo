@@ -12,13 +12,14 @@ import Alamofire
 
 class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate{
 
-    
     private var mTableTitleView:TableTitleView!
     private var mContentScrollView:UIScrollView!
     private var remmondedPageView:RemmondedPageView!
     private var livePageView:LivePageView!
     private var videoPageView:VideoPageView!
     private var settingPageView:SettingPageView!
+    private var searchImage:UIButton!
+    
     private var mPagesWidth:[CGFloat] = Array()
     
     private var recommondScrollerView : UIScrollView!//首页
@@ -41,6 +42,17 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
             make.height.equalTo(40)
             make.topMargin.equalTo(30)
             make.leftMargin.equalTo(20)
+        }
+        
+        searchImage = UIButton()
+        searchImage.setImage(UIImage(named: "v2_launch_search"), forState: .Normal)
+        searchImage.setImage(UIImage(named: "v2_launch_search_select"), forState: .Highlighted)
+        searchImage.addTarget(self, action: #selector(self.toSearchViewController), forControlEvents: .TouchUpInside)
+        self.view.addSubview(searchImage)
+        searchImage.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(mTableTitleView)
+            make.right.equalTo(self.view).offset(-30)
+            make.width.equalTo(40)
         }
         
         let scrollerHeight = self.view.frame.height * 0.9 - 70
@@ -157,6 +169,11 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         scrollerView.showsVerticalScrollIndicator = false
         
         //scrollerView.delegate = self
+    }
+    
+    func toSearchViewController(){
+        let searchViewController = SearchViewController()
+        self.presentViewController(searchViewController, animated: true, completion: nil)
     }
     
     func setConstraints(){

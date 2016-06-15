@@ -17,6 +17,9 @@ typedef NS_ENUM(NSInteger, SXMarqueeSpeedLevel) {
 
 @interface SXMarquee : UIView
 
+- (instancetype)initWithFrame:(CGRect)frame;
+
+
 /**
  *  style is default, backgroundColor is white,textColor is black;
  *
@@ -64,5 +67,7 @@ typedef NS_ENUM(NSInteger, SXMarqueeSpeedLevel) {
  *  will start with the point we stoped.
  */
 - (void)restart;
+
+- (void)setText:(NSString *) text;
 
 @end

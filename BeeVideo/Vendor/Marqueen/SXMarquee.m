@@ -35,6 +35,17 @@ typedef NS_ENUM(NSInteger, SXMarqueeTapMode) {
 
 @implementation SXMarquee
 
+- (instancetype)initWithFrame:(CGRect)frame{
+    
+    if (self = [super initWithFrame:frame]){
+        self.bgColor = [UIColor clearColor];
+        self.txtColor = [UIColor whiteColor];
+        self.speedLevel = 3;
+    }
+    
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame speed:(SXMarqueeSpeedLevel)speed Msg:(NSString *)msg bgColor:(UIColor *)bgColor txtColor:(UIColor *)txtColor{
     if (self = [super initWithFrame:frame]) {
         self.layer.cornerRadius = 2;
@@ -223,6 +234,11 @@ typedef NS_ENUM(NSInteger, SXMarqueeTapMode) {
     if (flag) {
         [self moveAction];
     }
+}
+
+- (void)setText:(NSString *)text{
+    self.msg = text;
+    [self doSometingBeginning];
 }
 
 //- (void)newThread

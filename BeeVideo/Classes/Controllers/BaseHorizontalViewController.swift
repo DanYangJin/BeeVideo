@@ -21,7 +21,6 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        leftWidth = Float(view.frame.width * 0.2)
         initBaseView()
     }
     
@@ -36,7 +35,7 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         contentView.bounces = false
         contentView.delegate = self
         contentView.tag = 0
-        contentView.contentSize = CGSizeMake(self.view.frame.width * 1.2, self.view.frame.height)
+        contentView.contentSize = CGSizeMake(self.view.frame.width + CGFloat(leftWidth), self.view.frame.height)
         self.view.addSubview(contentView)
 
         
@@ -48,6 +47,16 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
             make.height.equalTo(contentView)
             make.width.equalTo(leftWidth)
         }
+        
+        let leftViewBckground = UIImageView()
+        leftViewBckground.contentMode = .Redraw
+        leftViewBckground.image = UIImage(named: "v2_search_keyboard_background")?.resizableImageWithCapInsets(UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .Stretch)
+        leftView.addSubview(leftViewBckground)
+        leftViewBckground.snp_makeConstraints { (make) in
+            make.left.right.equalTo(leftView)
+            make.top.bottom.equalTo(leftView)
+        }
+        
         
         strinkView = UIImageView()
         strinkView = UIImageView()
@@ -98,8 +107,8 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
                 dispatch_async(dispatch_get_main_queue(), {
                     scrollView.setContentOffset(scrollView.contentOffset, animated: false)
                     let xOffset = scrollView.contentOffset.x
-                    if xOffset >= self.view.frame.width * 0.1 {
-                        scrollView.setContentOffset(CGPoint(x: self.view.frame.width * 0.2, y: 0), animated: true)
+                    if xOffset >= CGFloat(self.leftWidth / 2) {
+                        scrollView.setContentOffset(CGPoint(x: CGFloat(self.leftWidth), y: 0), animated: true)
                         self.strinkView.image = UIImage(named: "v2_arrow_shrink_left")
                     }else{
                         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
@@ -108,8 +117,8 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
                 })
             }else{
                 let xOffset = scrollView.contentOffset.x
-                if xOffset >= self.view.frame.width * 0.1 {
-                    scrollView.setContentOffset(CGPoint(x: self.view.frame.width * 0.2, y: 0), animated: true)
+                if xOffset >= CGFloat(leftWidth) / 2 {
+                    scrollView.setContentOffset(CGPoint(x: CGFloat(leftWidth), y: 0), animated: true)
                     self.strinkView.image = UIImage(named: "v2_arrow_shrink_left")
                 }else{
                     scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
