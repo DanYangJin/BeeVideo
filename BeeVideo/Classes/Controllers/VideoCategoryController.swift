@@ -61,6 +61,14 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
             make.bottom.equalTo(self.view.snp_bottom).inset(30)
             make.height.equalTo(self.view.frame.height * 1/3)
         }
+        
+        loadingView = LoadingView()
+        loadingView.startAnimat()
+        self.view.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(self.view)
+            make.height.width.equalTo(40)
+        }
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -110,6 +118,7 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
+        loadingView.stopAnimat()
         self.setBackgroundImg(mBackgroundUrl)
         mOptionBar.reloadData()
     }
@@ -137,7 +146,6 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     
     func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         let videoId = mDataList[index].id
-        //print(videoId)
         var extras = [ExtraData]()
         let data = ExtraData()
         data.value = videoId

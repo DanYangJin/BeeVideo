@@ -165,12 +165,11 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
                 videoList.append(videoItem)
                 videoItem = nil
             }else if elementName == "video_list"{
-                searchRecomView.hidden = true
-                videoListView.hidden = false
                 searchPageData.videoList.appendContentsOf(videoList)
                 videoList = nil
             }
         }
+        currentElement = ""
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
@@ -180,6 +179,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
                 searchRecomView.setViewData(re!)
             }
         }else if requestId == .SEARCH_VIDEO_REQUEST{
+            videoListView.collectionView.hidden = false
             videoListView.setViewData(searchPageData.videoList)
         }
     }
@@ -230,6 +230,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         searchPageData.pageNo = 1
         searchPageData.videoList.removeAll()
         videoListView.removeViewData()
+        videoListView.collectionView.hidden = true
         getSearchListData()
         searchRecomView.hidden = true
         videoListView.hidden = false

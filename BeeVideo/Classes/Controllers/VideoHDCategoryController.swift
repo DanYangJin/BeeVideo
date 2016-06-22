@@ -65,6 +65,14 @@ class VideoHDCategoryController: BaseViewController,NSXMLParserDelegate,ZXOption
             make.bottom.equalTo(self.view.snp_bottom).inset(30)
             make.height.equalTo(self.view.frame.height * 1/3)
         }
+        
+        loadingView = LoadingView()
+        loadingView.startAnimat()
+        self.view.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(self.view)
+            make.height.width.equalTo(30)
+        }
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -116,6 +124,7 @@ class VideoHDCategoryController: BaseViewController,NSXMLParserDelegate,ZXOption
     func parserDidEndDocument(parser: NSXMLParser) {
         self.setBackgroundImg(mBackgroundUrl)
         mOptionBar.reloadData()
+        loadingView.stopAnimat()
     }
     
     func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {

@@ -61,18 +61,22 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         setScrollCommen(mContentScrollView)
         mContentScrollView.pagingEnabled = true
         mContentScrollView.delegate = self
+        mContentScrollView.delaysContentTouches = false
         //mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
         recommondScrollerView = UIScrollView()
+        recommondScrollerView.delaysContentTouches = false
         setScrollCommen(recommondScrollerView)
         self.mContentScrollView.addSubview(recommondScrollerView)
         
         videoScrollerView = UIScrollView()
+        videoScrollerView.delaysContentTouches = false
         setScrollCommen(videoScrollerView)
         self.mContentScrollView.addSubview(videoScrollerView)
         
         liveScrollerView = UIScrollView()
+        liveScrollerView.delaysContentTouches = false
         setScrollCommen(liveScrollerView)
         self.mContentScrollView.addSubview(liveScrollerView)
         
@@ -80,6 +84,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
         self.remmondedPageView.setController(self)
         self.remmondedPageView.initView()
+        self.remmondedPageView.becomeFirstResponder()
         self.remmondedPageView.height = scrollerHeight
         self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
         self.recommondScrollerView.addSubview(self.remmondedPageView)
@@ -137,8 +142,6 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         // mContentScrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
         let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
         mTableTitleView.setOnSelectButtonByPosition(index)
-        
-        
     }
     
     //获取当前滚动属于第几页
@@ -207,7 +210,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         
         self.remmondedPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.recommondScrollerView)
-            make.topMargin.equalTo(self.recommondScrollerView).offset(0)
+            make.topMargin.equalTo(self.recommondScrollerView)
             make.leftMargin.equalTo(self.recommondScrollerView).offset(30)
             make.width.equalTo(self.remmondedPageView.getViewWidth())
         }
@@ -221,18 +224,17 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         
         self.livePageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.liveScrollerView)
-            make.topMargin.equalTo(self.liveScrollerView).offset(0)
+            make.topMargin.equalTo(self.liveScrollerView)
             make.leftMargin.equalTo(self.liveScrollerView).offset(30)
             make.width.equalTo(self.livePageView.getViewWidth());
         }
         
         self.settingPageView.snp_makeConstraints{ (make) -> Void in
             make.height.equalTo(self.liveScrollerView)
-            make.topMargin.equalTo(self.liveScrollerView).offset(0)
+            make.topMargin.equalTo(self.liveScrollerView)
             make.leftMargin.equalTo(self.liveScrollerView.snp_right).offset(30)
             make.width.equalTo(liveScrollerView)
         }
     }
-
 }
 

@@ -67,6 +67,15 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         divider.backgroundColor = UIColor.init(patternImage: UIImage(named: "v2_video_detail_divider_bg")!)
         self.view.addSubview(divider)
         
+        loadingView = LoadingView()
+        loadingView.startAnimat()
+        self.view.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(self.view)
+            make.height.width.equalTo(40)
+            
+        }
+        
         posterImg.snp_makeConstraints { (make) in
             make.right.equalTo(self.view.snp_right).offset(-30)
             make.bottom.equalTo(divider.snp_top).offset(-10)
@@ -87,6 +96,9 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             make.top.equalTo(posterImg)
             make.bottom.equalTo(posterImg)
         }
+        
+        
+        
        // initBaseView()
         initTableView()
         initOptionBar()
@@ -219,6 +231,8 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     
     func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
+        print(elementName)
+        
         if requestId == NetRequestId.VIDEO_DETAIL_REQUEST_ID {
             if elementName == "video" {
                 currentDepth -= 1
@@ -255,6 +269,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
                 recommends.appendContentsOf(videoDetailInfo.actors)
             }
             recommendTab.reloadData()
+            loadingView.stopAnimat()
             getRecommendRequest()
         }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID || requestId == NetRequestId.SEARCH_REQUEST_ID{
             
@@ -373,7 +388,13 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
                 print(error)
                 return
             }
-            let parse = NSXMLParser(data: data!)
+            
+            let string = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print(string)
+            
+            let data1 = string?.dataUsingEncoding(NSUTF8StringEncoding)
+            
+            let parse = NSXMLParser(data: data1!)
             parse.delegate = self
             parse.parse()
         }

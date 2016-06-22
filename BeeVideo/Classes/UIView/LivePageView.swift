@@ -32,15 +32,15 @@ class LivePageView: BasePageView,UITableViewDataSource, UITableViewDelegate, ZXO
         addSubview(image)
         
         blockView1 = BlockView()
-        blockView1.initView(homeSpace[1])
+        blockView1.setData(homeSpace[1])
         addSubview(blockView1)
         
         blockView2 = BlockView()
-        blockView2.initView(homeSpace[2])
+        blockView2.setData(homeSpace[2])
         addSubview(blockView2)
         
         blockView3 = BlockView()
-        blockView3.initView(homeSpace[3])
+        blockView3.setData(homeSpace[3])
         addSubview(blockView3)
         
         

@@ -50,29 +50,22 @@ class VideoDetailInfoView: UIView {
         self.addSubview(backBtn)
         
         videoTitleLbl = UILabel()
-        //videoTitleLbl.text = "测试信息122113414143121"
-        //setCommenAttr(videoTitleLbl)
         videoTitleLbl.textColor = UIColor.whiteColor()
-        //videoTitleLbl.backgroundColor = UIColor.redColor()
         self.addSubview(videoTitleLbl)
         
         directorLbl = UILabel()
         setCommenAttr(directorLbl)
-        //directorLbl.backgroundColor = UIColor.redColor()
         directorLbl.text = "导演:"
         self.addSubview(directorLbl)
         
         videoDirectorLbl = UILabel()
         setCommenAttr(videoDirectorLbl)
-        //videoDirectorLbl.backgroundColor = UIColor.redColor()
-        //videoDirectorLbl.text = "测试信息"
         self.addSubview(videoDirectorLbl)
         
         cateLbl = UILabel()
         setCommenAttr(cateLbl)
         cateLbl.text = "类型:"
         self.addSubview(cateLbl)
-        //cateLbl = UILabel
         
         videoCateLbl = UILabel()
         setCommenAttr(videoCateLbl)
@@ -87,7 +80,6 @@ class VideoDetailInfoView: UIView {
         videoAreaLbl = UILabel()
         setCommenAttr(videoAreaLbl)
         videoAreaLbl.text = "测试"
-        //videoAreaLbl.backgroundColor = UIColor.redColor()
         self.addSubview(videoAreaLbl)
         
         publishLbl = UILabel()
@@ -127,7 +119,6 @@ class VideoDetailInfoView: UIView {
         
         videoDescLbl = VerticalAlignmentLabel()
         setCommenAttr(videoDescLbl)
-        //videoDescLbl.backgroundColor = UIColor.yellowColor()
         videoDescLbl.setVerticalAlignmentMode(VerticalAlignmentLabel.VerticalAlignmentMode.VerticalAlignmentTop)
         videoDescLbl.numberOfLines = 0
         self.addSubview(videoDescLbl)

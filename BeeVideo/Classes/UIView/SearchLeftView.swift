@@ -36,6 +36,7 @@ class SearchLeftView: UIView {
         
         keyLabel = UILabel()
         keyLabel.textAlignment = .Center
+        keyLabel.font = UIFont.systemFontOfSize(12)
         keyLabel.textColor = UIColor.whiteColor()
         self.addSubview(keyLabel)
         

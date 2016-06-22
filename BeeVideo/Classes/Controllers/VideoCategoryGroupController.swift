@@ -9,15 +9,14 @@
 import UIKit
 import Alamofire
 
-class VideoCategoryGroupController: BaseViewController,NSXMLParserDelegate {
+class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
  
-    private var backImg : UIImageView!
-    private var titleLbl : UILabel!
     private var groupList : Array<CategoryGroupItem>!
     private var groupView : CategoryGroupView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titleLbl.text = "影视专题"
         initView()
         getGroupListData()
     }
@@ -27,36 +26,23 @@ class VideoCategoryGroupController: BaseViewController,NSXMLParserDelegate {
     }
     
     private func initView(){
-        backImg = UIImageView()
-        backImg.image = UIImage(named: "v2_vod_list_arrow_left")
-        backImg.contentMode = .ScaleAspectFill
-        view.addSubview(backImg)
-        backImg.addOnClickListener(self, action: #selector(self.dismissViewController))
-        backImg.snp_makeConstraints { (make) in
-            make.left.equalTo(view).offset(30)
-            make.topMargin.equalTo(30)
-            make.height.equalTo(20)
-            make.width.equalTo(10)
-        }
-        
-        titleLbl = UILabel()
-        titleLbl.font = UIFont.systemFontOfSize(16)
-        titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.text = "影视专题"
-        view.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(backImg.snp_right).offset(8)
-            make.top.bottom.equalTo(backImg)
-        }
         
         groupView = CategoryGroupView()
         groupView.controller = self
         view.addSubview(groupView)
         groupView.snp_makeConstraints { (make) in
-            make.left.equalTo(backImg)
-            make.top.equalTo(backImg.snp_bottom).offset(30)
+            make.left.equalTo(backView)
+            make.top.equalTo(backView.snp_bottom).offset(20)
             make.right.equalTo(view)
             make.bottom.equalTo(view).multipliedBy(0.9)
+        }
+        
+        loadingView = LoadingView()
+        loadingView.stopAnimat()
+        self.view.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(groupView)
+            make.height.width.equalTo(40)
         }
 
     }
@@ -99,7 +85,7 @@ class VideoCategoryGroupController: BaseViewController,NSXMLParserDelegate {
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
-        print(groupList.count)
+        loadingView.stopAnimat()
         groupView.setGroupItems(groupList)
     }
     

@@ -143,16 +143,16 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
         if lastPosition == indexPath.row {
             return
         }
+        lastPosition = indexPath.row
+         mOptionBar.reloadData()
         
         if channels.isEmpty {
             return
         }
-
-        lastPosition = indexPath.row
-    
+        
         subTitleLbl.text = "\(channels[indexPath.row].channelName) 共\(channels[indexPath.row].videoItem.count)部"
         
-        mOptionBar.reloadData()
+       
     }
     
     //optionbarDataSource,delegate

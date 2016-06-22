@@ -13,12 +13,13 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
     var contentView : UIScrollView!
     var leftView : UIView!
     var strinkView : UIImageView!
-    var backView : BackView!
+    //var backView : BackView!
     var titleLbl : UILabel!
     var subTitleLbl : UILabel!
+    var backView : UIButton!
     
     var leftWidth : Float = 0
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initBaseView()
@@ -34,10 +35,11 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         contentView.showsHorizontalScrollIndicator = false
         contentView.bounces = false
         contentView.delegate = self
+        contentView.delaysContentTouches = false
         contentView.tag = 0
         contentView.contentSize = CGSizeMake(self.view.frame.width + CGFloat(leftWidth), self.view.frame.height)
         self.view.addSubview(contentView)
-
+        
         
         leftView = UIView()
         contentView.addSubview(leftView)
@@ -70,8 +72,19 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
             make.width.equalTo(20)
         }
         
-        backView = BackView()
-        backView.addOnClickListener(self, action: #selector(self.dismissViewController))
+        //        backView = BackView()
+        //        backView.addOnClickListener(self, action: #selector(self.dismissViewController))
+        //        contentView.addSubview(backView)
+        //        backView.snp_makeConstraints { (make) in
+        //            make.left.equalTo(strinkView.snp_right)
+        //            make.topMargin.equalTo(25)
+        //            make.height.width.equalTo(30)
+        //        }
+        
+        backView = UIButton()
+        backView.setImage(UIImage(named: "v2_title_arrow_default"), forState: .Normal)
+        backView.setImage(UIImage(named: "v2_title_arrow_selected"), forState: .Highlighted)
+        backView.addTarget(self, action: #selector(self.dismissViewController), forControlEvents: .TouchUpInside)
         contentView.addSubview(backView)
         backView.snp_makeConstraints { (make) in
             make.left.equalTo(strinkView.snp_right)
@@ -128,6 +141,6 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         }
     }
     
-
+    
     
 }

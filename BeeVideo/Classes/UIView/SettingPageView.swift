@@ -72,7 +72,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         }
         
         accountSettingBlock = SettingBlockView()
-        let accountSettingData = SettingBlockData(title: "账户", icon: "v2_setting_acount_icon", backgroundImg: "v2_laucher_block_orange_bg", targetController: nil)
+        let accountSettingData = SettingBlockData(title: "账户", icon: "v2_setting_acount_icon", backgroundImg: "v2_laucher_block_orange_bg", targetController: AccountViewController())
         accountSettingBlock.setData(accountSettingData)
         accountSettingBlock.clickDelegate = self
         addSubview(accountSettingBlock)

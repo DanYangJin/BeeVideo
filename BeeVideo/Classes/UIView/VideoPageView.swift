@@ -29,7 +29,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
             // blockView.initFrame(0, y: CGFloat(73 * index), width: 65, height: 65)
             //print(height)
             blockView.frame = CGRectMake(0, height * 0.34 * CGFloat(index), height * 0.32, height * 0.32)
-            blockView.initView(super.homeSpace[index])
+            blockView.setData(super.homeSpace[index])
             blockView.setDelegate(self)
             addSubview(blockView)
         }
@@ -37,7 +37,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
         let blockLarge = BlockView()
         //blockLarge.initFrame(70, y: 0, width: 120, height: 210)
         blockLarge.frame = CGRectMake(height * 0.32 + 5.0, 0, height * 4/7, height)
-        blockLarge.initView(super.homeSpace[3])
+        blockLarge.setData(super.homeSpace[3])
         blockLarge.setDelegate(self)
         addSubview(blockLarge)
         
@@ -45,7 +45,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
             let blockView = BlockView()
             //blockView.initFrame(195, y: CGFloat(110 * index), width: 150, height: 100)
             blockView.frame = CGRectMake(height * 0.32 + height * 4/7 + 10, height * 0.52 * CGFloat(index), height * 0.48 * 1.5, height * 0.48)
-            blockView.initView(super.homeSpace[index + 4])
+            blockView.setData(super.homeSpace[index + 4])
             blockView.setBlockViewMode(.Right)
             blockView.setDelegate(self)
             addSubview(blockView)
@@ -55,7 +55,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
             let blockView = BlockView()
             // blockView.initFrame(350, y: CGFloat(110 * index), width: 100, height: 100)
             blockView.frame = CGRectMake(height * (1.04 + 4/7) + 15, height * 0.52 * CGFloat(index), height * 0.48, height * 0.48)
-            blockView.initView(super.homeSpace[index + 6])
+            blockView.setData(super.homeSpace[index + 6])
             blockView.setDelegate(self)
             addSubview(blockView)
         }
@@ -64,7 +64,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
             let blockView = BlockView()
             // blockView.initFrame(455, y: CGFloat(110 * index), width: 100, height: 100)
             blockView.frame = CGRectMake(height * (1.52 + 4/7) + 20, height * 0.52 * CGFloat(index), height * 0.48, height * 0.48)
-            blockView.initView(super.homeSpace[index + 8])
+            blockView.setData(super.homeSpace[index + 8])
             blockView.setDelegate(self)
             addSubview(blockView)
         }

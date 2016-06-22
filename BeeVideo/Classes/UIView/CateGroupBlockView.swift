@@ -31,6 +31,7 @@ class CateGroupBlockView: BaseBlockView {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesEnded(touches, withEvent: event)
         if delegate == nil{
             return
         }

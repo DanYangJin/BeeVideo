@@ -17,6 +17,8 @@ class SettingBlockView: UIView {
     private var titleLbl : UILabel!
     private var inco : UIImageView!
     private var backgroundImg : UIImageView!
+    private var clickView : UIView!
+    
     var settingData:SettingBlockData!
     var clickDelegate:SettingBlockViewClickDelegate!
     
@@ -25,7 +27,16 @@ class SettingBlockView: UIView {
         initBackgroundImg()
         initTitleLbl()
         initInco()
+        clickView = UIView()
+        clickView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+        clickView.hidden = true
+        self.addSubview(clickView)
         setConstraints()
+        
+        clickView.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(self)
+            make.left.right.equalTo(self)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -90,11 +101,30 @@ class SettingBlockView: UIView {
         titleLbl.text = title
     }
   
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        clickView.hidden = false
+    }
+    
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        super.touchesCancelled(touches, withEvent: event)
+        clickView.hidden = true
+    }
+
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        clickView.hidden = true
         if clickDelegate == nil{
             return
         }
+        let point:CGPoint = (touches.first?.locationInView(self))!
+        let x = point.x
+        let y = point.y
+        let width = self.frame.width
+        let height = self.frame.height
+        if x < 0 || x > width || y < 0 || y > height{
+            return
+        }
+        
         clickDelegate.settingBlockViewClick(settingData)
     }
     

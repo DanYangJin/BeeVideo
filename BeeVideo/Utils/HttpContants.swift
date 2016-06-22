@@ -17,6 +17,7 @@ class HttpContants {
     static let V20_SEARCH_VIDEO_RECOMMAND_KEY_ACTION = "/api/video2.0/video_search_hotkey.action"
     static let V20_SEARCH_VIDEO_ACTION = "/api/video2.0/video_search.action"
     
+    static let URL_HISTORY_RECOMMEND = "/api/video2.0/commonVideoRec.action"
     static let URL_HOME_DATA = "/api/hometv2.0/listBlockByVersion.action"
     static let URL_HD_VIDEO = "/videoplus/hometv/video_hd.action"
     static let URL_GET_CATEGORY_GROUP = "/api/hometv2.0/listSubjectBlock.action"
@@ -25,6 +26,8 @@ class HttpContants {
     static let URL_WEEK_HOT = "/api/video2.0/listWeekHotVideo.action"
     static let URL_REST_VIDEO_ACTION = "/api/hometv2.0/listVideoCategoryBlock.action"
     static let URL_GET_RECOMM_APK_LIST = "/apprec/front/listAppRec.action"
+    
+    static let ACTION_QUERY_USER_POINT_INFO = "/userpoint/client/queryUserPointInfo.action"
     
     //Request param
     static let PARAM_CHANNEL_ID = "channelId"

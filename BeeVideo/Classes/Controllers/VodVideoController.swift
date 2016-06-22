@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,VideoListViewDelegate {
     
     private enum NetRequestId{
         case VIDEO_CATEGORY_REQUEST
@@ -28,18 +28,17 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     private var videoPageData : VodVideoPageData = VodVideoPageData()
     private var videoList : Array<VideoBriefItem>!
     private var videoItem : VideoBriefItem!
-    private var pageNum : Int = 1
     private var maxPage : Int = 0
     private var leftWidth : Float!
     private var lastPosition = 4
     
     private var contentView : UIScrollView!
     private var leftView : VodLeftView!
-    private var videoCollection : UICollectionView!
     private var strinkView : UIImageView!
-    private var backImg : UIImageView!
+    private var backView : UIButton!
     private var titleLbl : UILabel!
     private var countLbl : UILabel!
+    private var videoListView : VideoListView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,16 +78,15 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             make.width.equalTo(20)
         }
         
-        backImg = UIImageView()
-        backImg.image = UIImage(named: "v2_vod_list_arrow_left")
-        backImg.contentMode = .ScaleAspectFill
-        contentView.addSubview(backImg)
-        backImg.addOnClickListener(self, action: #selector(self.dismissViewController))
-        backImg.snp_makeConstraints { (make) in
+        backView = UIButton()
+        backView.setImage(UIImage(named: "v2_title_arrow_default"), forState: .Normal)
+        backView.setImage(UIImage(named: "v2_title_arrow_selected"), forState: .Highlighted)
+        backView.addTarget(self, action: #selector(self.dismissViewController), forControlEvents: .TouchUpInside)
+        contentView.addSubview(backView)
+        backView.snp_makeConstraints { (make) in
             make.left.equalTo(strinkView.snp_right)
-            make.topMargin.equalTo(30)
-            make.height.equalTo(20)
-            make.width.equalTo(10)
+            make.topMargin.equalTo(25)
+            make.height.width.equalTo(30)
         }
         
         titleLbl = UILabel()
@@ -96,8 +94,8 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         titleLbl.textColor = UIColor.whiteColor()
         contentView.addSubview(titleLbl)
         titleLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(backImg.snp_right).offset(8)
-            make.top.bottom.equalTo(backImg)
+            make.left.equalTo(backView.snp_right)
+            make.top.bottom.equalTo(backView)
         }
         
         countLbl = UILabel()
@@ -110,52 +108,36 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             make.left.equalTo(titleLbl.snp_right).offset(5)
         }
         
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = self.view.frame.height - 80 - (self.view.frame.width - 80)/6 * 14/5
-        videoCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        videoCollection.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "collection")
-        videoCollection.dataSource = self
-        videoCollection.delegate = self
-        videoCollection.tag = 2
-        videoCollection.backgroundColor = UIColor.clearColor()
-        contentView.addSubview(videoCollection)
-        videoCollection.snp_makeConstraints { (make) in
-            make.top.equalTo(backImg.snp_bottom).offset(20)
+        videoListView = VideoListView()
+        videoListView.delegate = self
+        contentView.addSubview(videoListView)
+        videoListView.snp_makeConstraints { (make) in
+            make.top.equalTo(backView.snp_bottom).offset(20)
             make.bottom.equalTo(self.view).offset(-10)
             make.left.equalTo(strinkView.snp_right)
             make.width.equalTo(contentView).offset(-20)
         }
-
-        loadingView = LoadingView()
-        self.contentView.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
-            make.center.equalTo(videoCollection)
-            make.height.width.equalTo(50)
-        }
-        loadingView.startAnimat()
         
         getVideoCategoryData()
         
     }
     
-    private func initCollectionView(){
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = self.view.frame.height - 80 - (self.view.frame.width - 80)/6 * 14/5
-        videoCollection = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        videoCollection.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "collection")
-        videoCollection.dataSource = self
-        videoCollection.delegate = self
-        videoCollection.tag = 2
-        videoCollection.backgroundColor = UIColor.clearColor()
-        contentView.addSubview(videoCollection)
-        videoCollection.snp_makeConstraints { (make) in
-            make.top.equalTo(backImg.snp_bottom).offset(20)
-            make.bottom.equalTo(self.view).offset(-10)
-            make.left.equalTo(strinkView.snp_right)
-            make.width.equalTo(contentView).offset(-20)
+    
+    func onLoadMoreListener() {
+        if videoPageData.pageNo < videoPageData.maxPage {
+            videoPageData.pageNo += 1
+            getVideoListData(configParams(vodCategoryGather, index: lastPosition))
+            videoListView.loadingView.startAnimat()
         }
     }
     
+    func onVideoListViewItemClick(videoId: String) {
+        let detailViewController = VideoDetailViewController()
+        var extras = [ExtraData]()
+        extras.append(ExtraData(name: "videoId", value: videoId))
+        detailViewController.extras = extras
+        self.presentViewController(detailViewController, animated: true, completion: nil)
+    }
     //tableview相关
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return vodCategoryGather.vodCategoryList.count
@@ -202,12 +184,15 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             return
         }
         
+        videoPageData.videoList.removeAll()
+        
+        videoListView.collectionView.hidden = true
+        
         if lastPosition >= 2 && indexPath.row >= 2 {
             let lastCell:VodVideoTableViewCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableViewCell
             if lastCell != nil {
                 lastCell!.titleLbl?.textColor = UIColor.whiteColor()
             }
-            loadingView.startAnimat()
         }
         if indexPath.row >= 2{
             let currentCell:VodVideoTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! VodVideoTableViewCell
@@ -221,15 +206,16 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
         
         titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].title
-        
        
         if indexPath.row == 1 {
             let searchController = SearchViewController()
             self.presentViewController(searchController, animated: true, completion: nil)
-            loadingView.stopAnimat()
         }else{
             SDImageCache.sharedImageCache().clearMemory()
             videoPageData.videoList.removeAll()
+            videoPageData.pageNo = 1
+            videoListView.removeViewData()
+            videoListView.loadingView.startAnimat()
             getVideoListData(configParams(vodCategoryGather, index: indexPath.row))
         }
         
@@ -240,55 +226,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     }
     
     
-    //collectionview相关
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return videoPageData.videoList.count
-    }
-    
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
-        let cell : VideoItemCell = collectionView.dequeueReusableCellWithReuseIdentifier("collection", forIndexPath: indexPath) as! VideoItemCell
-        cell.itemView.setData(videoPageData.videoList[indexPath.row])
-        
-        return cell
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        
-        let viewWidth = self.view.frame.width
-        let width = (viewWidth - 80)/6
-        let height = width * 7/5
-        
-        return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        
-        return UIEdgeInsetsMake(0, 0, 0, 10)
-    }
-    
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == videoPageData.videoList.count - 1{
-            if pageNum < maxPage {
-                pageNum += 1
-                getVideoListData(configParams(vodCategoryGather, index: lastPosition))
-            }
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        
-        let videoId = videoPageData.videoList[indexPath.row].id
-        var extras:[ExtraData] = [ExtraData]()
-        extras.append(ExtraData(name: "",value:videoId))
-        
-        let controller = VideoDetailViewController()
-        controller.extras = extras
-        self.presentViewController(controller, animated: true, completion: nil)
-    }
-    
-    //scrollView
+     //scrollView
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.tag == 0 {
@@ -374,7 +312,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
                 countLbl.text = "共\(content)个视频"
                 let pageSize : Float = Float(VodVideoPageData.PAGE_SIZE)
                 let totalSize : Float = Float(content)!
-                maxPage = Int(ceilf(totalSize/pageSize))
+                videoPageData.maxPage = Int(ceilf(totalSize/pageSize))
             }else if currentElement == "id"{
                 videoItem.id = content
             }else if currentElement == "name"{
@@ -424,9 +362,8 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             titleLbl.text = vodCategoryGather.vodCategoryList[4].title
             getVideoListData(configParams(vodCategoryGather, index: 4))
         }else if requestId == NetRequestId.VIDEO_VIDEO_LIST_REQUEST{
-            videoCollection.reloadData()
-            videoCollection.contentOffset = CGPoint(x: 0, y: 0)
-            loadingView.stopAnimat()
+            videoListView.collectionView.hidden = false
+            videoListView.setViewData(videoPageData.videoList)
         }
     }
     
@@ -449,12 +386,17 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     //获取视频列表
     private func getVideoListData(params: [String:AnyObject]){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
-            _,_,data,error in
+            request,_,data,error in
             self.requestId = NetRequestId.VIDEO_VIDEO_LIST_REQUEST
+            print(request?.URLString)
             if error != nil {
                 print(error)
                 return
             }
+            
+            let string = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print(string)
+            
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
@@ -465,7 +407,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         var ret = [String : AnyObject]()
         ret[HttpContants.PARAM_CHANNEL_ID] = channelId
         ret[HttpContants.PARAM_PAGE_SIZE] = VodVideoPageData.PAGE_SIZE
-        ret[HttpContants.PARAM_PAGE_NO] = pageNum
+        ret[HttpContants.PARAM_PAGE_NO] = videoPageData.pageNo
         if index > gather.vodCategoryList.count - 1{
             return ret
         }
@@ -479,9 +421,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     
     override func dismissViewController() {
         SDImageCache.sharedImageCache().clearMemory()
-        videoCollection.delegate = nil
-        videoCollection.dataSource = nil
-        videoCollection = nil
         leftView = nil
         super.dismissViewController()
     }

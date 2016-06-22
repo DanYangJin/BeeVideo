@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ESPullToRefresh
+import DZNEmptyDataSet
 
 protocol VideoListViewDelegate{
     func onVideoListViewItemClick(videoId: String)
@@ -15,7 +15,7 @@ protocol VideoListViewDelegate{
 }
 
 
-class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource {
+class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate {
 
     var collectionView:UICollectionView!
     var loadingView:LoadingView!
@@ -31,6 +31,9 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
         collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.emptyDataSetSource = self
+        collectionView.emptyDataSetDelegate = self
+        collectionView.hidden = true
         collectionView.backgroundColor = UIColor.clearColor()
         collectionView.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "searchCell")
         self.addSubview(collectionView)
@@ -82,6 +85,14 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
                 delegate.onLoadMoreListener()
             }
         }
+    }
+    
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let emptyMessage = "没有找到相关内容"
+        let attributes:[String:AnyObject] = [NSFontAttributeName : UIFont.systemFontOfSize(12),
+                                             NSForegroundColorAttributeName: UIColor.whiteColor()
+        ]
+        return NSAttributedString(string: emptyMessage, attributes: attributes)
     }
     
     func setViewData(viewData: [VideoBriefItem]){

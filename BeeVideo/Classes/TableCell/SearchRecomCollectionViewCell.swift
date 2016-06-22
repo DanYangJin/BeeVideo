@@ -16,8 +16,8 @@ class SearchRecomCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         bgImg = UIImageView()
-        bgImg.contentMode = .ScaleToFill
-        bgImg.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 30,left: 30,bottom: 30,right: 30), resizingMode: .Tile)
+        bgImg.contentMode = .Redraw
+        bgImg.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 13,left: 10,bottom: 13,right: 10), resizingMode: .Stretch)
         self.addSubview(bgImg)
         bgImg.snp_makeConstraints{ (make) in
             make.left.right.equalTo(self)
@@ -26,11 +26,13 @@ class SearchRecomCollectionViewCell: UICollectionViewCell {
         
         titleLable = UILabel()
         titleLable.font = UIFont.systemFontOfSize(12)
+        titleLable.numberOfLines = 2
         titleLable.textAlignment = .Left
         titleLable.textColor = UIColor.colorWithHexString(ColorUtil.search_recom_item_normal)
         self.addSubview(titleLable)
         titleLable.snp_makeConstraints { (make) in
             make.left.equalTo(self).offset(10)
+            make.right.equalTo(self)
             make.centerY.equalTo(self)
         }
         

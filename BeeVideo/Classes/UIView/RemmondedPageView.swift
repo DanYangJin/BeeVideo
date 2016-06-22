@@ -69,7 +69,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         lastCell.setMarqueeStart(false)
         
         currentPosition = cyclePosition
-        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9")?.resizableImageWithCapInsets(UIEdgeInsets(top: 140,left: 10,bottom: 66,right: 200), resizingMode: .Stretch))
         let cell = cycleTableView.cellForRowAtIndexPath(NSIndexPath(forRow: cyclePosition, inSection: 0)) as! CycleTableCell
         cell.setMarqueeStart(true)
         cyclePosition += 1
@@ -102,46 +102,46 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         addSubview(cycleTableView)
         
         myVideoBlock = BlockView()
-        myVideoBlock.initView(homeSpace[1])
+        myVideoBlock.setData(homeSpace[1])
         myVideoBlock.setDelegate(self)
         addSubview(myVideoBlock)
         
         weekHotBlock = BlockView()
-        weekHotBlock.initView(homeSpace[2])
+        weekHotBlock.setData(homeSpace[2])
         weekHotBlock.setDelegate(self)
         addSubview(weekHotBlock)
         
         newVideoBlock = BlockView()
-        newVideoBlock.initView(homeSpace[3])
+        newVideoBlock.setData(homeSpace[3])
         newVideoBlock.setDelegate(self)
         addSubview(newVideoBlock)
         
         block1 = BlockView()
-        block1.initView(homeSpace[4])
+        block1.setData(homeSpace[4])
         block1.hiddenLbl(true)
         block1.setDelegate(self)
         addSubview(block1)
         
         block2 = BlockView()
-        block2.initView(homeSpace[5])
+        block2.setData(homeSpace[5])
         block2.hiddenLbl(true)
         block2.setDelegate(self)
         addSubview(block2)
         
         block3 = BlockView()
-        block3.initView(homeSpace[6])
+        block3.setData(homeSpace[6])
         block3.hiddenLbl(true)
         block3.setDelegate(self)
         addSubview(block3)
         
         block4 = BlockView()
-        block4.initView(homeSpace[7])
+        block4.setData(homeSpace[7])
         block4.hiddenLbl(true)
         block4.setDelegate(self)
         addSubview(block4)
         
         block5 = BlockView()
-        block5.initView(homeSpace[8])
+        block5.setData(homeSpace[8])
         block5.hiddenLbl(true)
         block5.setDelegate(self)
         addSubview(block5)
@@ -296,6 +296,10 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     
     override func initData(){
         self.cycleItems = super.homeSpace![0]
+    }
+    
+    override func canBecomeFirstResponder() -> Bool {
+        return true
     }
     
 }

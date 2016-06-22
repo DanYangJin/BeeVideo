@@ -83,7 +83,7 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
         
         let width = collectionView.frame.width * 0.48
         
-        return CGSize(width: width, height: 25)
+        return CGSize(width: width, height: 30)
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {

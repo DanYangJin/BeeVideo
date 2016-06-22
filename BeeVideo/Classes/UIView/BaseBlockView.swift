@@ -17,34 +17,35 @@ class BaseBlockView: UIView {
 
     private var blockImage:CornerImageView!
     var blockName:UILabel!
+    private var clickBackgroudnImg:CornerImageView!
+    
     private var blockViewMode : BlockViewMode = BlockViewMode.Center
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initImage()
-        initLabel()
-        setConstriants()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    private func initImage(){
-        // blockImage = CornerImageView(frame: CGRectMake(0, 0, width, height))
+        
         blockImage = CornerImageView()
         blockImage.setCorner(4.0)
         addSubview(blockImage)
-    }
-    
-    private func initLabel(){
+        
         blockName = UILabel()
-        //blockName.frame = CGRectMake(0, height - 20, width, 20)
         blockName.textAlignment = NSTextAlignment.Center
         blockName.textColor = UIColor.whiteColor()
         blockName.font = UIFont(name: "Helvetica", size: 12.0)
         addSubview(blockName)
+        
+        clickBackgroudnImg = CornerImageView()
+        clickBackgroudnImg.setCorner(4.0)
+        clickBackgroudnImg.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+        clickBackgroudnImg.hidden = true
+        self.addSubview(clickBackgroudnImg)
+        
+        setConstriants()
+    
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func setBlockViewMode(mode: BlockViewMode){
@@ -91,11 +92,42 @@ class BaseBlockView: UIView {
                 
             }
         }
+        
+        clickBackgroudnImg.snp_makeConstraints { (make) in
+            make.left.right.equalTo(blockImage)
+            make.top.bottom.equalTo(blockImage)
+        }
     }
 
     
     func hiddenLbl(hidden: Bool){
         blockName.hidden = hidden
     }
+
+    
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        clickBackgroudnImg.hidden = false
+    }
+    
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+        clickBackgroudnImg.hidden = true
+    }
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let point:CGPoint = (touches.first?.locationInView(self))!
+        let x = point.x
+        let y = point.y
+        let width = self.frame.width
+        let height = self.frame.height
+        if x < 0 || x > width || y < 0 || y > height{
+            clickBackgroudnImg.hidden = true
+        }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        clickBackgroudnImg.hidden = true
+    }
+    
+
     
 }

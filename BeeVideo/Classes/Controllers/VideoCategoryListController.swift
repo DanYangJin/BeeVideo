@@ -67,6 +67,14 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
             make.height.equalTo(view).dividedBy(2)
         }
         
+        loadingView = LoadingView()
+        loadingView.startAnimat()
+        self.view.addSubview(loadingView)
+        loadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(mOptionBar)
+            make.height.width.equalTo(40)
+        }
+        
         getListData()
     }
     
@@ -108,6 +116,7 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
     
     func parserDidEndDocument(parser: NSXMLParser) {
         countLbl.text = "共\(itemList.count)个专题"
+        loadingView.stopAnimat()
         mOptionBar.reloadData()
     }
     
