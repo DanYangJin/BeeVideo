@@ -22,7 +22,7 @@ class BaseBackViewController: BaseViewController {
         backView.snp_makeConstraints { (make) in
             make.left.equalTo(view).offset(30)
             make.top.equalTo(view).offset(20)
-            make.width.height.equalTo(30)
+            make.width.height.equalTo(40)
         }
         
         titleLbl = UILabel()

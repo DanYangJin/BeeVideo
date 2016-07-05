@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         NSThread.sleepForTimeInterval(0)
+        SDImageCache.sharedImageCache().maxMemoryCost = 1024 * 1024 * 8
+        SDImageCache.sharedImageCache().maxCacheSize = 1024 * 1024 * 8
         let userDefault = NSUserDefaults.standardUserDefaults()
         let isFirstRun = userDefault.valueForKey("isFirstRun") as? Bool
         if isFirstRun == nil || isFirstRun! {
@@ -48,6 +50,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
  
         self.saveContext()
+    }
+    
+    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+        SDImageCache.sharedImageCache().clearMemory()
+        SDWebImageManager.sharedManager().cancelAll()
     }
 
     // MARK: - Core Data stack

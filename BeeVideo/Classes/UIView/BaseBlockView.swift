@@ -115,13 +115,12 @@ class BaseBlockView: UIView {
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         let point:CGPoint = (touches.first?.locationInView(self))!
-        let x = point.x
-        let y = point.y
-        let width = self.frame.width
-        let height = self.frame.height
-        if x < 0 || x > width || y < 0 || y > height{
-            clickBackgroudnImg.hidden = true
+        let isInside = self.pointInside(point, withEvent: event)
+        if !isInside {
+            //clickBackgroudnImg.hidden = true
+            self.touchesCancelled(touches, withEvent: event)
         }
+
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {

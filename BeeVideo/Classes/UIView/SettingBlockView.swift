@@ -106,10 +106,16 @@ class SettingBlockView: UIView {
     }
     
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
-        super.touchesCancelled(touches, withEvent: event)
         clickView.hidden = true
     }
 
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        let point:CGPoint = (touches.first?.locationInView(self))!
+        let isInside = self.pointInside(point, withEvent: event)
+        if !isInside {
+            clickView.hidden = true
+        }
+    }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         clickView.hidden = true
@@ -117,11 +123,8 @@ class SettingBlockView: UIView {
             return
         }
         let point:CGPoint = (touches.first?.locationInView(self))!
-        let x = point.x
-        let y = point.y
-        let width = self.frame.width
-        let height = self.frame.height
-        if x < 0 || x > width || y < 0 || y > height{
+        let isInside = self.pointInside(point, withEvent: event)
+        if !isInside {
             return
         }
         

@@ -22,6 +22,7 @@ class ItemView: UIView {
     private var flagImg : UIImageView!
     
     private var data : VideoBriefItem!
+    private var dataByDatabase : VideoHistoryItem!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -130,6 +131,27 @@ class ItemView: UIView {
                 flagImg.image = UIImage(named: "v2_video_flag_hd")
             }
         }
+    }
+    
+    func setDataFromDataBase(data: VideoHistoryItem){
+        self.dataByDatabase = data
+        poster.sd_setImageWithURL(NSURL(string: data.poster), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+        durationLbl.text = data.duration
+        nameLbl.text = data.videoName
+        if data.score == nil || data.score.isEmpty {
+            averageLbl.hidden = true
+        }else{
+            averageLbl.hidden = false
+            averageLbl.text = data.score
+        }
+        if !isFlagImgHidden {
+            if data.resolutionType == 4 {
+                flagImg.image = UIImage(named: "v2_video_flag_sd")
+            }else if data.resolutionType == 3{
+                flagImg.image = UIImage(named: "v2_video_flag_hd")
+            }
+        }
+
     }
     
     func setFlagHidden(hidden: Bool){

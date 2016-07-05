@@ -1,0 +1,6 @@
+framework module PopupController {
+  umbrella header "PopupController-umbrella.h"
+
+  export *
+  module * { export * }
+}

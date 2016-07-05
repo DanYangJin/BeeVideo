@@ -25,7 +25,6 @@ class BaseViewController: UIViewController {
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
         }
-        
     }
 
     override func didReceiveMemoryWarning() {

@@ -19,25 +19,24 @@ class VideoHDCategoryController: BaseViewController,NSXMLParserDelegate,ZXOption
     private var mOptionBar : ZXOptionBar!
     
     private var mBackgroundUrl : String = ""
-    private var mDataList : Array<VideoBriefItem>!
+    private var mDataList : [VideoBriefItem] = [VideoBriefItem]()
     private var mVideoBriefItem : VideoBriefItem!
     
-    private var currentElement : String!
+    private var currentElement = ""
     
     var extras : [ExtraData]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mDataList = Array<VideoBriefItem>()
-        
         initView()
         
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HD_VIDEO)!).response{ _,_,data,error in
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HD_VIDEO)!).response{ request,_,data,error in
             if (error != nil) {
                 print(error)
                 return
             }
+            print(request?.URLString)
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
@@ -84,9 +83,6 @@ class VideoHDCategoryController: BaseViewController,NSXMLParserDelegate,ZXOption
     
     func parser(parser: NSXMLParser, foundCharacters string: String) {
         let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if currentElement == nil {
-            return
-        }
         if content.isEmpty {
             return
         }
@@ -118,7 +114,7 @@ class VideoHDCategoryController: BaseViewController,NSXMLParserDelegate,ZXOption
             mDataList.append(mVideoBriefItem)
             mVideoBriefItem = nil
         }
-        currentElement = nil
+        currentElement = ""
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {

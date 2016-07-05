@@ -41,7 +41,9 @@ class BlockView: BaseBlockView {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
-        if delegate == nil {
+        let point = touches.first?.locationInView(self)
+        let inside = self.pointInside(point!, withEvent: event)
+        if delegate == nil || !inside {
             return
         }
         delegate.blockClick(homeSpace)

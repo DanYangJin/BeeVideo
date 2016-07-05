@@ -10,8 +10,6 @@ import SnapKit
 import Alamofire
 
 class LauncherViewController: BaseViewController,NSXMLParserDelegate{
-
-    
     //变量
     var homeData:HomeData!
     var currentName:String!
@@ -34,8 +32,9 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     override func viewDidLoad() {
 
         let bagroundImage:UIImageView = UIImageView()
+        bagroundImage.image = UIImage(named: "home_start_bg")
         bagroundImage.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"))
-        
+        self.view.addSubview(bagroundImage)
         bagroundImage.snp_makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
             make.height.equalTo(self.view.frame.height)
@@ -51,7 +50,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
                 self.parseXml(data!)
         }
         
-        self.view.addSubview(bagroundImage)
+        
     }
     
     
@@ -218,7 +217,9 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     func parserDidEndDocument(parser: NSXMLParser) {
         let viewController = ViewController()
         viewController.homeData = self.homeData
-        self.presentViewController(viewController,animated: true,completion: nil)
+        self.presentViewController(viewController,animated: true,completion: {
+            
+        })
     }
 
 }

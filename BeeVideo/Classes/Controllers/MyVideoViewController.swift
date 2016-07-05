@@ -8,9 +8,9 @@
 
 import Alamofire
 
-class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate {
+class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate,VideoListViewDelegate {
     
-    private let menuData:[LeftViewTableData] = [
+    lazy var menuData:[LeftViewTableData] = [
         LeftViewTableData(title: "观看历史", unSelectPic: "v2_my_video_history_default", selectedPic: "v2_my_video_history_selected"),
         LeftViewTableData(title: "追剧收藏", unSelectPic: "v2_my_video_like_bg_normal", selectedPic: "v2_my_video_like_bg_favorited"),
         LeftViewTableData(title: "我的下载", unSelectPic: "v2_my_video_download_bg_normal", selectedPic: "v2_my_video_download_selected")
@@ -57,6 +57,7 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         
         myFavoriteView = MyFavoriteView()
         myFavoriteView.hidden = true
+        myFavoriteView.delegate = self
         contentView.addSubview(myFavoriteView)
         myFavoriteView.snp_makeConstraints { (make) in
             make.top.bottom.equalTo(myHistoryView)
@@ -75,9 +76,12 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         viewList.append(myFavoriteView)
         viewList.append(myDownloadView)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshFavoriteList), name: "FavoriteChangedNotify", object: nil)
+        
         getRecommendData()
-
+        
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -107,6 +111,14 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         viewList[lastPositon].hidden = true
         viewList[indexPath.row].hidden = false
         lastPositon = indexPath.row
+        switch indexPath.row {
+        case 1:
+            myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
+            break
+            
+        default:
+            break
+        }
     }
     
     //xml解析
@@ -153,6 +165,19 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         myHistoryView.setRecommendData(videoList)
     }
     
+    //列表点击事件
+    func onVideoListViewItemClick(videoId: String) {
+        let controller = VideoDetailViewController()
+        var extras:[ExtraData] = [ExtraData]()
+        extras.append(ExtraData(name: "videoId", value: videoId))
+        controller.extras = extras
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    func refreshFavoriteList(){
+        myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
+    }
+    
     
     func getRecommendData(){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HISTORY_RECOMMEND)!, parameters: nil).responseData{
@@ -170,4 +195,8 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         }
     }
     
+    override func dismissViewController() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        super.dismissViewController()
+    }
 }

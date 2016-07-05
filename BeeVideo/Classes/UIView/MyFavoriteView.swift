@@ -12,7 +12,8 @@ import DZNEmptyDataSet
 class MyFavoriteView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate {
     
     private var mCollectionView:UICollectionView!
-    private var videoList:[VideoBriefItem] = [VideoBriefItem]()
+    private var videoList:[VideoHistoryItem] = [VideoHistoryItem]()
+    var delegate:VideoListViewDelegate!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,6 +21,7 @@ class MyFavoriteView: UIView,UICollectionViewDelegateFlowLayout,UICollectionView
         let layout = UICollectionViewFlowLayout()
         mCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         mCollectionView.backgroundColor = UIColor.clearColor()
+        mCollectionView.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "favoriteCell")
         mCollectionView.delegate = self
         mCollectionView.dataSource = self
         mCollectionView.emptyDataSetDelegate = self
@@ -37,12 +39,27 @@ class MyFavoriteView: UIView,UICollectionViewDelegateFlowLayout,UICollectionView
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 0
+        return videoList.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let superWidth = collectionView.frame.width
+        let width = (superWidth - 50) / 6
+        return CGSize(width: width, height: width * 7/5)
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        return UICollectionViewCell()
+        let cell:VideoItemCell = collectionView.dequeueReusableCellWithReuseIdentifier("favoriteCell", forIndexPath: indexPath) as! VideoItemCell
+        cell.itemView.setDataFromDataBase(videoList[indexPath.row])
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        if delegate != nil {
+            delegate.onVideoListViewItemClick(videoList[indexPath.row].videoId)
+        }
     }
     
     func customViewForEmptyDataSet(scrollView: UIScrollView!) -> UIView! {
@@ -59,4 +76,10 @@ class MyFavoriteView: UIView,UICollectionViewDelegateFlowLayout,UICollectionView
         return -scrollView.frame.height/3
     }
 
+    func setVideoList(videoList: [VideoHistoryItem]){
+        self.videoList = videoList
+        mCollectionView.reloadData()
+    }
+    
+    
 }

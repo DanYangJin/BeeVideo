@@ -26,6 +26,9 @@ class HttpContants {
     static let URL_WEEK_HOT = "/api/video2.0/listWeekHotVideo.action"
     static let URL_REST_VIDEO_ACTION = "/api/hometv2.0/listVideoCategoryBlock.action"
     static let URL_GET_RECOMM_APK_LIST = "/apprec/front/listAppRec.action"
+    static let URL_GET_LIST_VIDEO_SOURCE_INFO = "/api/video2.0/list_video_source_info.action"
+    static let URL_GET_VIDEO_DETAIL_INFO_V2 = "/api/video2.0/video_detail_info.action"
+    static let URL_GET_VIDEO_RELATED_LIST = "/api/video2.0/video_relate.action"
     
     static let ACTION_QUERY_USER_POINT_INFO = "/userpoint/client/queryUserPointInfo.action"
     

@@ -18,7 +18,7 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     private var mDataList : Array<VideoBriefItem>!
     private var mVideoBriefItem : VideoBriefItem!
     
-    private var currentElement : String!
+    private var currentElement : String = ""
     
     var extras : [ExtraData]!
     
@@ -80,9 +80,6 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
     
     func parser(parser: NSXMLParser, foundCharacters string: String) {
         let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if currentElement == nil {
-            return
-        }
         if content.isEmpty {
             return
         }
@@ -97,7 +94,7 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
         }else if currentElement == "channelName"{
             mVideoBriefItem.channel = content
         }else if currentElement == "duration"{
-            mVideoBriefItem.duration = content
+            mVideoBriefItem.duration += content
         }else if currentElement == "picUrl"{
             mVideoBriefItem.posterImg = content
         }else if currentElement == "most"{
@@ -114,7 +111,7 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
             mDataList.append(mVideoBriefItem)
             mVideoBriefItem = nil
         }
-        currentElement = nil
+        currentElement = ""
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {

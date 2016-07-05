@@ -33,6 +33,6 @@ class Constants {
     "http://baobab.wdjcdn.com/1455888619273255747085_x264.mp4",
     "http://baobab.wdjcdn.com/1456734464766B(13).mp4",
     "http://baobab.wdjcdn.com/1456653443902B.mp4",
-    "http://baobab.wdjcdn.com/1456231710844S(24).mp4"];
+    "http://baobab.wdjcdn.com/1456231710844S(24).mp4"]
     
 }

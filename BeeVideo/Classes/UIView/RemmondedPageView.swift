@@ -33,7 +33,8 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     private var cyclePosition:Int = 0
     private var currentPosition : Int = 0
     private var timer:NSTimer!
-    private var isCycling:Bool {
+    private var isCycling:Bool = false
+    private var cycling:Bool {
         get{
             return self.isCycling
         }
@@ -69,7 +70,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         lastCell.setMarqueeStart(false)
         
         currentPosition = cyclePosition
-        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9")?.resizableImageWithCapInsets(UIEdgeInsets(top: 140,left: 10,bottom: 66,right: 200), resizingMode: .Stretch))
+        cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[cyclePosition].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
         let cell = cycleTableView.cellForRowAtIndexPath(NSIndexPath(forRow: cyclePosition, inSection: 0)) as! CycleTableCell
         cell.setMarqueeStart(true)
         cyclePosition += 1
@@ -89,7 +90,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         cycleImage.sd_setImageWithURL(NSURL(string: cycleItems.items[0].icon), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
         cycleImage.addOnClickListener(self, action: #selector(RemmondedPageView.clickCycleImg))
         addSubview(cycleImage)
-        isCycling = true
+        cycling = true
         
         cycleTableView = UITableView()
         cycleTableView.frame = CGRect(x: 220, y: 0, width: 100, height: 150)

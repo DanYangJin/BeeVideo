@@ -8,7 +8,12 @@
 
 import UIKit
 
-class VideoDetailInfoView: UIView {
+protocol DetailBtnClickDelegate {
+    func detailBtnClick(index: Int)
+}
+
+
+class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
     
     var backBtn : UIButton!
     private var videoTitleLbl : UILabel!
@@ -26,11 +31,11 @@ class VideoDetailInfoView: UIView {
     private var videoActorLbl : UILabel!
     private var descLbl : UILabel!
     private var videoDescLbl : VerticalAlignmentLabel!
-    var playBtn : ImageButton!
-    var chooseBtn : ImageButton!
-    var downloadBtn : ImageButton!
-    var faviBtn : ImageButton!
+    var mOptionBar:ZXOptionBar!
     
+    var delegate:DetailBtnClickDelegate!
+    
+    var btnItems:[Item] = [Item]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -123,25 +128,10 @@ class VideoDetailInfoView: UIView {
         videoDescLbl.numberOfLines = 0
         self.addSubview(videoDescLbl)
         
-        playBtn = ImageButton()
-        playBtn.setImage("v2_video_detail_op_play_bg_normal")
-        playBtn.setTitle("第1集")
-        self.addSubview(playBtn)
-        
-        chooseBtn = ImageButton()
-        chooseBtn.setImage("v2_video_detail_op_choose_drama_bg_normal")
-        chooseBtn.setTitle("选集")
-        self.addSubview(chooseBtn)
-        
-        downloadBtn = ImageButton()
-        downloadBtn.setImage("v2_my_video_download_bg_normal")
-        downloadBtn.setTitle("下载")
-        self.addSubview(downloadBtn)
-        
-        faviBtn = ImageButton()
-        faviBtn.setImage("v2_my_video_like_bg_normal")
-        faviBtn.setTitle("收藏")
-        self.addSubview(faviBtn)
+        mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self)
+        mOptionBar.setDividerWidth(dividerWidth: 5)
+        mOptionBar.backgroundColor = UIColor.clearColor()
+        self.addSubview(mOptionBar)
     }
     
     private func setConstraint(){
@@ -239,33 +229,41 @@ class VideoDetailInfoView: UIView {
             make.left.equalTo(descLbl)
             make.right.equalTo(self).offset(-5)
             make.top.equalTo(descLbl.snp_bottom)
-            make.bottom.equalTo(playBtn.snp_top).offset(-5)
+            make.bottom.equalTo(mOptionBar.snp_top)
+            //make.bottom.equalTo(playBtn.snp_top).offset(-5)
         }
-        playBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(backBtn)
-            make.height.equalTo(30)
+        mOptionBar.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self)
             make.bottom.equalTo(self)
-            make.width.equalTo(80)
-        }
-        chooseBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(playBtn.snp_right).offset(10)
-            make.top.equalTo(playBtn)
-            make.bottom.equalTo(playBtn)
-            make.width.equalTo(80)
-        }
-        downloadBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(chooseBtn.snp_right).offset(10)
-            make.top.equalTo(playBtn)
-            make.bottom.equalTo(playBtn)
-            make.width.equalTo(80)
-        }
-        faviBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(downloadBtn.snp_right).offset(10)
-            make.top.equalTo(playBtn)
-            make.bottom.equalTo(playBtn)
-            make.width.equalTo(80)
+            make.height.equalTo(30)
         }
         
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return Float(self.frame.width * 3/4)/4
+    }
+    
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        return btnItems.count
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        
+        var cell:VideoDetailBtnCell? = optionBar.dequeueReusableCellWithIdentifier("detailCell") as? VideoDetailBtnCell
+        
+        if cell == nil {
+            cell = VideoDetailBtnCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "detailCell")
+        }
+        cell?.setViewData(btnItems[index])
+        
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        if delegate != nil {
+            delegate.detailBtnClick(index)
+        }
     }
     
     private func setCommenAttr(label:UILabel){
@@ -282,7 +280,41 @@ class VideoDetailInfoView: UIView {
         videoDramaLbl.text = videoDetailInfo.duration
         videoActorLbl.text = videoDetailInfo.actorString
         videoDescLbl.text = videoDetailInfo.desc
+        collectDramaList(videoDetailInfo)
     }
     
+    private func collectDramaList(videoDetailInfo: VideoDetailInfo){
+        let isChooseDramaNeeded = VideoInfoUtils.isChooseDramaNeeded(videoDetailInfo)
+        if isChooseDramaNeeded {
+            let totalSize = videoDetailInfo.dramas.count
+            let readablePositon = VideoInfoUtils.getDramaReadablePosition(videoDetailInfo.dramaOrderFlag, dramaTotalSize: totalSize, index: videoDetailInfo.lastPlayDramaPosition)
+            let playItem = Item(icon: "v2_video_detail_op_play_bg_normal", title: "第\(readablePositon)集", position: VideoInfoUtils.OP_POSITION_PLAY)
+            btnItems.append(playItem)
+        }else{
+            btnItems.append(Item(icon: "v2_video_detail_op_play_bg_normal", title: "播放", position: VideoInfoUtils.OP_POSITION_PLAY))
+        }
+        if isChooseDramaNeeded {
+            btnItems.append(Item(icon: "v2_video_detail_op_choose_drama_bg_normal", title: "选集", position: VideoInfoUtils.OP_POSITION_CHOOSE))
+        }
+        btnItems.append(Item(icon: "v2_my_video_download_bg_normal", title: "下载", position: VideoInfoUtils.OP_POSITION_DOWNLOAD))
+        if videoDetailInfo.isFavorite {
+            btnItems.append(Item(icon: "v2_my_video_like_bg_favorited", title: "收藏", position: VideoInfoUtils.OP_POSITION_FAV))
+        }else{
+            btnItems.append(Item(icon: "v2_my_video_like_bg_normal", title: "收藏", position: VideoInfoUtils.OP_POSITION_FAV))
+        }
+        mOptionBar.reloadData()
+    }
+    
+    class Item{
+        var icon:String!
+        var title:String!
+        var position:Int!
+        
+        init(icon: String,title: String,position: Int){
+            self.icon = icon
+            self.title = title
+            self.position = position
+        }
+    }
     
 }

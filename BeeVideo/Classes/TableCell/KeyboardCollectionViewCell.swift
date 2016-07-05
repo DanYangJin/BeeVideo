@@ -15,6 +15,10 @@ class KeyboardCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        backgroundView = UIImageView(image: UIImage(named: "normal_bg"))//?.resizableImageWithCapInsets(UIEdgeInsets(top: 12,left: 12,bottom: 58,right: 58), resizingMode: .Stretch))
+        backgroundView?.contentMode = .ScaleToFill
+        backgroundView?.hidden = true
+        
         titleLabel = UILabel()
         titleLabel.textAlignment = .Center
         titleLabel.textColor = UIColor.whiteColor()
@@ -29,7 +33,6 @@ class KeyboardCollectionViewCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 
     
 }

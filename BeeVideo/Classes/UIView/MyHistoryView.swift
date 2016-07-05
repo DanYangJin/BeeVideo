@@ -12,15 +12,16 @@ import DZNEmptyDataSet
 class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,DZNEmptyDataSetDelegate,DZNEmptyDataSetSource,ZXOptionBarDelegate,ZXOptionBarDataSource {
 
     private var collentionView:UICollectionView!
-    private var viewData:[VideoBriefItem] = [VideoBriefItem]()
-    private var recommendData:[VideoBriefItem] = [VideoBriefItem]()
     private var loadingView:LoadingView!
     private var recommendLbl:UILabel!
     private var mOptionBar:ZXOptionBar!
     private var appearController:UIViewController
     
+    private var viewData:[VideoBriefItem] = [VideoBriefItem]()
+    private var recommendData:[VideoBriefItem] = [VideoBriefItem]()
+    
     init(frame: CGRect,controller: UIViewController) {
-        //self.init(frame:frame)
+        
         self.appearController = controller
         super.init(frame: frame)
         

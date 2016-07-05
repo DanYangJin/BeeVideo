@@ -44,7 +44,13 @@ class CommenUtils{
         
         return ret
     }
-
+    
+    static func imagePath(imageName: String) -> String{
+        
+        
+        
+        return ""
+    }
     
     
     

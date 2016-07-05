@@ -9,9 +9,10 @@
 import UIKit
 import DZNEmptyDataSet
 
+@objc
 protocol VideoListViewDelegate{
     func onVideoListViewItemClick(videoId: String)
-    func onLoadMoreListener()
+    optional func onLoadMoreListener()
 }
 
 
@@ -61,9 +62,12 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("searchCell", forIndexPath: indexPath) as! VideoItemCell
-        cell.itemView.setData(viewData[indexPath.row])
-        return cell
+        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("searchCell", forIndexPath: indexPath) as? VideoItemCell
+        if cell == nil {
+            cell = VideoItemCell()
+        }
+        cell!.itemView.setData(viewData[indexPath.row])
+        return cell!
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
@@ -82,7 +86,7 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
         let cellNum = indexPath.row
         if cellNum == viewData.count - 1 {
             if self.delegate != nil {
-                delegate.onLoadMoreListener()
+                delegate.onLoadMoreListener!()
             }
         }
     }

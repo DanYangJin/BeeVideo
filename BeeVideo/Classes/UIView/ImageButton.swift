@@ -35,19 +35,17 @@ class ImageButton: UIView {
     func initView(){
         
         backgroundImge = UIImageView()
-        backgroundImge.contentMode = .Redraw
-        backgroundImge.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsetsMake(30, 30, 30, 30))
+        backgroundImge.contentMode = .ScaleToFill
+        backgroundImge.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsetsMake(12, 30, 12, 30))
         self.addSubview(backgroundImge)
         
         iconImg = UIImageView()
         iconImg.contentMode = .ScaleAspectFill
-        //iconImg.backgroundColor = UIColor.redColor()
         self.addSubview(iconImg)
         
         titleLbl = UILabel()
         titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.font = UIFont.systemFontOfSize(12)
-        //titleLbl.backgroundColor = UIColor.redColor()
+        titleLbl.font = UIFont.systemFontOfSize(11)
         self.addSubview(titleLbl)
     
     }
@@ -61,16 +59,14 @@ class ImageButton: UIView {
         }
         iconImg.snp_makeConstraints { (make) in
             make.centerY.equalTo(self)
-            make.height.equalTo(20)
-            make.left.equalTo(self).offset(3)
-            make.width.equalTo(25)
+            make.centerX.equalTo(self.snp_right).dividedBy(4)
+            make.height.equalTo(self.snp_height).multipliedBy(0.6)
+            make.width.equalTo(self.snp_height).multipliedBy(0.6)
         }
         
         titleLbl.snp_makeConstraints { (make) in
             make.centerY.equalTo(iconImg)
-            make.top.equalTo(iconImg)
-            make.bottom.equalTo(iconImg)
-            make.left.equalTo(iconImg.snp_right).offset(3)
+            make.left.equalTo(iconImg.snp_right)
             make.right.equalTo(self).offset(-5)
         }
     }

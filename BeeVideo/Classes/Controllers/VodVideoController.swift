@@ -50,7 +50,9 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         contentView.delegate = self
         contentView.bounces = false  //关闭弹性
         contentView.tag = 0
+        contentView.delaysContentTouches = false
         contentView.contentSize = CGSizeMake(self.view.frame.width * 1.2, self.view.frame.height)
+        contentView.contentOffset = CGPoint(x: CGFloat(leftWidth), y: 0)
         self.view.addSubview(contentView)
         
         leftView = VodLeftView()
@@ -85,8 +87,8 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         contentView.addSubview(backView)
         backView.snp_makeConstraints { (make) in
             make.left.equalTo(strinkView.snp_right)
-            make.topMargin.equalTo(25)
-            make.height.width.equalTo(30)
+            make.topMargin.equalTo(15)
+            make.height.width.equalTo(40)
         }
         
         titleLbl = UILabel()
@@ -99,7 +101,9 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
         
         countLbl = UILabel()
-        countLbl.backgroundColor = UIColor(patternImage: (UIImage(named: "v2_vod_page_size_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 20,left: 20,bottom: 20,right: 20)))!)
+        //countLbl.backgroundColor = UIColor(patternImage: (UIImage(named: "v2_vod_page_size_bg"))!)
+        let img = UIImage(named: "v2_vod_page_size_bg")
+        countLbl.layer.contents = img?.CGImage
         countLbl.textColor = UIColor.whiteColor()
         countLbl.font = UIFont.systemFontOfSize(12)
         contentView.addSubview(countLbl)
@@ -112,7 +116,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         videoListView.delegate = self
         contentView.addSubview(videoListView)
         videoListView.snp_makeConstraints { (make) in
-            make.top.equalTo(backView.snp_bottom).offset(20)
+            make.top.equalTo(backView.snp_bottom).offset(15)
             make.bottom.equalTo(self.view).offset(-10)
             make.left.equalTo(strinkView.snp_right)
             make.width.equalTo(contentView).offset(-20)
@@ -184,10 +188,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             return
         }
         
-        videoPageData.videoList.removeAll()
-        
-        videoListView.collectionView.hidden = true
-        
         if lastPosition >= 2 && indexPath.row >= 2 {
             let lastCell:VodVideoTableViewCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableViewCell
             if lastCell != nil {
@@ -211,6 +211,8 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             let searchController = SearchViewController()
             self.presentViewController(searchController, animated: true, completion: nil)
         }else{
+            videoPageData.videoList.removeAll()
+            videoListView.collectionView.hidden = true
             SDImageCache.sharedImageCache().clearMemory()
             videoPageData.videoList.removeAll()
             videoPageData.pageNo = 1
@@ -361,6 +363,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             leftView.tableView.reloadData()
             titleLbl.text = vodCategoryGather.vodCategoryList[4].title
             getVideoListData(configParams(vodCategoryGather, index: 4))
+            contentView.setContentOffset(CGPoint(x: 0,y: 0), animated: true)
         }else if requestId == NetRequestId.VIDEO_VIDEO_LIST_REQUEST{
             videoListView.collectionView.hidden = false
             videoListView.setViewData(videoPageData.videoList)
@@ -388,15 +391,10 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
             request,_,data,error in
             self.requestId = NetRequestId.VIDEO_VIDEO_LIST_REQUEST
-            print(request?.URLString)
             if error != nil {
                 print(error)
                 return
             }
-            
-            let string = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            print(string)
-            
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
@@ -420,13 +418,18 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     }
     
     override func dismissViewController() {
+        videoListView.removeViewData()
+        videoListView.removeFromSuperview()
         SDImageCache.sharedImageCache().clearMemory()
         leftView = nil
+        videoListView = nil
+        videoList = nil
         super.dismissViewController()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        SDImageCache.sharedImageCache().clearMemory()
     }
     
     

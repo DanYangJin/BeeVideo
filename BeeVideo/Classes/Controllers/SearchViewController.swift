@@ -33,6 +33,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
     override func viewDidLoad() {
         leftWidth = Float(self.view.frame.width * 0.35)
         super.viewDidLoad()
+        
         strinkView.hidden = true
         titleLbl.text = "热门搜索"
         

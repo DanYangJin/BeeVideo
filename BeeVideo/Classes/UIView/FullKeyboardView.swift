@@ -58,6 +58,7 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         keyCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         keyCollectionView.backgroundColor = UIColor.clearColor()
         keyCollectionView.registerClass(KeyboardCollectionViewCell.self, forCellWithReuseIdentifier: "keyCollectionView")
+        keyCollectionView.delaysContentTouches = false
         keyCollectionView.dataSource = self
         keyCollectionView.delegate = self
         self.addSubview(keyCollectionView)
@@ -130,6 +131,16 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         if keyboardDelegate != nil {
             keyboardDelegate.onKeyboardClick(keyList[indexPath.row])
         }
+    }
+    
+    func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! KeyboardCollectionViewCell
+        cell.backgroundView?.hidden = false
+    }
+    
+    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath) {
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! KeyboardCollectionViewCell
+        cell.backgroundView?.hidden = true
     }
     
     //点击清理按钮

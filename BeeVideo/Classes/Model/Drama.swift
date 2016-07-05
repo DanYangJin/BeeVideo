@@ -16,5 +16,26 @@ class Drama {
     var sources : [VideoSourceInfo] = [VideoSourceInfo]() //每一集的源信息
     var currentUsedSourcePosition : Int = 0 //当前使用源的位置
     var currentUsedSourceInfo : VideoSourceInfo? //正在使用的源
+    
+    func hasSource() -> Bool{
+        if sources.isEmpty {
+            return false
+        }
+        return true
+    }
+    
+    func setCurrentUsedSourcePosition(position: Int){
+        if sources.isEmpty {
+            return
+        }
+        if position >= sources.count - 1 {
+            currentUsedSourcePosition = sources.count - 1
+        }else if position <= 0 {
+            currentUsedSourcePosition = 0
+        }else{
+            currentUsedSourcePosition = position
+        }
+        self.currentUsedSourceInfo = sources[currentUsedSourcePosition]
+    }
 }
 

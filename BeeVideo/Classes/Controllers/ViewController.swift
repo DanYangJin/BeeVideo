@@ -32,6 +32,7 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         mTableTitleView = TableTitleView()
         mTableTitleView.mDelegate = self
         mTableTitleView.initTitleData()
