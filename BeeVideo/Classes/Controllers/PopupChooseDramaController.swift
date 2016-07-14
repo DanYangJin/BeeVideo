@@ -165,8 +165,8 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
             if endPosition > totalSize {
                 endPosition = totalSize - 1
             }
-            let startReadable = String(VideoInfoUtils.getDramaReadablePositon(videoDetailInfo.dramaOrderFlag, dramaTotalSize: totalSize, index: startPosition))
-            let endReadable = String(VideoInfoUtils.getDramaReadablePositon(videoDetailInfo.dramaOrderFlag, dramaTotalSize: totalSize, index: endPosition))
+            let startReadable = String(VideoInfoUtils.getDramaReadablePosition(videoDetailInfo.dramaOrderFlag, dramaTotalSize: totalSize, index: startPosition))
+            let endReadable = String(VideoInfoUtils.getDramaReadablePosition(videoDetailInfo.dramaOrderFlag, dramaTotalSize: totalSize, index: endPosition))
             dramaCollector.append(startReadable + " - " + endReadable)
         }
     }

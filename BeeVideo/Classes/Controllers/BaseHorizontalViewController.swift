@@ -36,10 +36,9 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         contentView.bounces = false
         contentView.delegate = self
         contentView.delaysContentTouches = false
-        contentView.tag = 0
+        contentView.tag = 20
         contentView.contentSize = CGSizeMake(self.view.frame.width + CGFloat(leftWidth), self.view.frame.height)
         self.view.addSubview(contentView)
-        
         
         leftView = UIView()
         contentView.addSubview(leftView)
@@ -71,16 +70,7 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
             make.left.equalTo(leftView.snp_right)
             make.width.equalTo(20)
         }
-        
-        //        backView = BackView()
-        //        backView.addOnClickListener(self, action: #selector(self.dismissViewController))
-        //        contentView.addSubview(backView)
-        //        backView.snp_makeConstraints { (make) in
-        //            make.left.equalTo(strinkView.snp_right)
-        //            make.topMargin.equalTo(25)
-        //            make.height.width.equalTo(30)
-        //        }
-        
+            
         backView = UIButton()
         backView.setImage(UIImage(named: "v2_title_arrow_default"), forState: .Normal)
         backView.setImage(UIImage(named: "v2_title_arrow_selected"), forState: .Highlighted)
@@ -112,9 +102,8 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         
     }
     
-    
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if scrollView.tag == 0 {
+        if scrollView.tag == 20 {
             if decelerate {
                 //关闭惯性滑动
                 dispatch_async(dispatch_get_main_queue(), {
@@ -122,25 +111,30 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
                     let xOffset = scrollView.contentOffset.x
                     if xOffset >= CGFloat(self.leftWidth / 2) {
                         scrollView.setContentOffset(CGPoint(x: CGFloat(self.leftWidth), y: 0), animated: true)
-                        self.strinkView.image = UIImage(named: "v2_arrow_shrink_left")
                     }else{
                         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-                        self.strinkView.image = UIImage(named: "v2_arrow_shrink_right")
                     }
                 })
             }else{
                 let xOffset = scrollView.contentOffset.x
                 if xOffset >= CGFloat(leftWidth) / 2 {
                     scrollView.setContentOffset(CGPoint(x: CGFloat(leftWidth), y: 0), animated: true)
-                    self.strinkView.image = UIImage(named: "v2_arrow_shrink_left")
                 }else{
                     scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
-                    self.strinkView.image = UIImage(named: "v2_arrow_shrink_right")
                 }
             }
         }
     }
     
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if scrollView.tag == 20 {
+            if strinkView != nil {
+                let offsetX = scrollView.contentOffset.x
+                let rotation = offsetX / CGFloat(leftWidth)
+                strinkView.transform = CGAffineTransformMakeRotation(-rotation * CGFloat(M_PI))
+            }
+        }
+    }
     
     
 }

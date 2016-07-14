@@ -10,14 +10,14 @@ import UIKit
 
 class SearchRecomCollectionViewCell: UICollectionViewCell {
     
-    private var bgImg : UIImageView!
+    private var bgImg : UIView!
     var titleLable : UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        bgImg = UIImageView()
-        bgImg.contentMode = .Redraw
-        bgImg.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 13,left: 10,bottom: 13,right: 10), resizingMode: .Stretch)
+        bgImg = UIImageView(image: UIImage(named: "normal_bg"))
+        //bgImg.contentMode = .Redraw
+        //bgImg.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 13,left: 10,bottom: 13,right: 10), resizingMode: .Stretch)
         self.addSubview(bgImg)
         bgImg.snp_makeConstraints{ (make) in
             make.left.right.equalTo(self)

@@ -24,6 +24,18 @@ class Drama {
         return true
     }
     
+    func getCurrentUsedSourceInfo() -> VideoSourceInfo?{
+        if sources.isEmpty {
+            return nil
+        }
+        if currentUsedSourcePosition < 0 || currentUsedSourcePosition >= sources.count {
+            return nil
+        }
+        currentUsedSourceInfo = sources[currentUsedSourcePosition]
+        currentUsedSourceInfo?.played = true
+        return currentUsedSourceInfo
+    }
+    
     func setCurrentUsedSourcePosition(position: Int){
         if sources.isEmpty {
             return

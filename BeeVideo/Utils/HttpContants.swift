@@ -29,6 +29,7 @@ class HttpContants {
     static let URL_GET_LIST_VIDEO_SOURCE_INFO = "/api/video2.0/list_video_source_info.action"
     static let URL_GET_VIDEO_DETAIL_INFO_V2 = "/api/video2.0/video_detail_info.action"
     static let URL_GET_VIDEO_RELATED_LIST = "/api/video2.0/video_relate.action"
+    static let URL_DAILY_PLAY_SOURCE = "/api/video2.0/video_play.action"
     
     static let ACTION_QUERY_USER_POINT_INFO = "/userpoint/client/queryUserPointInfo.action"
     

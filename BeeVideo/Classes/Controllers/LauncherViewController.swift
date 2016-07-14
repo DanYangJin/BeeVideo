@@ -33,7 +33,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
 
         let bagroundImage:UIImageView = UIImageView()
         bagroundImage.image = UIImage(named: "home_start_bg")
-        bagroundImage.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"))
+        bagroundImage.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"), placeholderImage: UIImage(named: "home_start_bg"))
         self.view.addSubview(bagroundImage)
         bagroundImage.snp_makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
@@ -41,15 +41,13 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         }
         
         
-        Alamofire.request(.GET, "http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2")
-            .response { request, response, data, error in
-                if error != nil {
-                    print(error)
-                    return
-                }
-                self.parseXml(data!)
+        Alamofire.request(.GET, "http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2", parameters: nil, encoding: .URL, headers: ["X-Kds-Ver" : "2.10.07"]).response { request, response, data, error in
+            if error != nil {
+                print(error)
+                return
+            }
+            self.parseXml(data!)
         }
-        
         
     }
     

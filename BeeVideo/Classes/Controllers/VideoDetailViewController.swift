@@ -18,7 +18,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         case VIDEO_DETAIL_REQUEST_ID
         case RECOMMENDED_REQUEST_ID
         case SEARCH_REQUEST_ID
-        case GET_VIDEO_SPURCE_REQUEST_ID
+        case GET_VIDEO_SOURCE_REQUEST_ID
     }
     
     //上一层页面传递的参数
@@ -184,7 +184,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             }else if currentElement == "video_item"{
                 videoBriefItem = VideoBriefItem()
             }
-        }else if requestId == NetRequestId.GET_VIDEO_SPURCE_REQUEST_ID{
+        }else if requestId == NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID{
             if currentElement == "video_source_info" {
                 videoSource = VideoSourceInfo()
                 currentDepth += 1
@@ -279,7 +279,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             }else if currentElement == "channelId"{
                 videoBriefItem.channelId = content
             }
-        }else if requestId == NetRequestId.GET_VIDEO_SPURCE_REQUEST_ID{
+        }else if requestId == NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID{
             if currentElement == "id" {
                 if currentDepth == 1 {
                     videoSource.id = content
@@ -326,7 +326,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
                 videoBriefItems.append(videoBriefItem)
                 videoBriefItem = nil
             }
-        }else if requestId == NetRequestId.GET_VIDEO_SPURCE_REQUEST_ID{
+        }else if requestId == NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID{
             if elementName == "video_source_info" {
                 currentDepth -= 1
                 sourceList.append(videoSource)
@@ -368,7 +368,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             horizontalTab.hidden = false
             recommendLoadingView.stopAnimat()
             horizontalTab.reloadData()
-        }else if requestId == NetRequestId.GET_VIDEO_SPURCE_REQUEST_ID{
+        }else if requestId == NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID{
             videoDetailInfo.currentDrama?.sources = sourceList
             if videoDetailInfo.currentDrama!.hasSource() {
                 let item:VideoHistoryItem? = VideoDBHelper.shareInstance().getHistoryItem(videoDetailInfo.id)
@@ -411,6 +411,10 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     var lastPosition = 0 //记录上一次所点的位置
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if lastPosition == indexPath.row {
+            return
+        }
         
         let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
         lastCell?.textLabel?.textColor = UIColor.whiteColor()
@@ -525,7 +529,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         }
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_LIST_VIDEO_SOURCE_INFO)!, parameters: ["videoMergeInfoId" : (videoDetailInfo.currentDrama?.id)!]).responseData{
             response in
-            self.requestId = NetRequestId.GET_VIDEO_SPURCE_REQUEST_ID
+            self.requestId = NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID
             
             switch response.result{
             case .Success(let data):
@@ -558,8 +562,11 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         let position = detailView.btnItems[index].position
         switch position {
         case VideoInfoUtils.OP_POSITION_PLAY:
-            let viewController:PlayerViewController = PlayerViewController()
-            self.presentViewController(viewController, animated: true, completion: nil)
+            if !NetworkUtil.isWifiConnection() {
+                self.view.makeToast("当前处于非wifi环境下，播放时将产生流量费用")
+                return
+            }
+            toVideoPlayController()
             break
         case VideoInfoUtils.OP_POSITION_CHOOSE:
             popup = PopupController.create(self).customize([.Layout(.Bottom)])
@@ -629,10 +636,20 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             popup.dismiss()
             popup = nil
         }
+        
+        toVideoPlayController()
     }
     
     func addClick(){
         detailView.backBtn.addOnClickListener(self, action: (#selector(self.dismissViewController)))
+    }
+
+    func toVideoPlayController(){
+        let controller = PlayerViewController()
+        controller.flag = .Detail
+        controller.videoDetailInfo = videoDetailInfo
+        self.presentViewController(controller, animated: true, completion: nil)
+       // self.presentViewController(PlayerViewController(), animated: true, completion: nil)
     }
     
     override func dismissViewController() {

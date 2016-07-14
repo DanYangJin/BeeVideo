@@ -36,7 +36,7 @@ class VideoInfoUtils: NSObject {
     static let OP_POSITION_DOWNLOAD = 2;
     static let OP_POSITION_FAV = 3;
     
-    //选集弹框每次显示的集数
+    ///选集弹框每次显示的集数
     static let GRID_ITEM_COUNT = 20
     
     
@@ -46,7 +46,7 @@ class VideoInfoUtils: NSObject {
         }
         return false
     }
-    //判断是否需要选集
+    ///判断是否需要选集
     static func isChooseDramaNeeded(detailInfo: VideoDetailInfo) -> Bool{
         let dramas = detailInfo.dramas
         if dramas.isEmpty {
@@ -56,6 +56,7 @@ class VideoInfoUtils: NSObject {
         return dramas.count > VIDEO_CHOOSE_DRAMA_THRESHOLD
     }
     
+    ///将index转化为集数
     static func getDramaReadablePosition(dramaOrderFlag: Int,dramaTotalSize: Int, index: Int) -> Int{
         if dramaOrderFlag == DRAMA_ORDER_SEQUENCE{
             return (index + 1)
@@ -68,6 +69,7 @@ class VideoInfoUtils: NSObject {
         return isFavorited ? "v2_my_video_like_bg_favorited" : "v2_my_video_like_bg_normal"
     }
     
+    /// 获取到详情信息时 查询数据库获取观看的历史
     static func refreshWatchRecord(detailInfo: VideoDetailInfo){
         let item:VideoHistoryItem? = VideoDBHelper.shareInstance().getHistoryItem(detailInfo.id)
         if item == nil {
@@ -114,27 +116,9 @@ class VideoInfoUtils: NSObject {
         return position
     }
     
-    static func getDramaReadablePositon(dramaOrderFlag: Int,dramaTotalSize: Int,index: Int) -> Int{
-        if dramaOrderFlag == DRAMA_ORDER_SEQUENCE {
-            return index + 1
-        } else {
-            return dramaTotalSize - index
-        }
     
-    }
+   
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 

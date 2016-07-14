@@ -239,7 +239,7 @@ class AVPlayerControlView: UIView {
     func initIndicatorView() -> UIActivityIndicatorView{
         if loadingView == nil {
             loadingView = UIActivityIndicatorView(activityIndicatorStyle: .White)
-            loadingView.startAnimating()
+            //loadingView.startAnimating()
         }
         return loadingView
     }

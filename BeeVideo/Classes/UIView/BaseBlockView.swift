@@ -25,7 +25,7 @@ class BaseBlockView: UIView {
         super.init(frame: frame)
         
         blockImage = CornerImageView()
-        blockImage.setCorner(4.0)
+       // blockImage.setCorner(4.0)
         addSubview(blockImage)
         
         blockName = UILabel()
@@ -35,7 +35,7 @@ class BaseBlockView: UIView {
         addSubview(blockName)
         
         clickBackgroudnImg = CornerImageView()
-        clickBackgroudnImg.setCorner(4.0)
+        clickBackgroudnImg.setCorner(6.0)
         clickBackgroudnImg.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
         clickBackgroudnImg.hidden = true
         self.addSubview(clickBackgroudnImg)
@@ -60,7 +60,9 @@ class BaseBlockView: UIView {
     }
     
     func setImage(url:String){
-        blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "v2_image_default_bg.9")!)
+        blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "v2_image_default_bg.9")!) { (image, error, _, _) in
+            self.blockImage.setCorner(6)
+        }
     }
     
     
@@ -126,7 +128,5 @@ class BaseBlockView: UIView {
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         clickBackgroudnImg.hidden = true
     }
-    
-
     
 }

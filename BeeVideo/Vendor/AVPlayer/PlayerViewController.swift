@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import MediaPlayer
+import Alamofire
 
 public enum PlayerStatus {
     case INIT
@@ -25,13 +26,33 @@ public enum PanDirection {
     case PanDirectionVerticalMoved    //纵向移动
 }
 
-class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate{
+public enum Flag{
+    case Detail
+    case History
+}
+
+class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate, NSXMLParserDelegate{
+    
+    enum RequestId {
+        case GET_VIDEO_SOURCE
+        case GET_VIDEO_PALY_URL
+    }
+    
+    var flag:Flag!
+    var videoDetailInfo:VideoDetailInfo!
+    var videoHistoryItem:VideoHistoryItem!
+    var subjectId = ""
+    var videoPlayItem:VideoPlayItem!
+    
+    private var requestId:RequestId!
     
     private var videoPlayerView:AVPlayerView!
     private var controlView:AVPlayerControlView!
     private var progressView:ProgressView!
     private var volumeViewSlider:UISlider!
     internal var horizontalLabel:UILabel!
+    private var netLoadingView:NetSpeedView!
+    private var preLoadingView:PreLoadingView!
     
     //临时变量
     private var screenWidth:CGFloat!,screenHeight:CGFloat!
@@ -43,11 +64,27 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     private var lastSlideValue:CGFloat = 0
     private var lastPlayerPosition:Int = 0
     
+    //xml解析临时变量
+    //无源时获取源
+    private var videoSource:VideoSourceInfo!
+    private var source:Source!
+    private var sourceList = [VideoSourceInfo]()
+    private var currentDepth = 0
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initUI()
         self.addNotifications()
         self.configVolume()
+        //       // controlView.videoNameLabel.text = videoDetailInfo.currentDrama?.title
+        //        getVideoPlayUrl()
+        if flag == Flag.Detail {
+            if videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo() == nil {
+                preLoadingView.hidden = true
+                getSourceInfo()
+            }
+        }
     }
     
     func initUI(){
@@ -60,14 +97,16 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.view.addSubview(self.initControlView())
         self.view.addSubview(self.initHorizontalLabel())
         self.view.addSubview(self.initProgressView())
-    
+        self.view.addSubview(self.initNetLoadingView())
+        self.view.addSubview(self.initPreLoadingView())
+        
         self.videoStatus     = PlayerStatus.INIT
         self.moveDirection   = PanDirection.PanDirectionInit
         
         self.makeSubViewsConstraints()
         
         self.videoPlayerView.play()
-
+        
     }
     func makeSubViewsConstraints(){
         self.horizontalLabel.snp_makeConstraints{ (make) -> Void in
@@ -75,8 +114,19 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             make.height.equalTo(40)
             make.center.equalTo(self.view)
         }
+        self.netLoadingView.snp_makeConstraints { (make) in
+            make.top.equalTo(self.view).offset(20)
+            make.right.equalTo(self.view).offset(-20)
+            make.height.equalTo(self.view).multipliedBy(0.15)
+            make.width.equalTo(self.view).multipliedBy(0.32)
+        }
+        self.preLoadingView.snp_makeConstraints { (make) in
+            make.center.equalTo(self.view)
+            make.height.equalTo(80)
+            make.width.equalTo(self.view)
+        }
     }
-
+    
     func initAVPlayerView() -> AVPlayerView{
         if self.videoPlayerView == nil {
             self.videoPlayerView         = AVPlayerView()
@@ -108,6 +158,23 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         return horizontalLabel
     }
     
+    func initNetLoadingView() -> NetSpeedView{
+        if netLoadingView == nil {
+            netLoadingView = NetSpeedView()
+        }
+        return netLoadingView
+    }
+    
+    func initPreLoadingView() -> PreLoadingView{
+        if preLoadingView == nil{
+            preLoadingView = PreLoadingView()
+            preLoadingView.dramaLbl.text = "即将播放：第\(3)集"
+            preLoadingView.videoNameLbl.text = videoDetailInfo.name
+            preLoadingView.sourceNameLbl.text = videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo()?.source?.name
+        }
+        return preLoadingView
+    }
+    
     func initProgressView() -> ProgressView{
         if self.progressView == nil {
             self.progressView = ProgressView()
@@ -132,7 +199,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         
         self.createGesture()
     }
-
+    
     //创建手势
     func createGesture(){
         let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
@@ -222,7 +289,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         default:
             break
         }
-
+        
     }
     
     //判断滑动方向
@@ -247,7 +314,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     
     //水平移动
     func horizontalMoved(value:CGFloat){
-    
+        
         // 快进快退的方法
         var style:String = ""
         
@@ -273,7 +340,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.controlView.currentTimeLabel.text = nowTime
     }
     
-    //垂直移动 
+    //垂直移动
     func verticalMoved(value:CGFloat){
         if self.isVolumed {
             self.volumeViewSlider.value      -=  Float.init(value / 10000)
@@ -295,9 +362,9 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         do {
             try  AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         } catch {
-           //
+            //
         }
-
+        
     }
     /**
      * 播放
@@ -410,6 +477,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.controlView.loadingView.stopAnimating()
         self.videoStatus = PlayerStatus.PLAY
         self.videoPlayerView.play()
+        self.netLoadingView.stopAnimat()
+        self.preLoadingView.hidden = true
     }
     
     //播放错误
@@ -429,9 +498,11 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         case 701:
             self.videoStatus = PlayerStatus.BUFFERING
             self.controlView.loadingView.startAnimating()
+            self.netLoadingView.startAnimate()
         case 702:
             self.videoStatus = PlayerStatus.PLAY
             self.controlView.loadingView.stopAnimating()
+            self.netLoadingView.stopAnimat()
         default:
             break
         }
@@ -445,7 +516,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     //播放下一集
     func playNextDrama(){
         self.controlView.resetControlView()
-        self.controlView.loadingView.startAnimating()
+        //self.controlView.loadingView.startAnimating()
         self.videoPlayerView.resetPlayer()
         self.horizontalLabel.alpha = 0.0
         let size:Int = Constants.URLS.count
@@ -469,5 +540,133 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
+    //获取源
+    func getSourceInfo(){
+        if videoDetailInfo.currentDrama == nil {
+            return
+        }
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_LIST_VIDEO_SOURCE_INFO)!, parameters: ["videoMergeInfoId" : (videoDetailInfo.currentDrama?.id)!]).responseData{
+            response in
+            self.requestId = RequestId.GET_VIDEO_SOURCE
+            switch response.result{
+            case .Success(let data):
+                let parser = NSXMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
+                break
+            case .Failure(let error):
+                print(error)
+                break
+            }
+        }
+    }
+    
+    //获取播放地址
+    func getVideoPlayUrl(){
+        let sourceInfo = videoDetailInfo.currentDrama?.currentUsedSourceInfo
+        if sourceInfo == nil {
+            return
+        }
+        var params:[String:AnyObject] = [String:AnyObject]()
+        params["videoInfoId"] = sourceInfo?.id
+        params["subjectId"] = self.subjectId
+        params["model"] = UIDevice.currentDevice().localizedModel
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_DAILY_PLAY_SOURCE)!, parameters: params).responseData { (response) in
+            self.requestId = RequestId.GET_VIDEO_PALY_URL
+            
+            switch response.result{
+            case .Failure(let error):
+                print(error)
+                break
+            case .Success(let data):
+                let parser = NSXMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
+                break
+            }
+        }
+    }
+    
+    //xml解析
+    private var currentElement = ""
+    
+    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+        currentElement = elementName
+        if requestId == RequestId.GET_VIDEO_SOURCE {
+            if currentElement == "video_source_info" {
+                videoSource = VideoSourceInfo()
+                currentDepth += 1
+            }else if currentElement == "source" {
+                source = Source()
+                currentDepth += 1
+            }
+        }
+    }
+    
+    func parser(parser: NSXMLParser, foundCharacters string: String) {
+        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if content.isEmpty {
+            return
+        }
+        if requestId == RequestId.GET_VIDEO_SOURCE {
+            if currentElement == "id" {
+                if currentDepth == 1 {
+                    videoSource.id = content
+                }else if currentDepth == 2 {
+                    source.id = content
+                }
+            }else if currentElement == "name"{
+                if currentDepth == 1 {
+                    videoSource.name = content
+                }else if currentDepth == 2 {
+                    source.name = content
+                }
+            }else if currentElement == "duration" {
+                //videoSource.
+            }else if currentElement == "videoMetaId"{
+                videoSource.metaId = content
+            }else if currentElement == "playpoint"{
+                videoSource.playPointAmount = Int(content)!
+            }else if currentElement == "downloadpoint"{
+                videoSource.downloadPointAmount = Int(content)!
+            }else if currentElement == "otherSource"{
+                source.otherSource = content
+            }
+        }
+    }
+    
+    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if requestId == RequestId.GET_VIDEO_SOURCE {
+            if elementName == "video_source_info" {
+                currentDepth -= 1
+                sourceList.append(videoSource)
+                videoSource = nil
+            }else if elementName == "source" {
+                currentDepth -= 1
+                videoSource.source = source
+                source = nil
+            }
+        }
+    }
+    
+    func parserDidEndDocument(parser: NSXMLParser) {
+        if requestId == RequestId.GET_VIDEO_SOURCE {
+            videoDetailInfo.currentDrama?.sources = sourceList
+            if videoDetailInfo.currentDrama!.hasSource() {
+                let item:VideoHistoryItem? = VideoDBHelper.shareInstance().getHistoryItem(videoDetailInfo.id)
+                if item != nil {
+                    videoDetailInfo.currentDrama?.setCurrentUsedSourcePosition(VideoInfoUtils.getSourcePositionBySourceId(videoDetailInfo, sourceId: item!.sourceId))
+                }else {
+                    videoDetailInfo.currentDrama?.setCurrentUsedSourcePosition(0)
+                }
+            }
+            preLoadingView.sourceNameLbl.text = videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo()?.source?.name
+            let currentReadableDrama = VideoInfoUtils.getDramaReadablePosition(videoDetailInfo.dramaOrderFlag, dramaTotalSize: videoDetailInfo.dramas.count, index: videoDetailInfo.lastPlayDramaPosition)
+            preLoadingView.setDrama(currentReadableDrama)
+            preLoadingView.hidden = false
+        }
+    }
+    
+    
 }

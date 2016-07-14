@@ -268,6 +268,13 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             }else{
                 leftView.bottomArrow.hidden = false
             }
+        }else if scrollView.tag == 0{
+            if strinkView == nil {
+                return
+            }
+            let offsetX = scrollView.contentOffset.x
+            let rotation = offsetX / CGFloat(leftWidth)
+            strinkView.transform = CGAffineTransformMakeRotation(-rotation * CGFloat(M_PI))
         }
     }
     

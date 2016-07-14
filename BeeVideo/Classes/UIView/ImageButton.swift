@@ -18,7 +18,7 @@ class ImageButton: UIView {
     }
     */
     
-    private var backgroundImge : UIImageView!
+    private var backgroundImge : UIView!
     private var iconImg : UIImageView!
     private var titleLbl : UILabel!
     
@@ -34,9 +34,10 @@ class ImageButton: UIView {
     
     func initView(){
         
-        backgroundImge = UIImageView()
-        backgroundImge.contentMode = .ScaleToFill
-        backgroundImge.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsetsMake(12, 30, 12, 30))
+        backgroundImge = UIImageView(image: UIImage(named: "normal_bg"))
+        //backgroundImge.contentMode = .ScaleToFill
+       // backgroundImge.image = UIImage(named: "normal_bg")?.resizableImageWithCapInsets(UIEdgeInsetsMake(12, 30, 12, 30))
+        //backgroundImge.
         self.addSubview(backgroundImge)
         
         iconImg = UIImageView()

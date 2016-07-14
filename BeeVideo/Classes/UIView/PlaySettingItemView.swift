@@ -16,6 +16,7 @@ class PlaySettingItemView: UIView {
     private var leftArrowImg:UIImageView!
     private var rightArrowImg:UIImageView!
     
+    var currentIndex = 0
     var selectionList:[String]!
     
     init(frame: CGRect,title: String,selectionList: [String]) {
@@ -40,7 +41,7 @@ class PlaySettingItemView: UIView {
         selectionLbl = UILabel()
         selectionLbl.textColor = UIColor.textBlueColor()
         selectionLbl.textAlignment = .Center
-        selectionLbl.text = "高清"
+        selectionLbl.text = selectionList[currentIndex]
         selectionLbl.font = UIFont.systemFontOfSize(12)
         self.addSubview(selectionLbl)
         
@@ -55,6 +56,9 @@ class PlaySettingItemView: UIView {
         self.addSubview(rightArrowImg)
         
         setConstraints()
+        
+        leftArrowImg.addOnClickListener(self, action: #selector(self.leftClick))
+        rightArrowImg.addOnClickListener(self, action: #selector(self.rightClick))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -97,6 +101,22 @@ class PlaySettingItemView: UIView {
             make.centerY.equalTo(self)
         }
         
+    }
+    
+    func leftClick(){
+        currentIndex -= 1
+        if currentIndex < 0 {
+            currentIndex = selectionList.count - 1
+        }
+        selectionLbl.text = selectionList[currentIndex]
+    }
+    
+    func rightClick(){
+        currentIndex += 1
+        if currentIndex >= selectionList.count {
+            currentIndex = 0
+        }
+        selectionLbl.text = selectionList[currentIndex]
     }
 
 }
