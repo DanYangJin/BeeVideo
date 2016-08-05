@@ -151,20 +151,20 @@ class AVPlayerView: UIView {
             switch keyPath! {
             case "status":
                 if self.player.currentItem!.status == .ReadyToPlay {
-//                    print("onPreparedCompetion : ReadyToPlay")
+                    print("onPreparedCompetion : ReadyToPlay")
                     if delegate != nil {
                         self.layer.contents = nil
                         delegate.onPreparedCompetion(self)
                     }
                 } else if self.player.currentItem!.status == .Failed {
-//                    print("onPreparedCompetion : Failed")
+                    print("onPreparedCompetion : Failed")
                     if delegate != nil {
                         delegate.onError(self)
                     }
                 }
             case "loadedTimeRanges":
                 if delegate != nil {
-//                    print("loadedTimeRanges")
+                   // print("loadedTimeRanges")
                     let timeInterval:Float        = Float.init(self.calcBufferingData())
                     let duration:CMTime           = self.playerItem.duration;
                     let totalDuration:Float       = Float.init(CMTimeGetSeconds(duration));
@@ -172,13 +172,13 @@ class AVPlayerView: UIView {
                 }
                 break
             case "playbackBufferEmpty":
-//                print("playbackBufferEmpty")
+                print("playbackBufferEmpty")
                 if delegate != nil {
                     delegate.onInfo(self, value: 701)
                 }
                 break;
             case "playbackLikelyToKeepUp":
-//                print("playbackLikelyToKeepUp")
+                print("playbackLikelyToKeepUp")
                 if delegate != nil {
                     delegate.onInfo(self, value: 702)
                 }

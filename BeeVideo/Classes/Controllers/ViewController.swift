@@ -63,11 +63,13 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         mContentScrollView.pagingEnabled = true
         mContentScrollView.delegate = self
         mContentScrollView.delaysContentTouches = false
+        //mContentScrollView.canCancelContentTouches = false
         //mContentScrollView.backgroundColor = UIColor.redColor()
         self.view.addSubview(mContentScrollView)
         
         recommondScrollerView = UIScrollView()
         recommondScrollerView.delaysContentTouches = false
+        //recommondScrollerView.canCancelContentTouches = false
         setScrollCommen(recommondScrollerView)
         self.mContentScrollView.addSubview(recommondScrollerView)
         
@@ -133,7 +135,8 @@ class ViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDe
         if mContentScrollView == nil {
             return
         }
-        mContentScrollView.contentOffset = CGPoint(x: width * CGFloat(index), y: 0)
+        //mContentScrollView.contentOffset = CGPoint(x: width * CGFloat(index), y: 0)
+        mContentScrollView.setContentOffset(CGPoint(x: width * CGFloat(index), y: 0), animated: true)
     }
     
     

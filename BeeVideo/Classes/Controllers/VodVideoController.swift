@@ -8,12 +8,14 @@
 
 import UIKit
 import Alamofire
+import PopupController
 
-class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,VideoListViewDelegate {
+class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,VideoListViewDelegate,FiltViewClickDelegate {
     
     private enum NetRequestId{
         case VIDEO_CATEGORY_REQUEST
         case VIDEO_VIDEO_LIST_REQUEST
+        case VIDEO_FILT_REQUEST
     }
     
     private var requestId : NetRequestId!
@@ -21,16 +23,21 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     var channelId : String! // 外部传入
     
     //xml解析相关
+    //分类
     private var vodCategory : VodCategory!
     private var vodCategoryGather : VodCategoryGather = VodCategoryGather()//左边列表数据源
     private var vodCategoryList : Array<VodCategory>!
     private var currentElement : String = ""
+    //列表
     private var videoPageData : VodVideoPageData = VodVideoPageData()
     private var videoList : Array<VideoBriefItem>!
     private var videoItem : VideoBriefItem!
     private var maxPage : Int = 0
     private var leftWidth : Float!
     private var lastPosition = 4
+    //筛选
+    private var filtCategory:VodFiltrateCategory!
+    private var filtCategoryGather = VodFiltrateCategoryGather()
     
     private var contentView : UIScrollView!
     private var leftView : VodLeftView!
@@ -44,6 +51,13 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         super.viewDidLoad()
         leftWidth = Float(self.view.frame.width * 0.2)
         
+        initUI()
+        
+        getVideoCategoryData()
+        getFiltData()
+    }
+    
+    func initUI(){
         contentView = UIScrollView(frame: self.view.frame)
         contentView.showsVerticalScrollIndicator = false
         contentView.showsHorizontalScrollIndicator = false
@@ -121,9 +135,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             make.left.equalTo(strinkView.snp_right)
             make.width.equalTo(contentView).offset(-20)
         }
-        
-        getVideoCategoryData()
-        
     }
     
     
@@ -206,29 +217,37 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
         
         titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].title
-       
+        
         if indexPath.row == 1 {
             let searchController = SearchViewController()
             self.presentViewController(searchController, animated: true, completion: nil)
+        }else if indexPath.row == 0{
+            //print("--------->")
+            let popup = PopupController.create(self).customize([.Layout(.Bottom)])
+            let controller = VodFiltViewController()
+            controller.gather = filtCategoryGather
+            controller.delegate = self
+            popup.show(controller)
         }else{
-            videoPageData.videoList.removeAll()
-            videoListView.collectionView.hidden = true
-            SDImageCache.sharedImageCache().clearMemory()
-            videoPageData.videoList.removeAll()
-            videoPageData.pageNo = 1
-            videoListView.removeViewData()
-            videoListView.loadingView.startAnimat()
+//            videoPageData.videoList.removeAll()
+//            videoListView.collectionView.hidden = true
+//            SDImageCache.sharedImageCache().clearMemory()
+//            videoPageData.videoList.removeAll()
+//            videoPageData.pageNo = 1
+//            videoListView.removeViewData()
+//            videoListView.loadingView.startAnimat()
+            clearVodeoList()
             getVideoListData(configParams(vodCategoryGather, index: indexPath.row))
         }
         
     }
-
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 40
     }
     
     
-     //scrollView
+    //scrollView
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.tag == 0 {
@@ -298,6 +317,18 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             }else if currentElement == "video_list" {
                 videoList = Array<VideoBriefItem>()
             }
+        }else if requestId == NetRequestId.VIDEO_FILT_REQUEST{
+            
+            if currentElement == "area" {
+                filtCategory = VodFiltrateCategory()
+                filtCategory.type = FiltType.AREA
+            }else if currentElement == "cate"{
+                filtCategory = VodFiltrateCategory()
+                filtCategory.type = FiltType.CATEGORY
+            }else if currentElement == "year" {
+                filtCategory = VodFiltrateCategory()
+                filtCategory.type = FiltType.YEAR
+            }
         }
         
     }
@@ -337,6 +368,12 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             }else if currentElement == "doubanAverage"{
                 videoItem.score = content
             }
+        }else if requestId == NetRequestId.VIDEO_FILT_REQUEST{
+            if currentElement == "id" {
+                filtCategory.id = Int(content)!
+            }else if currentElement == "name" {
+                filtCategory.name = content
+            }
         }
     }
     
@@ -361,6 +398,18 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
                 videoPageData.videoList.appendContentsOf(videoList)
                 videoList = nil
             }
+        }else if requestId == NetRequestId.VIDEO_FILT_REQUEST{
+            if elementName == "area" {
+                //print(filtCategory.type)
+                filtCategoryGather.addFiltCategory(filtCategory)
+                filtCategory = nil
+            }else if elementName == "cate"{
+                filtCategoryGather.addFiltCategory(filtCategory)
+                filtCategory = nil
+            }else if elementName == "year" {
+                filtCategoryGather.addFiltCategory(filtCategory)
+                filtCategory = nil
+            }
         }
     }
     
@@ -374,10 +423,34 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }else if requestId == NetRequestId.VIDEO_VIDEO_LIST_REQUEST{
             videoListView.collectionView.hidden = false
             videoListView.setViewData(videoPageData.videoList)
+        }else if requestId == NetRequestId.VIDEO_FILT_REQUEST{
+            
         }
     }
     
-    //获取分类列表
+    func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
+        //print(parseError.code)
+        if requestId == NetRequestId.VIDEO_VIDEO_LIST_REQUEST{
+            videoPageData.videoList.removeAll()
+            if videoPageData.pageNo < videoPageData.maxPage {
+                videoPageData.pageNo += 1
+                getVideoListData(configParams(vodCategoryGather, index: lastPosition))
+                videoListView.loadingView.startAnimat()
+            }
+        }
+    }
+    
+    private func clearVodeoList(){
+        videoPageData.videoList.removeAll()
+        videoListView.collectionView.hidden = true
+        SDImageCache.sharedImageCache().clearMemory()
+        //videoPageData.videoList.removeAll()
+        videoPageData.pageNo = 1
+        videoListView.removeViewData()
+        videoListView.loadingView.startAnimat()
+    }
+    
+    ///获取分类列表
     private func getVideoCategoryData(){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_CATOGORY_LIST_ACTION)!,parameters: ["channelId":channelId,"version":"1"]).response{
             _,_,data,error in
@@ -393,7 +466,7 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         }
     }
     
-    //获取视频列表
+    ///获取视频列表
     private func getVideoListData(params: [String:AnyObject]){
         Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
             request,_,data,error in
@@ -424,20 +497,48 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         return ret
     }
     
-    override func dismissViewController() {
-        videoListView.removeViewData()
-        videoListView.removeFromSuperview()
-        SDImageCache.sharedImageCache().clearMemory()
-        leftView = nil
-        videoListView = nil
-        videoList = nil
-        super.dismissViewController()
+    ///获取筛选信息
+    private func getFiltData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_FILTRATE_CATEGORY_ACTION)!, parameters: ["channelId" : channelId]).responseData { (response) in
+            self.requestId = NetRequestId.VIDEO_FILT_REQUEST
+            switch response.result {
+            case .Failure(let error):
+                print(error)
+                break;
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break;
+            }
+        }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         SDImageCache.sharedImageCache().clearMemory()
     }
     
+    func confirmClickListener(row_0: Int, row_1: Int, row_2: Int, row_3: Int) {
+        
+        var params = [String:AnyObject]()
+        params["channelId"] = channelId
+        params["pageSize"] = 96
+        params["pageNo"] = videoPageData.pageNo
+        if row_0 != 0  {
+            params["areaId"] = filtCategoryGather.areaList[row_0].id
+        }
+        if row_1 != 0 {
+            params["cateId"] = filtCategoryGather.categoryList[row_1].id
+        }
+        if row_2 != 0 {
+            params["yearId"] = filtCategoryGather.yearList[row_2].id
+        }
+        
+        params["orderBy"] = filtCategoryGather.orderList[row_3].id
+        clearVodeoList()
+        getVideoListData(params)
+    }
     
 }

@@ -88,7 +88,7 @@ class BaseBlockView: UIView {
                 
             case .Right:
                 make.left.equalTo(self)
-                make.right.equalTo(self.snp_right).inset(20)
+                make.right.equalTo(self.snp_right).offset(-20)
                 blockName.textAlignment = .Right
                 break
                 

@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
- 
+    
     private var groupList : Array<CategoryGroupItem>!
     private var groupView : CategoryGroupView!
     
@@ -38,13 +38,13 @@ class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
         }
         
         loadingView = LoadingView()
-        loadingView.stopAnimat()
+        loadingView.startAnimat()
         self.view.addSubview(loadingView)
         loadingView.snp_makeConstraints { (make) in
             make.center.equalTo(groupView)
             make.height.width.equalTo(40)
         }
-
+        
     }
     
     //xml解析
@@ -102,5 +102,5 @@ class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
         }
     }
     
-
+    
 }

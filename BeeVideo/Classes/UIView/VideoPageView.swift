@@ -23,51 +23,109 @@ class VideoPageView: BasePageView,BlockViewDelegate {
     
     override func initView(){
         super.initView()
+        initUI()
         
-        for index in 0 ..< 3 {
-            let blockView = BlockView()
-            // blockView.initFrame(0, y: CGFloat(73 * index), width: 65, height: 65)
-            //print(height)
-            blockView.frame = CGRectMake(0, height * 0.34 * CGFloat(index), height * 0.32, height * 0.32)
-            blockView.setData(super.homeSpace[index])
-            blockView.setDelegate(self)
-            addSubview(blockView)
+    }
+    
+    func initUI(){
+        block_category1 = BlockView()
+        setBlockViewCommen(block_category1, index: 0)
+        
+        block_category2 = BlockView()
+        setBlockViewCommen(block_category2, index: 1)
+        
+        block_category3 = BlockView()
+        setBlockViewCommen(block_category3, index: 2)
+        
+        block_poster1 = BlockView()
+        setBlockViewCommen(block_poster1, index: 3)
+        
+        block_poster2 = BlockView()
+        block_poster2.setBlockViewMode(.Right)
+        setBlockViewCommen(block_poster2, index: 4)
+        
+        block_poster3 = BlockView()
+        block_poster3.setBlockViewMode(.Right)
+        setBlockViewCommen(block_poster3, index: 5)
+        
+        block_poster4 = BlockView()
+        setBlockViewCommen(block_poster4, index: 6)
+        block_poster5 = BlockView()
+        
+        setBlockViewCommen(block_poster5, index: 7)
+        block_poster6 = BlockView()
+        setBlockViewCommen(block_poster6, index: 8)
+        
+        block_poster7 = BlockView()
+        setBlockViewCommen(block_poster7, index: 9)
+        
+        block_category1.snp_makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.top.equalTo(self)
+            make.height.equalTo(self.snp_height).multipliedBy(0.32)
+            make.width.equalTo(self.snp_height).multipliedBy(0.32)
         }
         
-        let blockLarge = BlockView()
-        //blockLarge.initFrame(70, y: 0, width: 120, height: 210)
-        blockLarge.frame = CGRectMake(height * 0.32 + 5.0, 0, height * 4/7, height)
-        blockLarge.setData(super.homeSpace[3])
-        blockLarge.setDelegate(self)
-        addSubview(blockLarge)
-        
-        for index in 0 ..< 2 {
-            let blockView = BlockView()
-            //blockView.initFrame(195, y: CGFloat(110 * index), width: 150, height: 100)
-            blockView.frame = CGRectMake(height * 0.32 + height * 4/7 + 10, height * 0.52 * CGFloat(index), height * 0.48 * 1.5, height * 0.48)
-            blockView.setData(super.homeSpace[index + 4])
-            blockView.setBlockViewMode(.Right)
-            blockView.setDelegate(self)
-            addSubview(blockView)
+        block_category2.snp_makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.centerY.equalTo(self)
+            make.height.width.equalTo(block_category1)
         }
         
-        for index in 0 ..< 2 {
-            let blockView = BlockView()
-            // blockView.initFrame(350, y: CGFloat(110 * index), width: 100, height: 100)
-            blockView.frame = CGRectMake(height * (1.04 + 4/7) + 15, height * 0.52 * CGFloat(index), height * 0.48, height * 0.48)
-            blockView.setData(super.homeSpace[index + 6])
-            blockView.setDelegate(self)
-            addSubview(blockView)
+        block_category3.snp_makeConstraints { (make) in
+            make.left.equalTo(self)
+            make.bottom.equalTo(self)
+            make.height.width.equalTo(block_category1)
         }
         
-        for index in 0 ..< 2 {
-            let blockView = BlockView()
-            // blockView.initFrame(455, y: CGFloat(110 * index), width: 100, height: 100)
-            blockView.frame = CGRectMake(height * (1.52 + 4/7) + 20, height * 0.52 * CGFloat(index), height * 0.48, height * 0.48)
-            blockView.setData(super.homeSpace[index + 8])
-            blockView.setDelegate(self)
-            addSubview(blockView)
+        block_poster1.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(self)
+            make.left.equalTo(block_category2.snp_right).offset(height * 0.02)
+            make.width.equalTo(self.snp_height).multipliedBy( 0.58 )
         }
+        
+        block_poster2.snp_makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.left.equalTo(block_poster1.snp_right).offset(height * 0.02)
+            make.height.equalTo(self.snp_height).multipliedBy(0.49)
+            make.width.equalTo(self.snp_height).multipliedBy(0.49 * 1.5)
+        }
+
+        block_poster3.snp_makeConstraints { (make) in
+            make.bottom.equalTo(self)
+            make.left.equalTo(block_poster2)
+            make.height.equalTo(block_poster2)
+            make.width.equalTo(block_poster2)
+        }
+        
+        block_poster4.snp_makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.left.equalTo(block_poster2.snp_right).offset(height * 0.02)
+            make.height.equalTo(block_poster2)
+            make.width.equalTo(block_poster2.snp_height)
+        }
+        
+        block_poster5.snp_makeConstraints { (make) in
+            make.left.equalTo(block_poster4)
+            make.bottom.equalTo(self)
+            make.width.equalTo(block_poster4)
+            make.height.equalTo(block_poster4)
+        }
+        
+        block_poster6.snp_makeConstraints { (make) in
+            make.left.equalTo(block_poster4.snp_right).offset(height * 0.02)
+            make.top.equalTo(self)
+            make.height.equalTo(block_poster4)
+            make.width.equalTo(block_poster4)
+        }
+        
+        block_poster7.snp_makeConstraints { (make) in
+            make.left.equalTo(block_poster6)
+            make.bottom.equalTo(self)
+            make.height.equalTo(block_poster4)
+            make.width.equalTo(block_poster4)
+        }
+        
         
     }
     
@@ -95,7 +153,13 @@ class VideoPageView: BasePageView,BlockViewDelegate {
         }
     }
     
+    func setBlockViewCommen(view:BlockView, index: Int){
+        view.setData(homeSpace[index])
+        view.setDelegate(self)
+        self.addSubview(view)
+    }
+    
     override func getViewWidth() -> CGFloat {
-        return height * (2 + 4/7) + 70
+        return height * 3
     }
 }

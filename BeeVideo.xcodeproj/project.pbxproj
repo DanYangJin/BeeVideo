@@ -80,6 +80,7 @@
 		B3151C1D1D0CF87200245B65 /* FullKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3151C1C1D0CF87200245B65 /* FullKeyboardView.swift */; };
 		B3151C2E1D0D2DD400245B65 /* KeyBoardViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3151C2D1D0D2DD400245B65 /* KeyBoardViewButton.swift */; };
 		B3151C301D0D4AFB00245B65 /* KeyboardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3151C2F1D0D4AFB00245B65 /* KeyboardCollectionViewCell.swift */; };
+		B31B6F751D4F2F49005A0DB4 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31B6F741D4F2F49005A0DB4 /* JavaScriptCore.framework */; };
 		B33E66E11D1AB43A004A0E84 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = B33E66D61D1AB43A004A0E84 /* FMDatabase.m */; };
 		B33E66E21D1AB43A004A0E84 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = B33E66D81D1AB43A004A0E84 /* FMDatabaseAdditions.m */; };
 		B33E66E31D1AB43A004A0E84 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = B33E66DA1D1AB43A004A0E84 /* FMDatabasePool.m */; };
@@ -145,6 +146,9 @@
 		B3F24C491CC1DF5900ED73FA /* VideoBriefItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */; };
 		B3F24C4F1CC21D7C00ED73FA /* ZXOptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */; };
 		B3F2D6511D23DE04002FF3C5 /* ChooseOptionBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F2D6501D23DE04002FF3C5 /* ChooseOptionBarCell.swift */; };
+		B3F404F21D3E0F9600EA7036 /* VodFiltrateCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F404F11D3E0F9600EA7036 /* VodFiltrateCategory.swift */; };
+		B3F404F41D3E11B700EA7036 /* VodFiltrateCategoryGather.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F404F31D3E11B700EA7036 /* VodFiltrateCategoryGather.swift */; };
+		B3F404F61D3E2FB200EA7036 /* PickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F404F51D3E2FB200EA7036 /* PickerCell.swift */; };
 		B3F420081D1BB4DD00895E51 /* VideoHistoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F420071D1BB4DD00895E51 /* VideoHistoryItem.swift */; };
 		B3F4200A1D1CE02F00895E51 /* VideoDetailBtnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F420091D1CE02F00895E51 /* VideoDetailBtnCell.swift */; };
 		B3F513BB1D228D6800C3A842 /* PopupChooseDramaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F513BA1D228D6800C3A842 /* PopupChooseDramaController.swift */; };
@@ -300,6 +304,7 @@
 		B3151C1C1D0CF87200245B65 /* FullKeyboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullKeyboardView.swift; sourceTree = "<group>"; };
 		B3151C2D1D0D2DD400245B65 /* KeyBoardViewButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyBoardViewButton.swift; sourceTree = "<group>"; };
 		B3151C2F1D0D4AFB00245B65 /* KeyboardCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardCollectionViewCell.swift; path = TableCell/KeyboardCollectionViewCell.swift; sourceTree = "<group>"; };
+		B31B6F741D4F2F49005A0DB4 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		B33E66D51D1AB43A004A0E84 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = SqliteDB/FMDatabase.h; sourceTree = "<group>"; };
 		B33E66D61D1AB43A004A0E84 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = SqliteDB/FMDatabase.m; sourceTree = "<group>"; };
 		B33E66D71D1AB43A004A0E84 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = SqliteDB/FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -371,6 +376,9 @@
 		B3F24C481CC1DF5900ED73FA /* VideoBriefItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoBriefItem.swift; sourceTree = "<group>"; };
 		B3F24C4E1CC21D7C00ED73FA /* ZXOptionBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZXOptionBar.swift; sourceTree = "<group>"; };
 		B3F2D6501D23DE04002FF3C5 /* ChooseOptionBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChooseOptionBarCell.swift; path = TableCell/ChooseOptionBarCell.swift; sourceTree = "<group>"; };
+		B3F404F11D3E0F9600EA7036 /* VodFiltrateCategory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VodFiltrateCategory.swift; sourceTree = "<group>"; };
+		B3F404F31D3E11B700EA7036 /* VodFiltrateCategoryGather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VodFiltrateCategoryGather.swift; sourceTree = "<group>"; };
+		B3F404F51D3E2FB200EA7036 /* PickerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PickerCell.swift; path = TableCell/PickerCell.swift; sourceTree = "<group>"; };
 		B3F420071D1BB4DD00895E51 /* VideoHistoryItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoHistoryItem.swift; sourceTree = "<group>"; };
 		B3F420091D1CE02F00895E51 /* VideoDetailBtnCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoDetailBtnCell.swift; path = BeeVideo/Classes/TableCell/VideoDetailBtnCell.swift; sourceTree = SOURCE_ROOT; };
 		B3F513BA1D228D6800C3A842 /* PopupChooseDramaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupChooseDramaController.swift; sourceTree = "<group>"; };
@@ -411,6 +419,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B31B6F751D4F2F49005A0DB4 /* JavaScriptCore.framework in Frameworks */,
 				B3EDFD631D2BBB6000BEE03C /* SystemConfiguration.framework in Frameworks */,
 				B3ED81AF1D192DEB00CF21EF /* libsqlite3.0.tbd in Frameworks */,
 				2D9163CC1CC4DA5A0045163A /* WebP.framework in Frameworks */,
@@ -636,6 +645,8 @@
 				B300FBBB1D114B20006DB4E8 /* AccountInfo.swift */,
 				B3F420071D1BB4DD00895E51 /* VideoHistoryItem.swift */,
 				B3A26E641D2DF664000EC7D1 /* VideoPlayItem.swift */,
+				B3F404F11D3E0F9600EA7036 /* VodFiltrateCategory.swift */,
+				B3F404F31D3E11B700EA7036 /* VodFiltrateCategoryGather.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -838,6 +849,7 @@
 				B3ED81581D18E94500CF21EF /* PointRecordCell.swift */,
 				B3F420091D1CE02F00895E51 /* VideoDetailBtnCell.swift */,
 				B3F2D6501D23DE04002FF3C5 /* ChooseOptionBarCell.swift */,
+				B3F404F51D3E2FB200EA7036 /* PickerCell.swift */,
 			);
 			name = TableCell;
 			sourceTree = "<group>";
@@ -845,6 +857,7 @@
 		EB13B2A8EC69E148BBD52AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B31B6F741D4F2F49005A0DB4 /* JavaScriptCore.framework */,
 				B3EDFD621D2BBB6000BEE03C /* SystemConfiguration.framework */,
 				B3ED81AE1D192DEB00CF21EF /* libsqlite3.0.tbd */,
 				2DC9ABDD1CCCA24000B34A4B /* AVFoundation.framework */,
@@ -1150,7 +1163,9 @@
 				2D54DDF11C9D339C007362F2 /* BlockView.swift in Sources */,
 				2D9163CB1CC4DA5A0045163A /* UIImage+WebP.m in Sources */,
 				B300FA361CF5B56D00B9FC80 /* CategoryGroupView.swift in Sources */,
+				B3F404F41D3E11B700EA7036 /* VodFiltrateCategoryGather.swift in Sources */,
 				B300FBBF1D124524006DB4E8 /* MyHistoryView.swift in Sources */,
+				B3F404F61D3E2FB200EA7036 /* PickerCell.swift in Sources */,
 				2DB907311CC729C600BABAFB /* AVPlayerView.swift in Sources */,
 				B3ED3ACF1D0E8C2000D76B2F /* GridViewMatrixTransformer<T>.swift in Sources */,
 				2D54DDF31C9D39B7007362F2 /* VideoPageView.swift in Sources */,
@@ -1167,6 +1182,7 @@
 				B3FFB23F1CFBE212006F2562 /* WeekChannel.swift in Sources */,
 				B3CEC45E1CFD92A500A7D1EA /* RestVideoViewController.swift in Sources */,
 				B3FBEA2F1CEAF0F900E7C730 /* ItemView.swift in Sources */,
+				B3F404F21D3E0F9600EA7036 /* VodFiltrateCategory.swift in Sources */,
 				2DE7CE621CA154D7004F0D68 /* ChannelProgram.swift in Sources */,
 				B300FA381CF5B9A400B9FC80 /* CategoryItem.swift in Sources */,
 				B3FC48DD1CF6F5FA003C1A12 /* VideoCategoryListController.swift in Sources */,

@@ -50,7 +50,7 @@ class AppRecommendViewController: BaseBackViewController,NSXMLParserDelegate,UIC
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : AppRecommendCell = collectionView.dequeueReusableCellWithReuseIdentifier("recommendCell", forIndexPath: indexPath) as! AppRecommendCell
         cell.titleLabl.text = recommendAppGather.appList[indexPath.row].appName
-        cell.appIconImg.sd_setImageWithURL(NSURL(string: recommendAppGather.appList[indexPath.row].appIconUrl)!)
+        cell.appIconImg.sd_setImageWithURL(NSURL(string: recommendAppGather.appList[indexPath.row].appIconUrl))
         
         return cell
     }
@@ -131,7 +131,6 @@ class AppRecommendViewController: BaseBackViewController,NSXMLParserDelegate,UIC
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
-            
         }
     }
     

@@ -58,6 +58,13 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initUI()
+        
+        getVideoDetailRequest()
+        
+    }
+    
+    func initUI(){
         backView = UIButton()
         backView.setImage(UIImage(named: "play_back_full"), forState: .Normal)
         backView.addOnClickListener(self, action: #selector(self.dismissViewController))
@@ -151,9 +158,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             make.center.equalTo(horizontalTab)
             make.height.width.equalTo(30)
         }
-        
-        getVideoDetailRequest()
-        
+
     }
     
     override func didReceiveMemoryWarning() {

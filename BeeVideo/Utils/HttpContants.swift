@@ -17,6 +17,7 @@ class HttpContants {
     static let V20_SEARCH_VIDEO_RECOMMAND_KEY_ACTION = "/api/video2.0/video_search_hotkey.action"
     static let V20_SEARCH_VIDEO_ACTION = "/api/video2.0/video_search.action"
     
+    
     static let URL_HISTORY_RECOMMEND = "/api/video2.0/commonVideoRec.action"
     static let URL_HOME_DATA = "/api/hometv2.0/listBlockByVersion.action"
     static let URL_HD_VIDEO = "/videoplus/hometv/video_hd.action"

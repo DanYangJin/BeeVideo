@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import MediaPlayer
 import Alamofire
+import JavaScriptCore
 
 public enum PlayerStatus {
     case INIT
@@ -31,7 +32,7 @@ public enum Flag{
     case History
 }
 
-class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate, NSXMLParserDelegate{
+class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate, NSXMLParserDelegate, UIWebViewDelegate{
     
     enum RequestId {
         case GET_VIDEO_SOURCE
@@ -53,6 +54,9 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     internal var horizontalLabel:UILabel!
     private var netLoadingView:NetSpeedView!
     private var preLoadingView:PreLoadingView!
+    
+    //------------test 
+    private var webView:UIWebView!
     
     //临时变量
     private var screenWidth:CGFloat!,screenHeight:CGFloat!
@@ -99,6 +103,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.view.addSubview(self.initProgressView())
         self.view.addSubview(self.initNetLoadingView())
         self.view.addSubview(self.initPreLoadingView())
+        self.view.addSubview(self.initWebView())
         
         self.videoStatus     = PlayerStatus.INIT
         self.moveDirection   = PanDirection.PanDirectionInit
@@ -180,6 +185,15 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             self.progressView = ProgressView()
         }
         return self.progressView
+    }
+    
+    func initWebView() -> UIWebView{
+        if self.webView == nil{
+            self.webView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+            self.webView.delegate = self
+            self.webView.loadRequest(NSURLRequest(URL: NSURL(string: "http://192.168.66.68/client/index.html")!))
+        }
+        return self.webView
     }
     
     func addNotifications(){
@@ -666,6 +680,17 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             preLoadingView.setDrama(currentReadableDrama)
             preLoadingView.hidden = false
         }
+    }
+    
+    //------------------webview
+    func webViewDidFinishLoad(webView: UIWebView) {
+        let context = self.webView.valueForKeyPath("documentView.webView.mainFrame.javaScriptContext") as! JSContext
+        let value = context.objectForKeyedSubscript("getPlayUrl")
+        let ret = value.callWithArguments([])
+        let urls = ret.toArray()
+        print(urls)
+//        self.videoPlayerView.setDataSource(urls[0] as! String)
+//        self.videoPlayerView.play()
     }
     
     
