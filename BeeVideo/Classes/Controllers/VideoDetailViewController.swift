@@ -12,7 +12,7 @@ import Alamofire
 import DZNEmptyDataSet
 import PopupController
 
-class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,ZXOptionBarDelegate,ZXOptionBarDataSource,DetailBtnClickDelegate,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate,ChooseDramaDelegate {
+class VideoDetailViewController: BaseViewController,UITableViewDelegate,UITableViewDataSource,ZXOptionBarDelegate,ZXOptionBarDataSource,DetailBtnClickDelegate,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate,ChooseDramaDelegate {
     
     private enum NetRequestId{
         case VIDEO_DETAIL_REQUEST_ID
@@ -154,17 +154,330 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             make.bottom.equalTo(recommendTab)
         }
         
+        errorView = ErrorView()
+        errorView.hidden = true
+        self.view.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.left.right.equalTo(view)
+            make.top.equalTo(backView.snp_bottom)
+            make.bottom.equalTo(view)
+        }
+        
         recommendLoadingView.snp_makeConstraints { (make) in
             make.center.equalTo(horizontalTab)
             make.height.width.equalTo(30)
         }
-
+        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    /// tableview
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.recommends.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellId = "recommendCell"
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
+        if cell == nil {
+            cell = UITableViewCell(style: .Default, reuseIdentifier: cellId)
+        }
+        
+        cell?.textLabel?.text = recommends[indexPath.row]
+        cell?.textLabel?.textColor = UIColor.whiteColor()
+        cell?.textLabel?.textAlignment = .Center
+        cell?.textLabel?.lineBreakMode = .ByClipping
+        cell?.backgroundColor = UIColor.clearColor()
+        cell?.selectionStyle = .None
+        cell?.textLabel?.font = UIFont.systemFontOfSize(14)
+        
+        if lastPosition == indexPath.row {
+            cell?.textLabel?.textColor = UIColor.textBlueColor()
+        }
+        
+        return  cell!
+    }
+    
+    var lastPosition = 0 //记录上一次所点的位置
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if lastPosition == indexPath.row {
+            return
+        }
+        
+        let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
+        lastCell?.textLabel?.textColor = UIColor.whiteColor()
+        
+        let currentCell = tableView.cellForRowAtIndexPath(indexPath)
+        currentCell?.textLabel?.textColor = UIColor.textBlueColor()
+        
+        lastPosition = indexPath.row
+        
+        let index = indexPath.row
+        refreshReommendList(index)
+        
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 25
+    }
+    
+    /// optionBar
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        return videoBriefItems.count
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        let cellId = "optionCell"
+        var cell : BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? BaseTableViewCell
+        if cell == nil {
+            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+        }
+        cell?.backgroundColor = UIColor.clearColor()
+        cell?.videoNameLbl.text = videoBriefItems[index].name
+        cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+        cell?.durationLbl.text = videoBriefItems[index].duration
+        let average = videoBriefItems[index].score
+        if average.isEmpty {
+            cell?.averageLbl.hidden = true
+        }else{
+            cell?.averageLbl.hidden = false
+            cell?.averageLbl.text = videoBriefItems[index].score
+        }
+        
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return Float(optionBar.bounds.height * 3/4)
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        let detailController = VideoDetailViewController()
+        var extra = [ExtraData]()
+        extra.append(ExtraData(name: "", value: videoBriefItems[index].id))
+        detailController.extras = extra
+        self.presentViewController(detailController, animated: true, completion: nil)
+    }
+    
+    func judgeStatus(status:String) -> Bool{
+        let ret : Int = Int(status)!
+        if ret == 1 {
+            return true
+        }
+        return false
+    }
+    
+    //获取视频详情
+    func getVideoDetailRequest(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_VIDEO_DETAIL_INFO_V2)!, parameters: ["videoId": extras[0].value]).responseData { (response) in
+            self.requestId = NetRequestId.VIDEO_DETAIL_REQUEST_ID
+            self.loadingView.stopAnimat()
+            switch response.result {
+            case .Failure( _):
+                self.errorView.hidden = false
+                self.errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE
+                break
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break
+                
+            }
+        }
+    }
+    
+    ///获取推荐视频
+    func getRecommendRequest(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_VIDEO_RELATED_LIST)!,parameters: ["videoId":videoId]).responseData{ (response) in
+            self.requestId = NetRequestId.RECOMMENDED_REQUEST_ID
+            switch response.result {
+            case .Failure(let error):
+                print(error)
+                break
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break
+                
+            }
+
+        }
+    }
+    
+    //获取按演员推荐
+    func getRecommendByActorRequest(searchKey:String, type:String){
+        let params = ["searchKey" : searchKey, "type" : type]
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_ACTION)!, parameters: params).responseData { (response) in
+            self.requestId = NetRequestId.SEARCH_REQUEST_ID
+            switch response.result {
+            case .Failure(let error):
+                print(error)
+                break
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break
+                
+            }
+        }
+    }
+    
+    //获取源信息
+    func getSourceInfo(){
+        if videoDetailInfo.currentDrama == nil {
+            return
+        }
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_LIST_VIDEO_SOURCE_INFO)!, parameters: ["videoMergeInfoId" : (videoDetailInfo.currentDrama?.id)!]).responseData{
+            response in
+            self.requestId = NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID
+            
+            switch response.result{
+            case .Success(let data):
+                let parser = NSXMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
+                break
+            case .Failure(let error):
+                print(error)
+                break
+            }
+        }
+    }
+    
+    private func refreshReommendList(index: Int){
+        horizontalTab.hidden = true
+        recommendLoadingView.startAnimat()
+        if index == 0 {
+            getRecommendRequest()
+        }else{
+            getRecommendByActorRequest(recommends[index], type: "1")
+        }
+        
+    }
+    
+    
+    //操作按钮点击事件
+    func detailBtnClick(index: Int) {
+        
+        let position = detailView.btnItems[index].position
+        switch position {
+        case VideoInfoUtils.OP_POSITION_PLAY:
+            if !NetworkUtil.isWifiConnection() {
+                self.view.makeToast("当前处于非wifi环境下，播放时将产生流量费用")
+                return
+            }
+            toVideoPlayController()
+            break
+        case VideoInfoUtils.OP_POSITION_CHOOSE:
+            popup = PopupController.create(self).customize([.Layout(.Bottom)])
+            let chooseDramaController = PopupChooseDramaController()
+            chooseDramaController.videoDetailInfo = videoDetailInfo
+            chooseDramaController.delegate = self
+            popup.show(chooseDramaController)
+            break
+        case VideoInfoUtils.OP_POSITION_DOWNLOAD:
+            
+            break
+        case VideoInfoUtils.OP_POSITION_FAV:
+            if (videoDetailInfo.currentDrama?.sources != nil && videoDetailInfo.currentDrama?.sources.count > 0){
+                favoriteClickCount += 1
+                let cell = detailView.mOptionBar.cellForColumnAtIndex(index) as? VideoDetailBtnCell
+                if cell != nil {
+                    videoDetailInfo.isFavorite = !videoDetailInfo.isFavorite
+                    cell?.imgBtn.setImage(VideoInfoUtils.chooseImageWithFavorite(videoDetailInfo.isFavorite))
+                }
+            }
+            break
+        default:
+            break
+        }
+        
+    }
+    
+    
+    /**
+     去除数组中相同的元素
+     */
+    func removeRepeatActor(array: [String]) -> [String]{
+        var trim = Set<String>()
+        for  l in array {
+            trim.insert(l)
+        }
+        var ret = [String]()
+        for l in trim{
+            ret.append(l)
+        }
+        return ret
+    }
+    
+    //UILabel的共同属性
+    func setCommenAttr(label:UILabel){
+        label.textColor = UIColor.whiteColor()
+        label.font = UIFont.systemFontOfSize(12)
+    }
+    
+    //UIButton的共同属性
+    func setButtonAttr(button:UIButton){
+        button.layer.cornerRadius = 8
+        button.layer.borderColor = UIColor.whiteColor().CGColor
+        button.layer.borderWidth = 0.5
+        button.titleLabel?.font = UIFont.systemFontOfSize(14)
+    }
+    
+    func onDramaChooseListener(dramaIndex: Int) {
+        let lastDramaPosition = videoDetailInfo.lastPlayDramaPosition
+        
+        if lastDramaPosition != dramaIndex {
+            videoDetailInfo.setLastPlayDramaPosition(dramaIndex)
+            videoDetailInfo.dramaPlayedDuration = 0
+        }        
+        if popup != nil {
+            popup.dismiss()
+            popup = nil
+        }
+        
+        toVideoPlayController()
+    }
+    
+    func addClick(){
+        detailView.backBtn.addOnClickListener(self, action: (#selector(self.dismissViewController)))
+    }
+    
+    func toVideoPlayController(){
+        let controller = PlayerViewController()
+        controller.flag = .Detail
+        controller.videoDetailInfo = videoDetailInfo
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    override func dismissViewController() {
+        
+        if favoriteClickCount % 2 == 1 {
+            VideoDBHelper.shareInstance().updateFavorite(videoDetailInfo)
+            NSNotificationCenter.defaultCenter().postNotificationName("FavoriteChangedNotify", object: nil)
+        }
+        super.dismissViewController()
+    }
+    
+    deinit{
+        print("detail deinit")
+    }
+    
+}
+
+/*
+ xml解析
+ */
+extension VideoDetailViewController:NSXMLParserDelegate{
     
     //开始解析
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
@@ -366,7 +679,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
             }
             recommendLoadingView.startAnimat()
             recommendTab.reloadData()
-            loadingView.stopAnimat()
+            
             getSourceInfo()
             getRecommendRequest()
         }else if requestId == NetRequestId.RECOMMENDED_REQUEST_ID || requestId == NetRequestId.SEARCH_REQUEST_ID{
@@ -386,285 +699,7 @@ class VideoDetailViewController: BaseViewController,NSXMLParserDelegate,UITableV
         }
     }
     
-    /// tableview
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.recommends.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellId = "recommendCell"
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellId)
-        if cell == nil {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: cellId)
-        }
-        
-        cell?.textLabel?.text = recommends[indexPath.row]
-        cell?.textLabel?.textColor = UIColor.whiteColor()
-        cell?.textLabel?.textAlignment = .Center
-        cell?.textLabel?.lineBreakMode = .ByClipping
-        cell?.backgroundColor = UIColor.clearColor()
-        cell?.selectionStyle = .None
-        cell?.textLabel?.font = UIFont.systemFontOfSize(14)
-        
-        if lastPosition == indexPath.row {
-            cell?.textLabel?.textColor = UIColor.textBlueColor()
-        }
-        
-        return  cell!
-    }
-    
-    var lastPosition = 0 //记录上一次所点的位置
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        if lastPosition == indexPath.row {
-            return
-        }
-        
-        let lastCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0))
-        lastCell?.textLabel?.textColor = UIColor.whiteColor()
-        
-        let currentCell = tableView.cellForRowAtIndexPath(indexPath)
-        currentCell?.textLabel?.textColor = UIColor.textBlueColor()
-        
-        lastPosition = indexPath.row
-        
-        let index = indexPath.row
-        refreshReommendList(index)
-        
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 25
-    }
-    
-    /// optionBar
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
-        return videoBriefItems.count
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
-        let cellId = "optionCell"
-        var cell : BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? BaseTableViewCell
-        if cell == nil {
-            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
-        }
-        cell?.backgroundColor = UIColor.clearColor()
-        cell?.videoNameLbl.text = videoBriefItems[index].name
-        cell?.icon.sd_setImageWithURL(NSURL(string: videoBriefItems[index].posterImg),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-        cell?.durationLbl.text = videoBriefItems[index].duration
-        let average = videoBriefItems[index].score
-        if average.isEmpty {
-            cell?.averageLbl.hidden = true
-        }else{
-            cell?.averageLbl.hidden = false
-            cell?.averageLbl.text = videoBriefItems[index].score
-        }
-        
-        return cell!
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
-        return Float(optionBar.bounds.height * 3/4)
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
-        let detailController = VideoDetailViewController()
-        var extra = [ExtraData]()
-        extra.append(ExtraData(name: "", value: videoBriefItems[index].id))
-        detailController.extras = extra
-        self.presentViewController(detailController, animated: true, completion: nil)
-    }
-    
-    func judgeStatus(status:String) -> Bool{
-        let ret : Int = Int(status)!
-        if ret == 1 {
-            return true
-        }
-        return false
-    }
-    
-    //获取视频详情
-    func getVideoDetailRequest(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_VIDEO_DETAIL_INFO_V2)!, parameters: ["videoId": extras[0].value]).response{ request, response, data, error in
-            self.requestId = NetRequestId.VIDEO_DETAIL_REQUEST_ID
-            if error != nil {
-                print(error)
-                return
-            }
-            let parse = NSXMLParser(data: data!)
-            parse.delegate = self
-            parse.parse()
-        }
-    }
-    
-    ///获取推荐视频
-    func getRecommendRequest(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_VIDEO_RELATED_LIST)!,parameters: ["videoId":videoId]).response{ request, response, data, error in
-            self.requestId = NetRequestId.RECOMMENDED_REQUEST_ID
-            if error != nil{
-                print(error)
-                return
-            }
-            let parse = NSXMLParser(data: data!)
-            parse.delegate = self
-            parse.parse()
-        }
-    }
-    
-    //获取按演员推荐
-    func getRecommendByActorRequest(searchKey:String, type:String){
-        let params = ["searchKey" : searchKey, "type" : type]
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_ACTION)!, parameters: params).response{ request, response, data, error in
-            self.requestId = NetRequestId.SEARCH_REQUEST_ID
-            if error != nil{
-                print(error)
-                return
-            }
-            let parse = NSXMLParser(data: data!)
-            parse.delegate = self
-            parse.parse()
-        }
-    }
-    
-    //获取源信息
-    func getSourceInfo(){
-        if videoDetailInfo.currentDrama == nil {
-            return
-        }
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_LIST_VIDEO_SOURCE_INFO)!, parameters: ["videoMergeInfoId" : (videoDetailInfo.currentDrama?.id)!]).responseData{
-            response in
-            self.requestId = NetRequestId.GET_VIDEO_SOURCE_REQUEST_ID
-            
-            switch response.result{
-            case .Success(let data):
-                let parser = NSXMLParser(data: data)
-                parser.delegate = self
-                parser.parse()
-                break
-            case .Failure(let error):
-                print(error)
-                break
-            }
-        }
-    }
-    
-    private func refreshReommendList(index: Int){
-        horizontalTab.hidden = true
-        recommendLoadingView.startAnimat()
-        if index == 0 {
-            getRecommendRequest()
-        }else{
-            getRecommendByActorRequest(recommends[index], type: "1")
-        }
-        
-    }
-    
-    
-    //操作按钮点击事件
-    func detailBtnClick(index: Int) {
-        
-        let position = detailView.btnItems[index].position
-        switch position {
-        case VideoInfoUtils.OP_POSITION_PLAY:
-            if !NetworkUtil.isWifiConnection() {
-                self.view.makeToast("当前处于非wifi环境下，播放时将产生流量费用")
-                return
-            }
-            toVideoPlayController()
-            break
-        case VideoInfoUtils.OP_POSITION_CHOOSE:
-            popup = PopupController.create(self).customize([.Layout(.Bottom)])
-            let chooseDramaController = PopupChooseDramaController()
-            chooseDramaController.videoDetailInfo = videoDetailInfo
-            chooseDramaController.delegate = self
-            popup.show(chooseDramaController)
-            break
-        case VideoInfoUtils.OP_POSITION_DOWNLOAD:
-            
-            break
-        case VideoInfoUtils.OP_POSITION_FAV:
-            if (videoDetailInfo.currentDrama?.sources != nil && videoDetailInfo.currentDrama?.sources.count > 0){
-                favoriteClickCount += 1
-                let cell = detailView.mOptionBar.cellForColumnAtIndex(index) as? VideoDetailBtnCell
-                if cell != nil {
-                    videoDetailInfo.isFavorite = !videoDetailInfo.isFavorite
-                    cell?.imgBtn.setImage(VideoInfoUtils.chooseImageWithFavorite(videoDetailInfo.isFavorite))
-                }
-            }
-            break
-        default:
-            break
-        }
-        
-    }
-    
-    
-    /**
-     去除数组中相同的元素
-     */
-    func removeRepeatActor(array: [String]) -> [String]{
-        var trim = Set<String>()
-        for  l in array {
-            trim.insert(l)
-        }
-        var ret = [String]()
-        for l in trim{
-            ret.append(l)
-        }
-        return ret
-    }
-    
-    //UILabel的共同属性
-    func setCommenAttr(label:UILabel){
-        label.textColor = UIColor.whiteColor()
-        label.font = UIFont.systemFontOfSize(12)
-    }
-    
-    //UIButton的共同属性
-    func setButtonAttr(button:UIButton){
-        button.layer.cornerRadius = 8
-        button.layer.borderColor = UIColor.whiteColor().CGColor
-        button.layer.borderWidth = 0.5
-        button.titleLabel?.font = UIFont.systemFontOfSize(14)
-    }
-    
-    func onDramaChooseListener(dramaIndex: Int) {
-        let lastDramaPosition = videoDetailInfo.lastPlayDramaPosition
-        
-        if lastDramaPosition != dramaIndex {
-            videoDetailInfo.setLastPlayDramaPosition(dramaIndex)
-            videoDetailInfo.dramaPlayedDuration = 0
-        }
-        
-        if popup != nil {
-            popup.dismiss()
-            popup = nil
-        }
-        
-        toVideoPlayController()
-    }
-    
-    func addClick(){
-        detailView.backBtn.addOnClickListener(self, action: (#selector(self.dismissViewController)))
-    }
-
-    func toVideoPlayController(){
-        let controller = PlayerViewController()
-        controller.flag = .Detail
-        controller.videoDetailInfo = videoDetailInfo
-        self.presentViewController(controller, animated: true, completion: nil)
-       // self.presentViewController(PlayerViewController(), animated: true, completion: nil)
-    }
-    
-    override func dismissViewController() {
-        
-        if favoriteClickCount % 2 == 1 {
-            VideoDBHelper.shareInstance().updateFavorite(videoDetailInfo)
-            NSNotificationCenter.defaultCenter().postNotificationName("FavoriteChangedNotify", object: nil)
-        }
-        super.dismissViewController()
-    }
-    
 }
+
+
 

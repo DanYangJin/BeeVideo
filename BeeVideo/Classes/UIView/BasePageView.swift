@@ -11,7 +11,7 @@ import UIKit
 class BasePageView: UIView {
 
     internal var homeSpace:[HomeSpace]!
-    internal var viewController:UIViewController!
+    internal weak var viewController:UIViewController!
     internal var height:CGFloat!
     
     func initView(){

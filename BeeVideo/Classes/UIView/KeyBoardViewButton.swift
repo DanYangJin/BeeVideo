@@ -15,8 +15,7 @@ enum KeyBoardViewButtonMode {
 
 
 class KeyBoardViewButton: UIButton {
-    
-    private var bgImg : UIImageView!
+
     private var icon : UIImageView!
     var textLbl : UILabel!
     var buttonMode:KeyBoardViewButtonMode {
@@ -45,14 +44,7 @@ class KeyBoardViewButton: UIButton {
             make.width.equalTo(self).dividedBy(3)
         }
         
-        bgImg = UIImageView()
-        bgImg.contentMode = .ScaleToFill
-        bgImg.image = UIImage(named: "v2_normal_button_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 18,left: 20,bottom: 18,right: 20), resizingMode: .Stretch)
-        self.addSubview(bgImg)
-        bgImg.snp_makeConstraints { (make) in
-            make.top.bottom.equalTo(self)
-            make.left.right.equalTo(self)
-        }
+        self.setBackgroundImage(UIImage(named: "v2_normal_button_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 18,left: 20,bottom: 18,right: 20), resizingMode: .Stretch), forState: .Normal)
         
         textLbl = UILabel()
         textLbl.textColor = UIColor.whiteColor()

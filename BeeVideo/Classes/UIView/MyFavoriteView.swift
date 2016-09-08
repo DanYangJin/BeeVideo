@@ -13,7 +13,7 @@ class MyFavoriteView: UIView,UICollectionViewDelegateFlowLayout,UICollectionView
     
     private var mCollectionView:UICollectionView!
     private var videoList:[VideoHistoryItem] = [VideoHistoryItem]()
-    var delegate:VideoListViewDelegate!
+    weak var delegate:VideoListViewDelegate!
 
     override init(frame: CGRect) {
         super.init(frame: frame)

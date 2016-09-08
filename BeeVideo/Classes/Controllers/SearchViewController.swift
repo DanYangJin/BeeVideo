@@ -8,7 +8,7 @@
 
 import Alamofire
 
-class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXMLParserDelegate,SearchRecommendViewItemClickDelegate,VideoListViewDelegate{
+class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,SearchRecommendViewItemClickDelegate,VideoListViewDelegate{
     
     private enum NetRequestId{
         case RECOMMEND_SEARCH_REQUEST
@@ -26,6 +26,9 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
     private var videoItem:VideoBriefItem!
     private var videoList:[VideoBriefItem]!
     
+    //XML解析
+    private var currentElement:String!
+    
     var keyString:String = ""
     var keyWord:String!
     var keyWords:[String]!
@@ -34,6 +37,17 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         leftWidth = Float(self.view.frame.width * 0.35)
         super.viewDidLoad()
         
+        initUI()
+        
+        getRecommendData()
+        
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func initUI(){
         strinkView.hidden = true
         titleLbl.text = "热门搜索"
         
@@ -64,6 +78,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         
         leftContentView = SearchLeftView()
         leftContentView.fullKeyboard.keyboardDelegate = self
+        leftContentView.t9Keyboard.keyboardDelegate = self
         leftView.addSubview(leftContentView)
         leftContentView.snp_makeConstraints { (make) in
             make.left.equalTo(leftView.snp_right).multipliedBy(0.1)
@@ -78,8 +93,8 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         searchRecomView.snp_makeConstraints { (make) in
             make.left.equalTo(backView)
             make.top.equalTo(backView.snp_bottom)
-            make.width.equalTo(self.view.snp_width).dividedBy(2)
-            make.bottom.equalTo(self.view)
+            make.width.equalTo(view.snp_width).dividedBy(2)
+            make.bottom.equalTo(view)
         }
         
         videoListView = VideoListView()
@@ -90,109 +105,28 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         videoListView.snp_makeConstraints { (make) in
             make.left.equalTo(backView)
             make.top.equalTo(backView.snp_bottom)
-            make.bottom.equalTo(self.view)
-            make.width.equalTo(self.contentView).offset(-20)
-        }
-        
-        getRecommendData()
-        
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    //XML解析
-    private var currentElement:String!
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        currentElement = elementName
-        if requestId == .RECOMMEND_SEARCH_REQUEST {
-            if currentElement == "keywords"{
-                keyWords = [String]()
-            }
-        }else if requestId == .SEARCH_VIDEO_REQUEST{
-            if currentElement == "video_item" {
-                videoItem = VideoBriefItem()
-            }else if currentElement == "video_list" {
-                videoList = Array<VideoBriefItem>()
-            }
-        }
-        
-    }
-    
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if content.isEmpty {
-            return
-        }
-        if requestId == .RECOMMEND_SEARCH_REQUEST {
-            if currentElement == "name"{
-                keyWord = content
-            }
-        }else if requestId == .SEARCH_VIDEO_REQUEST{
-            if currentElement == "total" {
-                searchPageData.totalSize = Int(content)!
-                subTitleLbl.text = "共\(content)个视频"
-                let pageSize : Float = Float(VodVideoPageData.PAGE_SIZE)
-                let totalSize : Float = Float(content)!
-                searchPageData.maxPageNum = Int(ceilf(totalSize/pageSize))
-            }else if currentElement == "id"{
-                videoItem.id = content
-            }else if currentElement == "name"{
-                videoItem.name = content
-            }else if currentElement == "duration"{
-                videoItem.duration = content
-            }else if currentElement == "smallImg"{
-                videoItem.posterImg = content
-            }else if currentElement == "most"{
-                videoItem.resolutionType = Int(content)
-            }else if currentElement == "doubanId"{
-                videoItem.doubanId = content
-            }else if currentElement == "doubanAverage"{
-                videoItem.score = content
-            }
-
+            make.bottom.equalTo(view)
+            make.width.equalTo(contentView).offset(-20)
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        if requestId == .RECOMMEND_SEARCH_REQUEST {
-            if elementName == "name"{
-                keyWords.append(keyWord)
-                keyWord = nil
-            }
-        }else if requestId == .SEARCH_VIDEO_REQUEST{
-            if elementName == "video_item" {
-                videoList.append(videoItem)
-                videoItem = nil
-            }else if elementName == "video_list"{
-                searchPageData.videoList.appendContentsOf(videoList)
-                videoList = nil
-            }
-        }
-        currentElement = ""
-    }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
-        if requestId == .RECOMMEND_SEARCH_REQUEST {
-            let re = GridViewMatrixTransformer().multiPageTransform(keyWords, row: keyWords.count + 1 / 2, col: 2)
-            if re != nil{
-                searchRecomView.setViewData(re!)
-            }
-        }else if requestId == .SEARCH_VIDEO_REQUEST{
-            videoListView.collectionView.hidden = false
-            videoListView.setViewData(searchPageData.videoList)
-        }
-    }
     
     private func getRecommendData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_RECOMMAND_KEY_ACTION)!, parameters: nil).response{
+        hiddenErrorView()
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_RECOMMAND_KEY_ACTION)!, parameters: nil).response{ [weak self]
             _,_,data,error in
-            if error != nil{
-                print(error)
+            
+            guard let strongSelf = self else{
                 return
             }
-            self.requestId = .RECOMMEND_SEARCH_REQUEST
+            
+            if error != nil{
+                strongSelf.searchRecomView.loadingView.stopAnimat()
+                strongSelf.showErrorView()
+                return
+            }
+            strongSelf.requestId = .RECOMMEND_SEARCH_REQUEST
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
@@ -200,14 +134,20 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
     }
     
     private func getSearchListData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_ACTION)!, parameters: configParams()).response{
+        hiddenErrorView()
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_SEARCH_VIDEO_ACTION)!, parameters: configParams()).response{ [weak self]
             _,_,data,error in
             
-            if error != nil{
-                print(error)
+            guard let strongSelf = self else{
                 return
             }
-            self.requestId = .SEARCH_VIDEO_REQUEST
+            
+            if error != nil{
+                strongSelf.videoListView.loadingView.stopAnimat()
+                strongSelf.showErrorView()
+                return
+            }
+            strongSelf.requestId = .SEARCH_VIDEO_REQUEST
             let parser = NSXMLParser(data: data!)
             parser.delegate = self
             parser.parse()
@@ -228,8 +168,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
     }
     
     func refreshVideoListView(){
-        searchPageData.pageNo = 1
-        searchPageData.videoList.removeAll()
+        searchPageData =  SearchVideoPageData()
         videoListView.removeViewData()
         videoListView.collectionView.hidden = true
         getSearchListData()
@@ -292,6 +231,7 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
             if keyString.isEmpty {
                 titleLbl.text = "热门搜索"
                 searchRecomView.hidden = false
+                getRecommendData()
                 videoListView.hidden = true
                 subTitleLbl.hidden = true
             }else{
@@ -307,4 +247,123 @@ class SearchViewController: BaseHorizontalViewController,IKeyboardDelegate,NSXML
         leftContentView.keyLabel.text = keyString
         refreshVideoListView()
     }
+    
+    func onDigitalBtnClick(point: CGRect,data: [String]) {
+        let t9Key = T9PopupView(frame: self.view.frame,data: data,centerPoint: point)
+        t9Key.clickDelegate = self
+        self.view.addSubview(t9Key)
+        
+    }
+    
+    func showErrorView(){
+        errorView = ErrorView()
+        errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
+        self.contentView.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.left.right.equalTo(videoListView)
+            make.top.bottom.equalTo(videoListView)
+        }
+    }
+    
+    func hiddenErrorView(){
+        if errorView != nil {
+            errorView.removeFromSuperview()
+            errorView = nil
+        }
+    }
+    
+    deinit{
+        print("search deinit")
+    }
+    
 }
+
+/*
+ xml解析
+ */
+extension SearchViewController: NSXMLParserDelegate {
+    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+        currentElement = elementName
+        if requestId == .RECOMMEND_SEARCH_REQUEST {
+            if currentElement == "keywords"{
+                keyWords = [String]()
+            }
+        }else if requestId == .SEARCH_VIDEO_REQUEST{
+            if currentElement == "video_item" {
+                videoItem = VideoBriefItem()
+            }else if currentElement == "video_list" {
+                videoList = Array<VideoBriefItem>()
+            }
+        }
+        
+    }
+    
+    func parser(parser: NSXMLParser, foundCharacters string: String) {
+        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if content.isEmpty {
+            return
+        }
+        if requestId == .RECOMMEND_SEARCH_REQUEST {
+            if currentElement == "name"{
+                keyWord = content
+            }
+        }else if requestId == .SEARCH_VIDEO_REQUEST{
+            if currentElement == "total" {
+                searchPageData.totalSize = Int(content)!
+                let pageSize : Float = Float(VodVideoPageData.PAGE_SIZE)
+                let totalSize : Float = Float(content)!
+                searchPageData.maxPageNum = Int(ceilf(totalSize/pageSize))
+            }else if currentElement == "id"{
+                videoItem.id = content
+            }else if currentElement == "name"{
+                videoItem.name = content
+            }else if currentElement == "duration"{
+                videoItem.duration = content
+            }else if currentElement == "smallImg"{
+                videoItem.posterImg = content
+            }else if currentElement == "most"{
+                videoItem.resolutionType = Int(content)
+            }else if currentElement == "doubanId"{
+                videoItem.doubanId = content
+            }else if currentElement == "doubanAverage"{
+                videoItem.score = content
+            }
+            
+        }
+    }
+    
+    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if requestId == .RECOMMEND_SEARCH_REQUEST {
+            if elementName == "name"{
+                keyWords.append(keyWord)
+                keyWord = nil
+            }
+        }else if requestId == .SEARCH_VIDEO_REQUEST{
+            if elementName == "video_item" {
+                videoList.append(videoItem)
+                videoItem = nil
+            }else if elementName == "video_list"{
+                searchPageData.videoList.appendContentsOf(videoList)
+                videoList = nil
+            }
+        }
+        currentElement = ""
+    }
+    
+    func parserDidEndDocument(parser: NSXMLParser) {
+        if requestId == .RECOMMEND_SEARCH_REQUEST {
+            let re = GridViewMatrixTransformer().multiPageTransform(keyWords, row: keyWords.count + 1 / 2, col: 2)
+            if re != nil{
+                searchRecomView.setViewData(re!)
+            }
+        }else if requestId == .SEARCH_VIDEO_REQUEST{
+            subTitleLbl.text = "共\(searchPageData.totalSize)个视频"
+            videoListView.collectionView.hidden = false
+            videoListView.setViewData(searchPageData.videoList)
+        }
+    }
+    
+}
+
+
+

@@ -52,12 +52,11 @@ class ItemView: UIView {
         
         durationLbl = MyUILabel()
         durationLbl.textAlignment = NSTextAlignment.Center
-        durationLbl.font = UIFont.systemFontOfSize(12)
+        durationLbl.font = UIFont.systemFontOfSize(10)
         durationLbl.textColor = UIColor.whiteColor()
         durationLbl.lineBreakMode = .ByClipping
         durationLbl.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         self.addSubview(durationLbl)
-        
         
         averageLbl = MyUILabel()
         averageLbl.textAlignment = .Center
@@ -116,7 +115,8 @@ class ItemView: UIView {
     internal func setData(data: VideoBriefItem){
         self.data = data
         poster.sd_setImageWithURL(NSURL(string: data.posterImg), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-        durationLbl.text = data.duration
+        //durationLbl.text = data.duration
+        setDurationText(data.duration)
         nameLbl.text = data.name
         if data.score.isEmpty {
             averageLbl.hidden = true
@@ -136,7 +136,8 @@ class ItemView: UIView {
     func setDataFromDataBase(data: VideoHistoryItem){
         self.dataByDatabase = data
         poster.sd_setImageWithURL(NSURL(string: data.poster), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-        durationLbl.text = data.duration
+       // durationLbl.text = data.duration
+        setDurationText(data.duration)
         nameLbl.text = data.videoName
         if data.score == nil || data.score.isEmpty {
             averageLbl.hidden = true
@@ -168,5 +169,29 @@ class ItemView: UIView {
         view.layer.mask = maskLayer
     }
 
+    
+    func setDurationText(text:String){
+        if !text.containsString("集") {
+            durationLbl.text = text
+            return
+        }
+        var num:Int32 = -1
+        let scanner = NSScanner(string: text)
+        scanner.scanUpToCharactersFromSet(NSCharacterSet.decimalDigitCharacterSet(), intoString: nil)
+        scanner.scanInt(&num)
+        
+        let subString = String(num)
+        let range = (text as NSString).rangeOfString(subString)
+        
+        if range.location != NSNotFound{
+            let mutable = NSMutableAttributedString(string: text)
+            mutable.addAttribute(NSForegroundColorAttributeName, value: UIColor.orangeColor(), range: range)
+            durationLbl.attributedText = mutable
+        }else{
+            durationLbl.text = text
+        }
+        
+    }
+    
     
 }

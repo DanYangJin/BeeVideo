@@ -12,7 +12,7 @@ import UIKit
  VideoCategoryGroupController 列表view
  */
 
-class CategoryGroupView: UIView,CateGroupBlockClick {
+ class CategoryGroupView: UIView,CateGroupBlockClick {
     
     var controller : UIViewController!
     private var groupItems : Array<CategoryGroupItem>!

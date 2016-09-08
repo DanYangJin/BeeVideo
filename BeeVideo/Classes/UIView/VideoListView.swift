@@ -21,7 +21,7 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
     var collectionView:UICollectionView!
     var loadingView:LoadingView!
     
-    var delegate:VideoListViewDelegate!
+    weak var delegate:VideoListViewDelegate!
     
     private var viewData:[VideoBriefItem] = [VideoBriefItem]()
     

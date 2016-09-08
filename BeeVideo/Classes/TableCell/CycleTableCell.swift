@@ -23,7 +23,7 @@ class CycleTableCell: UITableViewCell {
         marqueeLabel = MarqueeLabel(frame: CGRectZero)
         marqueeLabel.type = .Continuous
         marqueeLabel.textAlignment = .Left
-        marqueeLabel.textColor = UIColor.whiteColor()
+        marqueeLabel.textColor = UIColor.colorWithHexString("a0a0a9")
         marqueeLabel.speed = .Rate(40)
         marqueeLabel.lineBreakMode = .ByClipping
         marqueeLabel.trailingBuffer = 20.0
@@ -60,7 +60,7 @@ class CycleTableCell: UITableViewCell {
             marqueeLabel.textColor = UIColor.textBlueColor()
         }else {
             lineView.hidden = true
-            marqueeLabel.textColor = UIColor.whiteColor()
+            marqueeLabel.textColor = UIColor.colorWithHexString("a0a0a9")
         }
     }
     

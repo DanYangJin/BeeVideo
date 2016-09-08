@@ -8,14 +8,14 @@
 
 import PopupController
 
-protocol ChooseDramaDelegate {
+@objc protocol ChooseDramaDelegate {
     func onDramaChooseListener(dramaIndex: Int)
 }
 
 class PopupChooseDramaController: UIViewController,PopupContentViewController,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,ZXOptionBarDelegate,ZXOptionBarDataSource {
 
     var videoDetailInfo:VideoDetailInfo!
-    var delegate:ChooseDramaDelegate!
+    weak var delegate:ChooseDramaDelegate!
     
     private var backgroundImg:UIImageView!
     private var mCollectionView:UICollectionView!
@@ -103,7 +103,6 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-       // print("current selected drama is \(dramas[indexPath.row].dramaIndex)")
         if delegate != nil {
             delegate.onDramaChooseListener(dramas[indexPath.row].dramaIndex)
         }

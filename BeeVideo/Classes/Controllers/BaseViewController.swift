@@ -12,6 +12,7 @@ class BaseViewController: UIViewController {
     
     private var backgroundImg : UIImageView!
     var loadingView : LoadingView!
+    var errorView:ErrorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

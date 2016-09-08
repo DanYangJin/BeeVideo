@@ -25,12 +25,11 @@ class AVPlayerControlView: UIView {
     internal var videoNameLabel:UILabel!
     internal var systemTimeLabel:UILabel!
     internal var loadingView:UIActivityIndicatorView!
+    internal var nextDramaBtn:UIButton!
+    internal var menuButton:UIButton!
     
     //标记
     internal var isShowed:Bool = false
-    
-    //定时器
-    private var timer:NSTimer!
     
     
     override init(frame: CGRect) {
@@ -57,20 +56,17 @@ class AVPlayerControlView: UIView {
         self.bottomImageView.addSubview(self.initCurrentTimeLabel())
         self.bottomImageView.addSubview(self.initProgressView())
         self.bottomImageView.addSubview(self.initTotalTimeLabel())
-        self.bottomImageView.addSubview(self.initVideoSlider());
+        self.bottomImageView.addSubview(self.initVideoSlider())
+        self.bottomImageView.addSubview(self.initNextDramaBtn())
         
         self.topImageView.addSubview(self.initBackButton())
         self.topImageView.addSubview(self.initVideoNameLabel())
         self.topImageView.addSubview(self.initSystemTimeLabel())
+        self.topImageView.addSubview(self.initMenuButton())
 
         self.makeSubViewsConstraints()
         
         self.hideControlView()
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1,
-                                                            target:self,
-                                                            selector:#selector(refreshCurrentTime),
-                                                            userInfo:nil,
-                                                            repeats:true )
     }
     
     func makeSubViewsConstraints(){
@@ -89,8 +85,14 @@ class AVPlayerControlView: UIView {
             make.width.height.equalTo(30);
         }
         
+        self.nextDramaBtn.snp_makeConstraints { (make) in
+            make.left.equalTo(playButton.snp_right)
+            make.width.equalTo(playButton)
+            make.top.bottom.equalTo(playButton)
+        }
+        
         self.currentTimeLabel.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.playButton.snp_trailing).offset(0)
+            make.leading.equalTo(self.nextDramaBtn.snp_trailing).offset(0)
             make.centerY.equalTo(self.playButton.snp_centerY)
 
             make.width.equalTo(80);
@@ -136,6 +138,12 @@ class AVPlayerControlView: UIView {
             make.center.equalTo(self)
         }
         
+        self.menuButton.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(backButton)
+            make.right.equalTo(systemTimeLabel.snp_left)
+            make.width.equalTo(backButton)
+        }
+        
     }
     
     func initTopImageView() -> UIImageView {
@@ -178,7 +186,7 @@ class AVPlayerControlView: UIView {
     func initProgressView() -> UIProgressView {
         if progressView == nil {
             progressView                    = UIProgressView(progressViewStyle: .Default)
-            progressView.progressTintColor = UIColor.blackColor()
+            progressView.progressTintColor = UIColor.blueColor()
 //            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
             progressView.trackTintColor     = UIColor.clearColor()
         }
@@ -220,7 +228,7 @@ class AVPlayerControlView: UIView {
             videoNameLabel.textColor          = UIColor.whiteColor()
             videoNameLabel.font               = UIFont.boldSystemFontOfSize(15.0)
             videoNameLabel.textAlignment      = NSTextAlignment.Center
-            videoNameLabel.text               = "武神赵子龙"
+           // videoNameLabel.text               = "武神赵子龙"
         }
         return videoNameLabel
     }
@@ -244,6 +252,23 @@ class AVPlayerControlView: UIView {
         return loadingView
     }
     
+    func initNextDramaBtn() -> UIButton{
+        if nextDramaBtn == nil {
+            nextDramaBtn = UIButton(type: UIButtonType.Custom)
+            nextDramaBtn.setImage(UIImage(named: "video_seek_next_bg"), forState: .Normal)
+        }
+        return nextDramaBtn
+    }
+    
+    func initMenuButton() -> UIButton{
+        if menuButton == nil{
+            menuButton = UIButton()
+            menuButton.setImage(UIImage(named: "video_menu_normal"), forState: .Normal)
+            menuButton.setImage(UIImage(named: "video_menu_press"), forState: .Highlighted)
+        }
+        return menuButton
+    }
+    
     func changePlayButtonBg(flag:Bool){
         if flag {
             self.playButton.setImage(UIImage(named: "kr-video-player-play"), forState: .Normal)
@@ -264,7 +289,6 @@ class AVPlayerControlView: UIView {
         NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(hideControlView), object: nil)
         self.performSelector(#selector(hideControlView), withObject: nil, afterDelay: NSTimeInterval.init(AnimationTimeInterval))
     }
-    
     
     /**
      * 取消隐藏控制条
@@ -331,10 +355,7 @@ class AVPlayerControlView: UIView {
     
     deinit{
         self.resetControlView()
-        if self.timer != nil {
-            self.timer.invalidate()
-            self.timer = nil
-        }
+        
     }
     
 }

@@ -43,7 +43,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         
         Alamofire.request(.GET, "http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2", parameters: nil, encoding: .URL, headers: ["X-Kds-Ver" : "2.10.07"]).response { request, response, data, error in
             if error != nil {
-                print(error)
+                self.view.makeToast("网络不给力，请稍后再试")
                 return
             }
             self.parseXml(data!)
@@ -213,11 +213,9 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     }
     //解析结束
     func parserDidEndDocument(parser: NSXMLParser) {
-        let viewController = ViewController()
+        let viewController = TestViewController()
         viewController.homeData = self.homeData
-        self.presentViewController(viewController,animated: true,completion: {
-            
-        })
+        self.presentViewController(viewController,animated: true,completion: nil)
     }
 
 }

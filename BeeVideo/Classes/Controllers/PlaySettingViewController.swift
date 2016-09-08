@@ -21,6 +21,9 @@ class PlaySettingViewController: BaseBackViewController {
         titleLbl.text = "播放设置"
         
         playSettingItem = PlaySettingItemView(frame: CGRectZero, title: "清晰度选择", selectionList: playSettingList)
+        let userDefault = NSUserDefaults.standardUserDefaults()
+        print(userDefault.integerForKey("play_setting"))
+        playSettingItem.currentIndex = userDefault.integerForKey("play_setting")
         playSettingItem.iconImg.image = UIImage(named: "v2_play_setting_definition_default")
         view.addSubview(playSettingItem)
         playSettingItem.snp_makeConstraints { (make) in
@@ -29,8 +32,6 @@ class PlaySettingViewController: BaseBackViewController {
             make.right.equalTo(self.view).offset(-50)
             make.height.equalTo(40)
         }
-        
-        
     }
     
     
@@ -38,4 +39,18 @@ class PlaySettingViewController: BaseBackViewController {
         super.didReceiveMemoryWarning()
     }
     
+
+    override func dismissViewController() {
+        if playSettingItem.contentChanged {
+            let userDefault = NSUserDefaults.standardUserDefaults()
+             userDefault.setInteger(playSettingItem.currentIndex, forKey: "play_setting")
+        }
+        super.dismissViewController()
+    }
+    
+    deinit{
+        print("deinit")
+    }
+
 }
+

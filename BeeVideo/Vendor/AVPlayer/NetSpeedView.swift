@@ -12,7 +12,6 @@ class NetSpeedView: UIView {
     private var backgroundView:UIView!
     private var loadingImg:UIImageView!
     private var loadingLbl:UILabel!
-   // private var speedLbl:UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,15 +52,6 @@ class NetSpeedView: UIView {
             make.centerY.equalTo(self)
         }
         
-//        speedLbl = UILabel()
-//        speedLbl.textColor = UIColor.grayColor()
-//        speedLbl.font = UIFont.systemFontOfSize(11)
-//        speedLbl.text = "300kb/s"
-//        self.addSubview(speedLbl)
-//        speedLbl.snp_makeConstraints { (make) in
-//            make.left.equalTo(loadingLbl)
-//            make.top.equalTo(loadingLbl.snp_bottom)
-//        }
     }
     
     required init?(coder aDecoder: NSCoder) {

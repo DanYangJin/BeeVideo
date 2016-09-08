@@ -39,7 +39,7 @@ extension UIColor{
 
 extension UIColor{
     
-    static func textBlueColor() -> UIColor{
+    class func textBlueColor() -> UIColor{
         return colorWithHexString("0d9aff")
     }
     

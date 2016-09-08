@@ -17,9 +17,12 @@ class SearchLeftView: UIView {
     private var fullKeyboardBtn:KeyBoardViewButton!
     private var t9KeyboardBtn:KeyBoardViewButton!
     var fullKeyboard:FullKeyboardView!
+    var t9Keyboard:T9KeyboardView!
     var keyLabel:UILabel!
     private var lineView:UIImageView!
     private var seacherHelpLabel:UILabel!
+    
+    private var fullHidden = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,11 +30,14 @@ class SearchLeftView: UIView {
         fullKeyboardBtn = KeyBoardViewButton()
         fullKeyboardBtn.textLbl.text = "全键盘"
         fullKeyboardBtn.textLbl.font = UIFont.systemFontOfSize(13)
+        fullKeyboardBtn.textLbl.textColor = UIColor.textBlueColor()
+        fullKeyboardBtn.addTarget(self, action: #selector(self.fullKeyBtnClick), forControlEvents: .TouchUpInside)
         self.addSubview(fullKeyboardBtn)
         
         t9KeyboardBtn = KeyBoardViewButton()
         t9KeyboardBtn.textLbl.text = "九宫格"
         t9KeyboardBtn.textLbl.font = UIFont.systemFontOfSize(13)
+        t9KeyboardBtn.addTarget(self, action: #selector(self.t9KeyClick), forControlEvents: .TouchUpInside)
         self.addSubview(t9KeyboardBtn)
         
         keyLabel = UILabel()
@@ -53,6 +59,10 @@ class SearchLeftView: UIView {
         
         fullKeyboard = FullKeyboardView()
         self.addSubview(fullKeyboard)
+        
+        t9Keyboard = T9KeyboardView()
+        t9Keyboard.hidden = true
+        self.addSubview(t9Keyboard)
         
         setConstraints()
     }
@@ -99,8 +109,31 @@ class SearchLeftView: UIView {
             make.top.equalTo(seacherHelpLabel.snp_bottom)
         }
         
-        
-        
+        t9Keyboard.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self)
+            make.bottom.equalTo(self)
+            make.top.equalTo(seacherHelpLabel.snp_bottom)
+        }
+    }
+    
+    func fullKeyBtnClick(){
+        if fullHidden {
+            fullKeyboard.hidden = false
+            t9Keyboard.hidden = true
+            fullHidden = !fullHidden
+            fullKeyboardBtn.textLbl.textColor = UIColor.textBlueColor()
+            t9KeyboardBtn.textLbl.textColor = UIColor.whiteColor()
+        }
+    }
+    
+    func t9KeyClick(){
+        if !fullHidden {
+            fullKeyboard.hidden = true
+            t9Keyboard.hidden = false
+            fullHidden = !fullHidden
+            fullKeyboardBtn.textLbl.textColor = UIColor.whiteColor()
+            t9KeyboardBtn.textLbl.textColor = UIColor.textBlueColor()
+        }
     }
 
 }

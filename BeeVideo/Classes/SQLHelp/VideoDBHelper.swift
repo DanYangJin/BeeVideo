@@ -245,7 +245,7 @@ class VideoDBHelper: NSObject {
         if videoId == nil || videoId.isEmpty {
             return
         }
-        let sql = "update " + TABLE_VIDEO_INFO + "set deleteTrace = ? where videoId = ?"
+        let sql = "update " + TABLE_VIDEO_INFO + " set deleteTrace = ? where videoId = ?"
         let db = getDB()
         if db.open() {
             db.executeUpdate(sql, withArgumentsInArray: [VideoInfoUtils.DELETE_TRACE_YES,videoId])
@@ -261,7 +261,7 @@ class VideoDBHelper: NSObject {
         if videoId == nil || videoId.isEmpty {
             return
         }
-        let sql = "update " + TABLE_VIDEO_INFO + "set deleteFavorite = ? where videoId = ?"
+        let sql = "update " + TABLE_VIDEO_INFO + " set deleteFavorite = ? where videoId = ?"
         let db = getDB()
         if db.open(){
             db.executeUpdate(sql, withArgumentsInArray: [VideoInfoUtils.DELETE_FAVORITE_YES,videoId])

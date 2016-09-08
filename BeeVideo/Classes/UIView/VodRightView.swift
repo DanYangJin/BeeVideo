@@ -26,8 +26,6 @@ class VodRightView: UIView,UICollectionViewDelegateFlowLayout {
     
     private func initView(){
         
-        
-        
         strinkView = UIImageView()
         strinkView.contentMode = .ScaleAspectFit
         strinkView.image = UIImage(named: "v2_arrow_shrink_right")
@@ -43,7 +41,6 @@ class VodRightView: UIView,UICollectionViewDelegateFlowLayout {
         backImg.image = UIImage(named: "v2_vod_list_arrow_left")
         backImg.contentMode = .ScaleAspectFill
         self.addSubview(backImg)
-        //backImg.addOnClickListener(self, action: #selector(self.dismissViewController))
         backImg.snp_makeConstraints { (make) in
             make.left.equalTo(strinkView.snp_right)
             make.topMargin.equalTo(30)
@@ -55,7 +52,6 @@ class VodRightView: UIView,UICollectionViewDelegateFlowLayout {
         titleLbl.font = UIFont.systemFontOfSize(16)
         titleLbl.textColor = UIColor.whiteColor()
         self.addSubview(titleLbl)
-        //titleLbl.text = "经典武侠"
         titleLbl.snp_makeConstraints { (make) in
             make.left.equalTo(backImg.snp_right).offset(8)
             make.top.bottom.equalTo(backImg)

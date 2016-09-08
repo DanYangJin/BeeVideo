@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SearchRecommendViewItemClickDelegate {
+@objc protocol SearchRecommendViewItemClickDelegate {
     func onSearchRecommendViewItemClick(title: String)
 }
 
@@ -20,8 +20,8 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
 
     private var mCollectionView:UICollectionView!
     private var dataList:[String] = [String]()
-    private var loadingView:LoadingView!
-    var itemClickDelegate:SearchRecommendViewItemClickDelegate!
+    var loadingView:LoadingView!
+    weak var itemClickDelegate:SearchRecommendViewItemClickDelegate!
         
     override init(frame: CGRect) {
         super.init(frame: frame)

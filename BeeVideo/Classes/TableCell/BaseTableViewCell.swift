@@ -14,7 +14,6 @@ class BaseTableViewCell: ZXOptionBarCell {
         label.font = UIFont.systemFontOfSize(12)
         label.textColor = UIColor.whiteColor()
         label.lineBreakMode = .ByClipping
-        //        label.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.8)
         label.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         return label
     }()
@@ -37,10 +36,9 @@ class BaseTableViewCell: ZXOptionBarCell {
         
         let label = UILabel(frame: CGRectZero)
         label.textAlignment = .Center
-        label.font = UIFont.systemFontOfSize(12)
+        label.font = UIFont.systemFontOfSize(10)
         label.textColor = UIColor.whiteColor()
         label.lineBreakMode = .ByClipping
-        //label.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.8)
         label.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         
         return label
@@ -52,7 +50,6 @@ class BaseTableViewCell: ZXOptionBarCell {
         label.textAlignment = .Center
         label.font = UIFont.systemFontOfSize(12)
         label.textColor = UIColor.orangeColor()
-        //label.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.8)
         label.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         return label
     }()
@@ -62,16 +59,6 @@ class BaseTableViewCell: ZXOptionBarCell {
             
         }
     }
-    
-    //    override internal var selected: Bool {
-    //        didSet {
-    //            if selected {
-    //                icon.image = UIImage(named: "bra_focus")
-    //            }else{
-    //                icon.image = UIImage(named: "bra")
-    //            }
-    //        }
-    //    }
     
     override init(style: ZXOptionBarCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

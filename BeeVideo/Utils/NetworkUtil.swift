@@ -28,6 +28,12 @@ class NetworkUtil: NSObject {
             return true
         }
         
+        do{
+            try reachability.startNotifier()
+        }catch{
+            
+        }
+        
         return false
     }
     

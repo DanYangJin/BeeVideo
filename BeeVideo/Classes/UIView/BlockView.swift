@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol BlockViewDelegate {
+@objc protocol BlockViewDelegate {
     func blockClick(homeSpace:HomeSpace)
 }
 
 class BlockView: BaseBlockView {
 
     internal var homeSpace:HomeSpace!
-    private var delegate : BlockViewDelegate!
+    private weak var delegate : BlockViewDelegate!
     
     
     override init(frame: CGRect) {

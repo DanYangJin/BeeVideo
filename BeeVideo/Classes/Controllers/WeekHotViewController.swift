@@ -8,7 +8,7 @@
 
 import Alamofire
 
-class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZXOptionBarDelegate,ZXOptionBarDataSource,UITableViewDelegate,UITableViewDataSource {
+class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZXOptionBarDataSource,UITableViewDelegate,UITableViewDataSource {
     
     private var mOptionBar : ZXOptionBar!
     private var menuTable : UITableView!
@@ -20,11 +20,21 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
     
     private let leftMenu = DataFactory.weekHotItems
     private var lastPosition:Int = 0
-
+    
+    //xml解析
+    private var currentElement = ""
+    
     override func viewDidLoad() {
         leftWidth = Float(view.frame.width * 0.2)
         super.viewDidLoad()
         
+        initUI()
+        
+        getData()
+        
+    }
+    
+    func initUI(){
         titleLbl.text = "周热播榜"
         
         mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self)
@@ -61,16 +71,114 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
         }
         loadingView.startAnimat()
         
-        getData()
-        
+        errorView = ErrorView()
+        errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
+        errorView.hidden = true
+        self.contentView.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.left.right.equalTo(mOptionBar)
+            make.top.equalTo(backView.snp_bottom)
+            make.bottom.equalTo(self.view)
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    //xml解析
-    private var currentElement = ""
+    
+    //uitable datasource,delegate
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellId = "weekHotCell"
+        let cell : LeftViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId,forIndexPath:  indexPath) as? LeftViewCell
+        
+        cell?.setViewData(leftMenu[indexPath.row])
+        
+        return cell!
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return leftMenu.count
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return self.view.frame.height * 0.12
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if lastPosition == indexPath.row {
+            return
+        }
+        lastPosition = indexPath.row
+        mOptionBar.reloadData()
+        
+        if channels.isEmpty {
+            return
+        }
+        
+        subTitleLbl.text = "\(channels[indexPath.row].channelName) 共\(channels[indexPath.row].videoItem.count)部"
+    }
+    
+    //optionbarDataSource,delegate
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        if channels.isEmpty {
+            return 0
+        }
+        return channels[lastPosition].videoItem.count
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        var cell:BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier("weekOpt") as? BaseTableViewCell
+        if cell == nil {
+            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "weekOpt")
+        }
+        if channels.count != 0{
+            let viewDetail = channels[lastPosition].videoItem[index]
+            cell?.averageLbl.hidden = true
+            cell?.icon.sd_setImageWithURL(NSURL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+            cell?.videoNameLbl.text = viewDetail.name
+            cell?.durationLbl.text = viewDetail.duration
+        }
+        
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return Float(self.view.frame.height/3 * 5/7)
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        let detailController = VideoDetailViewController()
+        let videoId = channels[lastPosition].videoItem[index].id
+        var extras = Array<ExtraData>()
+        extras.append(ExtraData(name: "", value: videoId))
+        detailController.extras = extras
+        self.presentViewController(detailController, animated: true, completion: nil)
+    }
+    
+    
+    private func getData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_WEEK_HOT)!, parameters: nil).response{
+            _,_,data,error in
+            if error != nil {
+                self.loadingView.stopAnimat()
+                self.errorView.hidden = false
+                return
+            }
+            let parser = NSXMLParser(data: data!)
+            parser.delegate = self
+            parser.parse()
+        }
+    }
+}
+
+
+
+/*
+ xml解析
+ */
+extension WeekHotViewController:NSXMLParserDelegate{
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "video_item" {
@@ -120,90 +228,6 @@ class WeekHotViewController: BaseHorizontalViewController,NSXMLParserDelegate,ZX
         loadingView.stopAnimat()
     }
     
-    //uitable datasource,delegate
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellId = "weekHotCell"
-        let cell : LeftViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId,forIndexPath:  indexPath) as? LeftViewCell
-        
-        cell?.setViewData(leftMenu[indexPath.row])
-        
-        return cell!
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return leftMenu.count
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return self.view.frame.height * 0.12
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if lastPosition == indexPath.row {
-            return
-        }
-        lastPosition = indexPath.row
-         mOptionBar.reloadData()
-        
-        if channels.isEmpty {
-            return
-        }
-        
-        subTitleLbl.text = "\(channels[indexPath.row].channelName) 共\(channels[indexPath.row].videoItem.count)部"
-        
-       
-    }
-    
-    //optionbarDataSource,delegate
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
-        if channels.isEmpty {
-            return 0
-        }
-        return channels[lastPosition].videoItem.count
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
-        var cell:BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier("weekOpt") as? BaseTableViewCell
-        if cell == nil {
-            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "weekOpt")
-        }
-        if channels.count != 0{
-            let viewDetail = channels[lastPosition].videoItem[index]
-            cell?.averageLbl.hidden = true
-            cell?.icon.sd_setImageWithURL(NSURL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-            cell?.videoNameLbl.text = viewDetail.name
-            cell?.durationLbl.text = viewDetail.duration
-        }
-        
-        return cell!
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
-        return Float(self.view.frame.height/3 * 5/7)
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
-        let detailController = VideoDetailViewController()
-        let videoId = channels[lastPosition].videoItem[index].id
-        var extras = Array<ExtraData>()
-        extras.append(ExtraData(name: "", value: videoId))
-        detailController.extras = extras
-        self.presentViewController(detailController, animated: true, completion: nil)
-    }
-    
-    
-    private func getData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_WEEK_HOT)!, parameters: nil).response{
-            _,_,data,error in
-            if error != nil {
-                print(error)
-                return
-            }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
-        }
-    }
     
 }
+

@@ -9,7 +9,6 @@
 import Alamofire
 
 /**
- 
  点播更多页面
  */
 
@@ -22,6 +21,10 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
     private var intent:RestVideoInfo.IntentInfo!
     private var extras:Array<ExtraData>!
     private var extraData:ExtraData!
+    
+    //xml解析
+    private var currentElement = ""
+    private var parentElement = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,9 +90,28 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
         }
     }
     
-    //xml解析
-    private var currentElement = ""
-    private var parentElement = ""
+    func getData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_REST_VIDEO_ACTION)!, parameters: nil).response{
+            _,_,data,error in
+            
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            let parse = NSXMLParser(data: data!)
+            parse.delegate = self
+            parse.parse()
+            
+        }
+    }
+    
+}
+
+/*
+ xml解析
+ */
+extension RestVideoViewController{
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "block"{
@@ -155,22 +177,7 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
         mCollectionView.reloadData()
     }
     
-    
-    
-    func getData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_REST_VIDEO_ACTION)!, parameters: nil).response{
-            _,_,data,error in
-            
-            if error != nil {
-                print(error)
-                return
-            }
-            
-            let parse = NSXMLParser(data: data!)
-            parse.delegate = self
-            parse.parse()
-            
-        }
-    }
-    
 }
+
+
+

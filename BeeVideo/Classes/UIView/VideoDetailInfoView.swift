@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DetailBtnClickDelegate {
+@objc protocol DetailBtnClickDelegate {
     func detailBtnClick(index: Int)
 }
 
@@ -33,7 +33,7 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
     private var videoDescLbl : VerticalAlignmentLabel!
     var mOptionBar:ZXOptionBar!
     
-    var delegate:DetailBtnClickDelegate!
+    weak var delegate:DetailBtnClickDelegate!
     
     var btnItems:[Item] = [Item]()
     

@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBarDelegate,ZXOptionBarDataSource {
+class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBarDataSource {
     
     private var backBtn : UIButton!
     private var mOptionBar : ZXOptionBar!
@@ -31,7 +31,8 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
         
         Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/subject_videos.action", parameters: ["subjectId":categoryId]).response{ _,_,data,error in
             if (error != nil) {
-                print(error)
+                self.loadingView.stopAnimat()
+                self.errorView.hidden = false
                 return
             }
             let parser = NSXMLParser(data: data!)
@@ -69,8 +70,61 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
             make.center.equalTo(self.view)
             make.height.width.equalTo(40)
         }
+        
+        errorView = ErrorView()
+        errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
+        errorView.hidden = true
+        self.view.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self.view)
+            make.top.equalTo(backBtn.snp_bottom)
+            make.bottom.equalTo(self.view)
+        }
     }
     
+    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+        return mDataList.count
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+        let cellId = "optionCell"
+        
+        var cell : VideoCategoryCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? VideoCategoryCell
+        if cell == nil {
+            cell = VideoCategoryCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+        }
+        
+        cell?.itemView.setData(mDataList[index])
+        
+        return cell!
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+        return Float(self.view.frame.height) * 1/3 * 5/7
+    }
+    
+    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+        let videoId = mDataList[index].id
+        var extras = [ExtraData]()
+        let data = ExtraData()
+        data.value = videoId
+        extras.append(data)
+        let detailViewController = VideoDetailViewController()
+        detailViewController.extras = extras
+        self.presentViewController(detailViewController, animated: true, completion: nil)
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
+}
+
+/*
+ xml解析
+ */
+extension VideoCategoryController:NSXMLParserDelegate{
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "video" {
@@ -119,43 +173,6 @@ class VideoCategoryController: BaseViewController,NSXMLParserDelegate,ZXOptionBa
         self.setBackgroundImg(mBackgroundUrl)
         mOptionBar.reloadData()
     }
-    
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
-        return mDataList.count
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
-        let cellId = "optionCell"
-        
-        var cell : VideoCategoryCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? VideoCategoryCell
-        if cell == nil {
-            cell = VideoCategoryCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
-        }
-        
-        cell?.itemView.setData(mDataList[index])
-        
-        return cell!
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
-        return Float(self.view.frame.height) * 1/3 * 5/7
-    }
-    
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
-        let videoId = mDataList[index].id
-        var extras = [ExtraData]()
-        let data = ExtraData()
-        data.value = videoId
-        extras.append(data)
-        let detailViewController = VideoDetailViewController()
-        detailViewController.extras = extras
-        self.presentViewController(detailViewController, animated: true, completion: nil)
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-
 }
+
+

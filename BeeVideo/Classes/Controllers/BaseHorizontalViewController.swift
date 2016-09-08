@@ -106,11 +106,14 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         if scrollView.tag == 20 {
             if decelerate {
                 //关闭惯性滑动
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(dispatch_get_main_queue(), {[weak self] in
+                    guard let strongSelf = self else{
+                        return
+                    }
                     scrollView.setContentOffset(scrollView.contentOffset, animated: false)
                     let xOffset = scrollView.contentOffset.x
-                    if xOffset >= CGFloat(self.leftWidth / 2) {
-                        scrollView.setContentOffset(CGPoint(x: CGFloat(self.leftWidth), y: 0), animated: true)
+                    if xOffset >= CGFloat(strongSelf.leftWidth / 2) {
+                        scrollView.setContentOffset(CGPoint(x: CGFloat(strongSelf.leftWidth), y: 0), animated: true)
                     }else{
                         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
                     }

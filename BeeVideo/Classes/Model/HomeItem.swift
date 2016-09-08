@@ -6,7 +6,7 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-class HomeItem {
+class HomeItem:NSObject {
     internal var tableName:String!
     internal var name:String!
     internal var icon:String!
@@ -17,7 +17,7 @@ class HomeItem {
     internal var extras:[ExtraData]!
     internal var position:Int!
     
-    init(){
+    override init(){
         extras = Array()
     }
     

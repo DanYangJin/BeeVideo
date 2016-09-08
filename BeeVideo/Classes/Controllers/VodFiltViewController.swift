@@ -8,14 +8,14 @@
 
 import PopupController
 
-protocol FiltViewClickDelegate {
+@objc protocol FiltViewClickDelegate {
     func confirmClickListener(row_0: Int,row_1: Int,row_2: Int,row_3: Int )
 }
 
 class VodFiltViewController: UIViewController, PopupContentViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var gather:VodFiltrateCategoryGather!
-    var delegate:FiltViewClickDelegate!
+    weak var delegate:FiltViewClickDelegate!
     
     private var picker:UIPickerView!
     private var areaLbl:UILabel!

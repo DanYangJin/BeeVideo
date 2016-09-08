@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import PopupController
 
-class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDelegate,UITableViewDataSource,VideoListViewDelegate,FiltViewClickDelegate {
+class VodVideoController: BaseViewController,VideoListViewDelegate,FiltViewClickDelegate {
     
     private enum NetRequestId{
         case VIDEO_CATEGORY_REQUEST
@@ -135,6 +135,15 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             make.left.equalTo(strinkView.snp_right)
             make.width.equalTo(contentView).offset(-20)
         }
+        
+        errorView = ErrorView()
+        errorView.hidden = true
+        //errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE
+        self.contentView.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(videoListView)
+            make.left.right.equalTo(videoListView)
+        }
     }
     
     
@@ -152,98 +161,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
         extras.append(ExtraData(name: "videoId", value: videoId))
         detailViewController.extras = extras
         self.presentViewController(detailViewController, animated: true, completion: nil)
-    }
-    //tableview相关
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return vodCategoryGather.vodCategoryList.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cellId = "tableCell"
-        let cellId2 = "iconCell"
-        if indexPath.row == 0 || indexPath.row == 1 {
-            var cell : VodVideoTableIconCell? = tableView.dequeueReusableCellWithIdentifier(cellId2) as? VodVideoTableIconCell
-            if cell == nil {
-                cell = VodVideoTableIconCell(style: .Default, reuseIdentifier: cellId2)
-                cell?.backgroundColor = UIColor.clearColor()
-                cell?.selectionStyle = .Gray
-            }
-            cell?.titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].name
-            if indexPath.row == 0 {
-                cell?.icon.image = UIImage(named: "v2_vod_category_filter_normal")
-            }else if indexPath.row == 1{
-                cell?.icon.image = UIImage(named: "vod_index_serch")
-            }
-            return cell!
-        }
-        var cell : VodVideoTableViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? VodVideoTableViewCell
-        if cell == nil {
-            cell = VodVideoTableViewCell(style: .Default, reuseIdentifier: cellId)
-            cell?.backgroundColor = UIColor.clearColor()
-            cell?.selectionStyle = .Gray
-        }
-        
-        cell?.titleLbl?.text = vodCategoryGather.vodCategoryList[indexPath.row].name
-        cell?.titleLbl?.textColor = UIColor.whiteColor()
-        if lastPosition == indexPath.row {
-            cell?.titleLbl?.textColor = UIColor.textBlueColor()
-        }
-        
-        return cell!
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        if lastPosition == indexPath.row {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
-            return
-        }
-        
-        if lastPosition >= 2 && indexPath.row >= 2 {
-            let lastCell:VodVideoTableViewCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableViewCell
-            if lastCell != nil {
-                lastCell!.titleLbl?.textColor = UIColor.whiteColor()
-            }
-        }
-        if indexPath.row >= 2{
-            let currentCell:VodVideoTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! VodVideoTableViewCell
-            currentCell.titleLbl?.textColor = UIColor.textBlueColor()
-        }
-        
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        if indexPath.row >= 2 {
-            lastPosition = indexPath.row
-        }
-        
-        titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].title
-        
-        if indexPath.row == 1 {
-            let searchController = SearchViewController()
-            self.presentViewController(searchController, animated: true, completion: nil)
-        }else if indexPath.row == 0{
-            //print("--------->")
-            let popup = PopupController.create(self).customize([.Layout(.Bottom)])
-            let controller = VodFiltViewController()
-            controller.gather = filtCategoryGather
-            controller.delegate = self
-            popup.show(controller)
-        }else{
-//            videoPageData.videoList.removeAll()
-//            videoListView.collectionView.hidden = true
-//            SDImageCache.sharedImageCache().clearMemory()
-//            videoPageData.videoList.removeAll()
-//            videoPageData.pageNo = 1
-//            videoListView.removeViewData()
-//            videoListView.loadingView.startAnimat()
-            clearVodeoList()
-            getVideoListData(configParams(vodCategoryGather, index: indexPath.row))
-        }
-        
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 40
     }
     
     
@@ -300,6 +217,118 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     //xml解析
     
     private var fatherElement = ""
+    
+    private func clearVodeoList(){
+        videoPageData.videoList.removeAll()
+        videoListView.collectionView.hidden = true
+        SDImageCache.sharedImageCache().clearMemory()
+        //videoPageData.videoList.removeAll()
+        videoPageData.pageNo = 1
+        videoListView.removeViewData()
+        videoListView.loadingView.startAnimat()
+    }
+    
+    ///获取分类列表
+    private func getVideoCategoryData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_CATOGORY_LIST_ACTION)!,parameters: ["channelId":channelId,"version":"1"]).response{
+            _,_,data,error in
+            self.requestId = NetRequestId.VIDEO_CATEGORY_REQUEST
+            if error != nil{
+                self.videoListView.loadingView.stopAnimat()
+                self.errorView.hidden = false
+                return
+            }
+            
+            let parser = NSXMLParser(data: data!)
+            parser.delegate = self
+            parser.parse()
+        }
+    }
+    
+    ///获取视频列表
+    private func getVideoListData(params: [String:AnyObject]){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
+            request,_,data,error in
+            self.requestId = NetRequestId.VIDEO_VIDEO_LIST_REQUEST
+            if error != nil {
+                self.videoListView.loadingView.stopAnimat()
+                self.videoListView.collectionView.hidden = true
+                self.errorView.hidden = false
+                self.errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
+                return
+            }
+            let parser = NSXMLParser(data: data!)
+            parser.delegate = self
+            parser.parse()
+        }
+    }
+    
+    private func configParams(gather: VodCategoryGather,index: Int) -> [String:AnyObject]{
+        var ret = [String : AnyObject]()
+        ret[HttpContants.PARAM_CHANNEL_ID] = channelId
+        ret[HttpContants.PARAM_PAGE_SIZE] = VodVideoPageData.PAGE_SIZE
+        ret[HttpContants.PARAM_PAGE_NO] = videoPageData.pageNo
+        if index > gather.vodCategoryList.count - 1{
+            return ret
+        }
+        var id = gather.vodCategoryList[index].id
+        if id.isEmpty {
+            id = gather.defVodCategory.id
+        }
+        ret[HttpContants.PARAM_STB_CATE_ID] = id
+        return ret
+    }
+    
+    ///获取筛选信息
+    private func getFiltData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_FILTRATE_CATEGORY_ACTION)!, parameters: ["channelId" : channelId]).responseData { (response) in
+            self.requestId = NetRequestId.VIDEO_FILT_REQUEST
+            switch response.result {
+            case .Failure(let error):
+                print(error)
+                break;
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break;
+            }
+        }
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        SDImageCache.sharedImageCache().clearMemory()
+    }
+    
+    func confirmClickListener(row_0: Int, row_1: Int, row_2: Int, row_3: Int) {
+        
+        var params = [String:AnyObject]()
+        params["channelId"] = channelId
+        params["pageSize"] = 96
+        params["pageNo"] = videoPageData.pageNo
+        if row_0 != 0  {
+            params["areaId"] = filtCategoryGather.areaList[row_0].id
+        }
+        if row_1 != 0 {
+            params["cateId"] = filtCategoryGather.categoryList[row_1].id
+        }
+        if row_2 != 0 {
+            params["yearId"] = filtCategoryGather.yearList[row_2].id
+        }
+        
+        params["orderBy"] = filtCategoryGather.orderList[row_3].id
+        clearVodeoList()
+        getVideoListData(params)
+    }
+    
+}
+
+
+
+extension VodVideoController: NSXMLParserDelegate{
+    
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if requestId == NetRequestId.VIDEO_CATEGORY_REQUEST{
@@ -429,7 +458,6 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
     }
     
     func parser(parser: NSXMLParser, parseErrorOccurred parseError: NSError) {
-        //print(parseError.code)
         if requestId == NetRequestId.VIDEO_VIDEO_LIST_REQUEST{
             videoPageData.videoList.removeAll()
             if videoPageData.pageNo < videoPageData.maxPage {
@@ -439,106 +467,101 @@ class VodVideoController: BaseViewController,NSXMLParserDelegate,UITableViewDele
             }
         }
     }
+
+}
+
+
+/*
+ xml解析
+ */
+extension VodVideoController: UITableViewDelegate,UITableViewDataSource{
     
-    private func clearVodeoList(){
-        videoPageData.videoList.removeAll()
-        videoListView.collectionView.hidden = true
-        SDImageCache.sharedImageCache().clearMemory()
-        //videoPageData.videoList.removeAll()
-        videoPageData.pageNo = 1
-        videoListView.removeViewData()
-        videoListView.loadingView.startAnimat()
+    //tableview相关
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return vodCategoryGather.vodCategoryList.count
     }
     
-    ///获取分类列表
-    private func getVideoCategoryData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_CATOGORY_LIST_ACTION)!,parameters: ["channelId":channelId,"version":"1"]).response{
-            _,_,data,error in
-            self.requestId = NetRequestId.VIDEO_CATEGORY_REQUEST
-            if error != nil{
-                print(error)
-                return
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cellId = "tableCell"
+        let cellId2 = "iconCell"
+        if indexPath.row == 0 || indexPath.row == 1 {
+            var cell : VodVideoTableIconCell? = tableView.dequeueReusableCellWithIdentifier(cellId2) as? VodVideoTableIconCell
+            if cell == nil {
+                cell = VodVideoTableIconCell(style: .Default, reuseIdentifier: cellId2)
+                cell?.backgroundColor = UIColor.clearColor()
+                cell?.selectionStyle = .Gray
             }
-            
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
-        }
-    }
-    
-    ///获取视频列表
-    private func getVideoListData(params: [String:AnyObject]){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_VIDEO_VIDEO_LIST_ACTION)!,parameters: params).response{
-            request,_,data,error in
-            self.requestId = NetRequestId.VIDEO_VIDEO_LIST_REQUEST
-            if error != nil {
-                print(error)
-                return
+            cell?.titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].name
+            if indexPath.row == 0 {
+                cell?.icon.image = UIImage(named: "v2_vod_category_filter_normal")
+            }else if indexPath.row == 1{
+                cell?.icon.image = UIImage(named: "vod_index_serch")
             }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
+            return cell!
         }
-    }
-    
-    private func configParams(gather: VodCategoryGather,index: Int) -> [String:AnyObject]{
-        var ret = [String : AnyObject]()
-        ret[HttpContants.PARAM_CHANNEL_ID] = channelId
-        ret[HttpContants.PARAM_PAGE_SIZE] = VodVideoPageData.PAGE_SIZE
-        ret[HttpContants.PARAM_PAGE_NO] = videoPageData.pageNo
-        if index > gather.vodCategoryList.count - 1{
-            return ret
-        }
-        var id = gather.vodCategoryList[index].id
-        if id.isEmpty {
-            id = gather.defVodCategory.id
-        }
-        ret[HttpContants.PARAM_STB_CATE_ID] = id
-        return ret
-    }
-    
-    ///获取筛选信息
-    private func getFiltData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.V20_VOD_FILTRATE_CATEGORY_ACTION)!, parameters: ["channelId" : channelId]).responseData { (response) in
-            self.requestId = NetRequestId.VIDEO_FILT_REQUEST
-            switch response.result {
-            case .Failure(let error):
-                print(error)
-                break;
-            case .Success(let data):
-                let parse = NSXMLParser(data: data)
-                parse.delegate = self
-                parse.parse()
-                break;
-            }
-        }
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        SDImageCache.sharedImageCache().clearMemory()
-    }
-    
-    func confirmClickListener(row_0: Int, row_1: Int, row_2: Int, row_3: Int) {
-        
-        var params = [String:AnyObject]()
-        params["channelId"] = channelId
-        params["pageSize"] = 96
-        params["pageNo"] = videoPageData.pageNo
-        if row_0 != 0  {
-            params["areaId"] = filtCategoryGather.areaList[row_0].id
-        }
-        if row_1 != 0 {
-            params["cateId"] = filtCategoryGather.categoryList[row_1].id
-        }
-        if row_2 != 0 {
-            params["yearId"] = filtCategoryGather.yearList[row_2].id
+        var cell : VodVideoTableViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId) as? VodVideoTableViewCell
+        if cell == nil {
+            cell = VodVideoTableViewCell(style: .Default, reuseIdentifier: cellId)
+            cell?.backgroundColor = UIColor.clearColor()
+            cell?.selectionStyle = .Gray
         }
         
-        params["orderBy"] = filtCategoryGather.orderList[row_3].id
-        clearVodeoList()
-        getVideoListData(params)
+        cell?.titleLbl?.text = vodCategoryGather.vodCategoryList[indexPath.row].name
+        cell?.titleLbl?.textColor = UIColor.whiteColor()
+        if lastPosition == indexPath.row {
+            cell?.titleLbl?.textColor = UIColor.textBlueColor()
+        }
+        
+        return cell!
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if lastPosition == indexPath.row {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            return
+        }
+        
+        countLbl.text = ""
+        
+        if lastPosition >= 2 && indexPath.row >= 2 {
+            let lastCell:VodVideoTableViewCell? = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: lastPosition, inSection: 0)) as? VodVideoTableViewCell
+            if lastCell != nil {
+                lastCell!.titleLbl?.textColor = UIColor.whiteColor()
+            }
+        }
+        if indexPath.row >= 2{
+            let currentCell:VodVideoTableViewCell = tableView.cellForRowAtIndexPath(indexPath) as! VodVideoTableViewCell
+            currentCell.titleLbl?.textColor = UIColor.textBlueColor()
+            lastPosition = indexPath.row
+        }
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        titleLbl.text = vodCategoryGather.vodCategoryList[indexPath.row].title
+        
+        if indexPath.row == 1 {
+            let searchController = SearchViewController()
+            self.presentViewController(searchController, animated: true, completion: nil)
+        }else if indexPath.row == 0{
+            let popup = PopupController.create(self).customize([.Layout(.Bottom)])
+            let controller = VodFiltViewController()
+            controller.gather = filtCategoryGather
+            controller.delegate = self
+            popup.show(controller)
+        }else{
+            errorView.hidden = true
+            clearVodeoList()
+            getVideoListData(configParams(vodCategoryGather, index: indexPath.row))
+        }
+        
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 40
     }
     
 }
+
+
+

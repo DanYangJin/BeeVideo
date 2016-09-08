@@ -5,15 +5,14 @@
 //  Created by JinZhang on 16/5/26.
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
-
-protocol CateGroupBlockClick {
+@objc protocol CateGroupBlockClick {
     func cateGroupBlockClick(categoryGroupItem:CategoryGroupItem)
 }
 
 class CateGroupBlockView: BaseBlockView {
 
     var categoryGroupItem : CategoryGroupItem!
-    var delegate : CateGroupBlockClick!
+    weak var delegate : CateGroupBlockClick!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

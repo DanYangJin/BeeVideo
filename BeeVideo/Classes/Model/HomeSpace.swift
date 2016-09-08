@@ -6,13 +6,13 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-class HomeSpace {
+class HomeSpace:NSObject {
 
     internal var tableName:String!
     internal var position:Int!
     internal var items:[HomeItem]!
     
-    init(){
+    override init(){
         items = Array()
     }
     

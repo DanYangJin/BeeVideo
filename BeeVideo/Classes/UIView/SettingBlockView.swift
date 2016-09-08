@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SettingBlockViewClickDelegate{
+@objc protocol SettingBlockViewClickDelegate{
     func settingBlockViewClick(settingData:SettingBlockData)
 }
 
@@ -20,7 +20,7 @@ class SettingBlockView: UIView {
     private var clickView : UIView!
     
     var settingData:SettingBlockData!
-    var clickDelegate:SettingBlockViewClickDelegate!
+    weak var clickDelegate:SettingBlockViewClickDelegate!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -127,7 +127,6 @@ class SettingBlockView: UIView {
         if !isInside {
             return
         }
-        
         clickDelegate.settingBlockViewClick(settingData)
     }
     

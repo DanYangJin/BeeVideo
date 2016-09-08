@@ -33,16 +33,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     private var cyclePosition:Int = 0
     private var currentPosition : Int = 0
     private var timer:NSTimer!
-    private var isCycling:Bool = false
+    var isCycling:Bool = false
     private var cycling:Bool {
         get{
             return self.isCycling
         }
         set{
             if newValue {
-                timer = NSTimer.scheduledTimerWithTimeInterval(3,
-                                                               target:self,selector:#selector(RemmondedPageView.tickDown),
-                                                               userInfo:nil,repeats:true)
+                timer = NSTimer.scheduledTimerWithTimeInterval(3,target:self,selector:#selector(RemmondedPageView.tickDown),userInfo:nil,repeats:true)
             } else {
                 if timer != nil {
                     timer.invalidate()
@@ -157,14 +155,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return cycleImage.frame.height / 6
+        return tableView.frame.height / 6
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell:CycleTableCell = tableView.dequeueReusableCellWithIdentifier("CycleCell", forIndexPath: indexPath) as! CycleTableCell
         cell.backgroundColor = UIColor.clearColor()
-        cell.selectionStyle = .None
+        //cell.selectionStyle = .None
         cell.marqueeLabel.text = cycleItems.items[indexPath.row].name
         if indexPath.row == 0 {
             cell.setMarqueeStart(true)
@@ -173,17 +171,16 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //
-        //print(cycleItems.items[indexPath.row].action)
         
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let action:String = cycleItems.items[indexPath.row].action
-        
         if action == "com.mipt.videohj.intent.action.VOD_DETAIL_ACTION" {
             let videoDetailViewController = VideoDetailViewController()
             videoDetailViewController.extras = cycleItems.items[indexPath.row].extras;
             self.viewController.presentViewController(videoDetailViewController, animated: true, completion: nil)
         }
     }
+    
     
     //约束
     private func setConstraint(){
@@ -206,13 +203,14 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
         myVideoBlock.snp_makeConstraints { (make) in
             make.left.equalTo(self)
-            make.height.equalTo(self.snp_height).multipliedBy(0.32)
+            make.height.equalTo(self.snp_height).multipliedBy(0.34)
             //make.top.equalTo(cycleImage.snp_bottom).offset(5)
             make.bottom.equalTo(self)
-            make.width.equalTo(cycleImage.snp_width).multipliedBy(0.48)
+            make.width.equalTo(cycleView.snp_width).multipliedBy(0.325)
         }
         weekHotBlock.snp_makeConstraints { (make) in
-            make.right.equalTo(cycleImage)
+            //make.right.equalTo(cycleImage)
+            make.centerX.equalTo(cycleView)
             make.top.equalTo(myVideoBlock)
             make.bottom.equalTo(myVideoBlock)
             make.width.equalTo(myVideoBlock)
@@ -224,9 +222,9 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         }
         block1.snp_makeConstraints { (make) in
             make.top.equalTo(cycleImage)
-            make.height.equalTo(self.snp_height).multipliedBy(0.48)
+            make.height.equalTo(self.snp_height).multipliedBy(0.49)
             make.width.equalTo(block1.snp_height)
-            make.left.equalTo(cycleTableView.snp_right).offset(10)
+            make.left.equalTo(cycleTableView.snp_right).offset(height * 0.02)
         }
         block2.snp_makeConstraints { (make) in
             make.bottom.equalTo(newVideoBlock)
@@ -237,7 +235,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         block3.snp_makeConstraints { (make) in
             make.top.equalTo(block1)
             make.bottom.equalTo(block1)
-            make.left.equalTo(block1.snp_right).offset(5)
+            make.left.equalTo(block1.snp_right).offset(height * 0.02)
             make.width.equalTo(block3.snp_height).multipliedBy(1.5)
         }
         block4.snp_makeConstraints { (make) in
@@ -249,7 +247,7 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
         block5.snp_makeConstraints { (make) in
             make.top.equalTo(block1)
             make.bottom.equalTo(block2)
-            make.left.equalTo(block3.snp_right).offset(5)
+            make.left.equalTo(block3.snp_right).offset(height * 0.02)
             make.width.equalTo(block3)
         }
         
@@ -289,6 +287,12 @@ class RemmondedPageView: BasePageView, UITableViewDataSource, UITableViewDelegat
             categoryController.extras = cycleItems.items[currentPosition].extras
             self.viewController.presentViewController(categoryController, animated: true, completion: nil)
         }
+    }
+    
+    func setBlockDelegate(delegate: BlockViewDelegate){
+        weekHotBlock.setDelegate(delegate)
+        myVideoBlock.setDelegate(delegate)
+        
     }
     
     override func getViewWidth() -> CGFloat {

@@ -7,61 +7,244 @@
 //
 
 import UIKit
-import SnapKit
-import Alamofire
-import MediaPlayer
+import PopupController
 
-class TestViewController: UIViewController, UIWebViewDelegate{
+class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate{
     
-    var mwebview : UIWebView!
+    
+    private var mTableTitleView:TableTitleView!
+    private var mContentScrollView:UIScrollView!
+    private var remmondedPageView:RemmondedPageView!
+    private var livePageView:LivePageView!
+    private var videoPageView:VideoPageView!
+    private var settingPageView:SettingPageView!
+    private var searchImage:UIButton!
+    
+    private var mPagesWidth:[CGFloat] = Array()
+    
+    private var recommondScrollerView : UIScrollView!//首页
+    private var liveScrollerView : UIScrollView!//直播
+    private var videoScrollerView : UIScrollView!//点播
+    private var settingScrollerView : UIScrollView!//设置
+    
+    internal var homeData:HomeData!
     
     override func viewDidLoad() {
-        mwebview = UIWebView()
-        mwebview.allowsInlineMediaPlayback = true
-        mwebview.delegate = self
-        self.view.addSubview(mwebview)
-        mwebview.snp_makeConstraints { (make) in
-            make.left.right.equalTo(self.view)
-            make.top.bottom.equalTo(self.view)
+        super.viewDidLoad()
+        
+        initUI()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.chang), name: ReachabilityChangedNotification, object: nil)
+        
+    }
+    
+    func chang(){
+        print("network had changed")
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    func initUI(){
+        mTableTitleView = TableTitleView()
+        mTableTitleView.mDelegate = self
+        //mTableTitleView.initTitleData()
+        self.view.addSubview(mTableTitleView)
+        
+        mTableTitleView.snp_makeConstraints{ (make) -> Void in
+            make.width.equalTo(self.view).dividedBy(2)
+            make.height.equalTo(40)
+            make.topMargin.equalTo(30)
+            make.leftMargin.equalTo(20)
         }
         
-//        let js = "window.onload = function(){document.body.style.backgroundColor = '#3333';//#3333 is your color}"
-    
-        let url = NSURL(string: "http://www.iqiyi.com/v_19rrllxz4g.html?fc=8b62d5327a54411b#vfrm=19-9-0-1")
-        let request = NSURLRequest(URL: url!)
+        searchImage = UIButton()
+        searchImage.setImage(UIImage(named: "v2_launch_search"), forState: .Normal)
+        searchImage.setImage(UIImage(named: "v2_launch_search_select"), forState: .Highlighted)
+        searchImage.addTarget(self, action: #selector(self.toSearchViewController), forControlEvents: .TouchUpInside)
+        self.view.addSubview(searchImage)
+        searchImage.snp_makeConstraints { (make) in
+            make.top.bottom.equalTo(mTableTitleView)
+            make.right.equalTo(self.view).offset(-30)
+            make.width.equalTo(40)
+        }
         
-        mwebview.loadRequest(request)
+        let scrollerHeight = self.view.frame.height * 0.9 - 70
+        
+        mContentScrollView = UIScrollView()
+        setScrollCommen(mContentScrollView)
+        mContentScrollView.pagingEnabled = true
+        mContentScrollView.delegate = self
+        mContentScrollView.delaysContentTouches = false
+        self.view.addSubview(mContentScrollView)
+        
+        recommondScrollerView = UIScrollView()
+        recommondScrollerView.delaysContentTouches = false
+        //recommondScrollerView.canCancelContentTouches = false
+        setScrollCommen(recommondScrollerView)
+        self.mContentScrollView.addSubview(recommondScrollerView)
+        
+        videoScrollerView = UIScrollView()
+        videoScrollerView.delaysContentTouches = false
+        setScrollCommen(videoScrollerView)
+        self.mContentScrollView.addSubview(videoScrollerView)
+        
+        liveScrollerView = UIScrollView()
+        liveScrollerView.delaysContentTouches = false
+        setScrollCommen(liveScrollerView)
+        self.mContentScrollView.addSubview(liveScrollerView)
+        
+        self.remmondedPageView = RemmondedPageView()
+        self.remmondedPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_HOME])
+        self.remmondedPageView.setController(self)
+        self.remmondedPageView.height = scrollerHeight
+        self.remmondedPageView.initView()
+        self.mPagesWidth.append(self.remmondedPageView.getViewWidth())
+        self.recommondScrollerView.addSubview(self.remmondedPageView)
+        
+        self.videoPageView = VideoPageView()
+        self.videoPageView.height = scrollerHeight
+        self.videoPageView.setData(homeData.blockDatas[Constants.TABLE_NAME_VIDEO])
+        self.videoPageView.initView()
+        self.videoPageView.setController(self)
+        self.mPagesWidth.append(self.videoPageView.getViewWidth())
+        self.videoScrollerView.addSubview(self.videoPageView)
+        
+        self.livePageView = LivePageView()
+        self.livePageView.height = scrollerHeight
+        self.livePageView.setData(homeData.blockDatas[Constants.TABLE_NAME_LIVE], homeData.favChannels, homeData.livePrograms, homeData.dailyPrograms)
+        self.livePageView.initView()
+        self.mPagesWidth.append(self.livePageView.getViewWidth())
+        self.liveScrollerView.addSubview(self.livePageView)
         
         
+        self.settingPageView = SettingPageView()
+        self.settingPageView.height = scrollerHeight
+        self.settingPageView.initView()
+        settingPageView.viewController = self
+        self.mPagesWidth.append(self.settingPageView.getViewWidth())
+        self.mContentScrollView.addSubview(self.settingPageView)
+        
+        self.setConstraints()
+        
+        mContentScrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.width * 4, height: self.view.frame.height - 120)
+        recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: scrollerHeight)
+        videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: scrollerHeight)
+        liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: scrollerHeight)
     }
-//    
-//    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-//        //print(request.URLString)
-//        
-//        return true
-//    }
     
-//    func webViewDidFinishLoad(webView: UIWebView) {
-//        let js = "window.onload = function(){document.body.style.backgroundColor = '#3333';//#3333 is your color}"
-//        let result = webView.stringByEvaluatingJavaScriptFromString(js)
-//        print(result)
-//    }
-    func webViewDidStartLoad(webView: UIWebView) {
-        print(webView.request?.URLString)
+    func selectButtonIndex(index: Int) {
+        let width = UIScreen.mainScreen().bounds.width
+        if mContentScrollView == nil {
+            return
+        }
+        mContentScrollView.setContentOffset(CGPoint(x: width * CGFloat(index), y: 0), animated: true)
     }
     
     
-    func webViewDidFinishLoad(webView: UIWebView) {
-        //let js = "document.documentElement.innerHTML"
-       // let html = webView.stringByEvaluatingJavaScriptFromString(js)
-        //print(html)
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
+        let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
+        mTableTitleView.setOnSelectButtonByPosition(index)
+    }
+    
+    //获取当前滚动属于第几页
+    func getScrollViewIndex(contentOffset:CGFloat) -> Int {
+        let width = UIScreen.mainScreen().bounds.width
+        if contentOffset < width {
+            return 0
+        } else if contentOffset < 2 * width {
+            return 1
+        } else if contentOffset < 3 * width {
+            return 2
+        } else {
+            return 3
+        }
+    }
+    
+    //获取当前滚动的偏移量
+    func calcTotalSizeByIndex(index: Int) -> CGFloat{
+        var totalSize:CGFloat = 0
+        for i in 0 ..< index {
+            totalSize += mPagesWidth[i]
+        }
+        return totalSize
+    }
+    
+    func setScrollCommen(scrollerView:UIScrollView){
+        scrollerView.showsHorizontalScrollIndicator = false
+        scrollerView.showsVerticalScrollIndicator = false
         
+        //scrollerView.delegate = self
+    }
+    
+    func toSearchViewController(){
+                let searchViewController = SearchViewController()
+                self.presentViewController(searchViewController, animated: true, completion: nil)
+        //self.dismissViewController()
+    }
+    
+    func setConstraints(){
+        mContentScrollView.snp_makeConstraints{ (make) -> Void in
+            make.width.equalTo(self.view.frame.width)
+            make.bottom.equalTo(self.view).multipliedBy(0.9)
+            make.top.equalTo(self.mTableTitleView.snp_bottom)
+            make.left.equalTo(self.view)
+        }
         
-        let js2 = "document.getElementsByTagName(\"video\")[0]).getElementsByTagName(\"source\")[0].src"
-        let m3u8 = webView.stringByEvaluatingJavaScriptFromString(js2)
-        print(m3u8)
+        recommondScrollerView.snp_makeConstraints { (make) in
+            make.width.equalTo(self.view)
+            make.height.equalTo(mContentScrollView)
+            make.top.equalTo(mContentScrollView)
+            make.leading.equalTo(mContentScrollView)
+        }
         
+        videoScrollerView.snp_makeConstraints { (make) in
+            make.width.equalTo(self.view)
+            make.height.equalTo(mContentScrollView)
+            make.top.equalTo(mContentScrollView)
+            make.leading.equalTo(recommondScrollerView.snp_trailing)
+        }
+        
+        liveScrollerView.snp_makeConstraints { (make) in
+            make.width.equalTo(self.view)
+            make.height.equalTo(mContentScrollView)
+            make.top.equalTo(mContentScrollView)
+            make.leading.equalTo(videoScrollerView.snp_trailing)
+        }
+        
+        self.remmondedPageView.snp_makeConstraints{ (make) -> Void in
+            make.height.equalTo(self.recommondScrollerView)
+            make.topMargin.equalTo(self.recommondScrollerView)
+            make.leftMargin.equalTo(self.recommondScrollerView).offset(30)
+            make.width.equalTo(self.remmondedPageView.getViewWidth())
+        }
+        
+        self.videoPageView.snp_makeConstraints{ (make) -> Void in
+            make.height.equalTo(self.videoScrollerView)
+            make.topMargin.equalTo(self.videoScrollerView).offset(0)
+            make.leftMargin.equalTo(self.videoScrollerView).offset(30)
+            make.width.equalTo(self.videoPageView.getViewWidth());
+        }
+        
+        self.livePageView.snp_makeConstraints{ (make) -> Void in
+            make.height.equalTo(self.liveScrollerView)
+            make.topMargin.equalTo(self.liveScrollerView)
+            make.leftMargin.equalTo(self.liveScrollerView).offset(30)
+            make.width.equalTo(self.livePageView.getViewWidth());
+        }
+        
+        self.settingPageView.snp_makeConstraints{ (make) -> Void in
+            make.height.equalTo(self.liveScrollerView)
+            make.topMargin.equalTo(self.liveScrollerView)
+            make.leftMargin.equalTo(self.liveScrollerView.snp_right).offset(30)
+            make.width.equalTo(liveScrollerView)
+        }
+    }
+    
+    deinit{
+        print("----->fagewgewdeinit")
     }
     
 }

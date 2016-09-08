@@ -6,10 +6,11 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-protocol IKeyboardDelegate {
+@objc protocol IKeyboardDelegate {
     func onKeyboardClick(letter:String)
     func onClearBtnClick()
     func onBackspaceClick()
+    optional func onDigitalBtnClick(point:CGRect,data: [String])
 }
 
 
@@ -20,7 +21,7 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     var backspaceBtn:KeyBoardViewButton!
     var keyCollectionView:UICollectionView!
     
-    var keyboardDelegate:IKeyboardDelegate!
+    weak var keyboardDelegate:IKeyboardDelegate!
     
     private var isAlphabet:Bool = true
     private var alphabetList:[String] = [String]()

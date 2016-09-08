@@ -9,10 +9,15 @@
 import UIKit
 import Alamofire
 
-class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
+class VideoCategoryGroupController:BaseBackViewController {
     
     private var groupList : Array<CategoryGroupItem>!
     private var groupView : CategoryGroupView!
+    
+    //xml解析
+    var currentElement = ""
+    var cateItem : CategoryGroupItem!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +52,27 @@ class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
         
     }
     
-    //xml解析
-    var currentElement = ""
-    var cateItem : CategoryGroupItem!
+    
+    private func getGroupListData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_CATEGORY_GROUP)!, parameters: nil).response{
+            _,_,data,error in
+            if error != nil{
+                print(error)
+                return
+            }
+            let parser = NSXMLParser(data: data!)
+            parser.delegate = self
+            parser.parse()
+        }
+    }
+}
+
+
+/*
+ xml解析
+ */
+extension VideoCategoryGroupController: NSXMLParserDelegate{
+    
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "list"{
@@ -89,18 +112,5 @@ class VideoCategoryGroupController:BaseBackViewController ,NSXMLParserDelegate {
         groupView.setGroupItems(groupList)
     }
     
-    private func getGroupListData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_CATEGORY_GROUP)!, parameters: nil).response{
-            _,_,data,error in
-            if error != nil{
-                print(error)
-                return
-            }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
-        }
-    }
-    
-    
 }
+

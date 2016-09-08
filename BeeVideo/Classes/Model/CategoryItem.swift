@@ -11,7 +11,7 @@
  
  */
 
-class CategoryItem {
+class CategoryItem:NSObject {
 
     var id:String = ""
     var name:String = ""

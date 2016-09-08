@@ -38,6 +38,7 @@ class VideoPageView: BasePageView,BlockViewDelegate {
         setBlockViewCommen(block_category3, index: 2)
         
         block_poster1 = BlockView()
+        block_poster1.setBlockViewMode(.Right)
         setBlockViewCommen(block_poster1, index: 3)
         
         block_poster2 = BlockView()

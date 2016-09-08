@@ -15,9 +15,6 @@ class AccountPoinRecordViewController: BaseBackViewController,UITableViewDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLbl.text = "我的帐户"
-     
-        
-        
     }
     
     override func didReceiveMemoryWarning() {

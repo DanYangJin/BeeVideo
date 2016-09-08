@@ -16,14 +16,8 @@ class ErrorView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        errorImg = UIImageView()
-        errorImg.contentMode = .ScaleAspectFit
-        errorImg.image = UIImage(named: "error_icon")
-        self.addSubview(errorImg)
-        errorImg.snp_makeConstraints { (make) in
-            make.top.bottom.equalTo(self)
-            make.left.right.equalTo(self)
-        }
+        
+        
         
         errorInfoLable = UILabel()
         errorInfoLable.font = UIFont.systemFontOfSize(14)
@@ -33,6 +27,17 @@ class ErrorView: UIView {
         errorInfoLable.snp_makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.bottom.equalTo(self)
+            make.height.equalTo(30)
+        }
+        
+        errorImg = UIImageView()
+        errorImg.contentMode = .ScaleAspectFit
+        errorImg.image = UIImage(named: "error_icon")
+        self.addSubview(errorImg)
+        errorImg.snp_makeConstraints { (make) in
+            make.top.equalTo(self)
+            make.bottom.equalTo(errorInfoLable.snp_top)
+            make.left.right.equalTo(self)
         }
         
     }

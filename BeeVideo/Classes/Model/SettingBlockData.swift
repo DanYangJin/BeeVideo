@@ -10,12 +10,12 @@
 
 class SettingBlockData: NSObject {
 
-    var targetController:UIViewController?
+    var targetController:String = ""
     var title:String
     var icon:String
     var backgroundImg:String
     
-    init(title:String, icon:String, backgroundImg:String, targetController:UIViewController?) {
+    init(title:String, icon:String, backgroundImg:String, targetController:String) {
         self.title = title
         self.icon = icon
         self.backgroundImg = backgroundImg

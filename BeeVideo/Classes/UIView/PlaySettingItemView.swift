@@ -10,13 +10,24 @@
 class PlaySettingItemView: UIView {
 
     var iconImg:UIImageView!
+    var contentChanged:Bool = false
     private var backgroundImg:UIImageView!
     private var nameLbl:UILabel!
     private var selectionLbl:UILabel!
     private var leftArrowImg:UIImageView!
     private var rightArrowImg:UIImageView!
     
-    var currentIndex = 0
+    private var index = 0
+    
+    var currentIndex:Int{
+        set{
+            self.index = newValue
+            selectionLbl.text = selectionList[newValue]
+        }
+        get{
+            return self.index
+        }
+    }
     var selectionList:[String]!
     
     init(frame: CGRect,title: String,selectionList: [String]) {
@@ -104,19 +115,21 @@ class PlaySettingItemView: UIView {
     }
     
     func leftClick(){
-        currentIndex -= 1
-        if currentIndex < 0 {
-            currentIndex = selectionList.count - 1
+        index -= 1
+        if index < 0 {
+            index = selectionList.count - 1
         }
-        selectionLbl.text = selectionList[currentIndex]
+        selectionLbl.text = selectionList[index]
+        contentChanged = true
     }
     
     func rightClick(){
-        currentIndex += 1
-        if currentIndex >= selectionList.count {
-            currentIndex = 0
+        index += 1
+        if index >= selectionList.count {
+            index = 0
         }
-        selectionLbl.text = selectionList[currentIndex]
+        selectionLbl.text = selectionList[index]
+        contentChanged = true
     }
 
 }

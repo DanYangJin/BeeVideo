@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import MediaPlayer
 import Alamofire
-import JavaScriptCore
+import PopupController
 
 public enum PlayerStatus {
     case INIT
@@ -32,7 +32,7 @@ public enum Flag{
     case History
 }
 
-class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate, NSXMLParserDelegate, UIWebViewDelegate{
+class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecognizerDelegate,VideoMenuDelegate{
     
     enum RequestId {
         case GET_VIDEO_SOURCE
@@ -54,9 +54,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     internal var horizontalLabel:UILabel!
     private var netLoadingView:NetSpeedView!
     private var preLoadingView:PreLoadingView!
-    
-    //------------test 
-    private var webView:UIWebView!
+    private var menuView:VideoMenuViewController!
     
     //临时变量
     private var screenWidth:CGFloat!,screenHeight:CGFloat!
@@ -67,6 +65,10 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     private var sumTime:CGFloat = 0
     private var lastSlideValue:CGFloat = 0
     private var lastPlayerPosition:Int = 0
+    
+    private var reachability : Reachability!
+    
+    var timer:NSTimer!
     
     //xml解析临时变量
     //无源时获取源
@@ -81,9 +83,13 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.initUI()
         self.addNotifications()
         self.configVolume()
+        
+        self.videoPlayerView.setDataSource(Constants.URLS[index])
+        self.videoPlayerView.playbackLoops = true
         //       // controlView.videoNameLabel.text = videoDetailInfo.currentDrama?.title
         //        getVideoPlayUrl()
         if flag == Flag.Detail {
+            controlView.videoNameLabel.text = videoDetailInfo.name
             if videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo() == nil {
                 preLoadingView.hidden = true
                 getSourceInfo()
@@ -92,7 +98,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     }
     
     func initUI(){
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.blackColor()
         
         self.screenWidth     = self.view.bounds.size.width
         self.screenHeight    = self.view.bounds.size.height
@@ -103,14 +109,15 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.view.addSubview(self.initProgressView())
         self.view.addSubview(self.initNetLoadingView())
         self.view.addSubview(self.initPreLoadingView())
-        self.view.addSubview(self.initWebView())
         
         self.videoStatus     = PlayerStatus.INIT
         self.moveDirection   = PanDirection.PanDirectionInit
         
         self.makeSubViewsConstraints()
         
-        self.videoPlayerView.play()
+        self.setTimering(true)
+        //self.videoPlayerView.play()
+        //        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(self.playerTimeAction), userInfo: nil, repeats: true)
         
     }
     func makeSubViewsConstraints(){
@@ -136,8 +143,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         if self.videoPlayerView == nil {
             self.videoPlayerView         = AVPlayerView()
             self.videoPlayerView.frame   = self.view.frame
-            self.videoPlayerView.setDataSource(Constants.URLS[index])
             self.videoPlayerView.setDelegate(self)
+            
         }
         return self.videoPlayerView
     }
@@ -187,36 +194,56 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         return self.progressView
     }
     
-    func initWebView() -> UIWebView{
-        if self.webView == nil{
-            self.webView = UIWebView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-            self.webView.delegate = self
-            self.webView.loadRequest(NSURLRequest(URL: NSURL(string: "http://192.168.66.68/client/index.html")!))
+    func initMenuView() -> VideoMenuViewController{
+        if self.menuView == nil {
+            menuView = VideoMenuViewController(frame: CGRectZero, data: videoDetailInfo,currentIndex: index)
+            menuView.delegate = self
+            menuView.hidden = true
+            self.view.addSubview(menuView)
+            menuView.snp_makeConstraints { (make) in
+                make.left.right.equalTo(self.view)
+                make.top.bottom.equalTo(self.view)
+            }
         }
-        return self.webView
+        
+        return self.menuView
     }
     
     func addNotifications(){
-        //APP进入前台
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(appDidEnterPlayGround), name: UIApplicationDidBecomeActiveNotification, object: nil)
-        //APP退到后台
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(appDidEnterBackground), name: UIApplicationWillResignActiveNotification, object: nil)
-        
         self.controlView.playButton.addTarget(self, action: (#selector(onPauseOrPlay)), forControlEvents: .TouchUpInside)
+        //切换下一集
+        self.controlView.nextDramaBtn.addTarget(self, action: #selector(playNextDrama), forControlEvents: .TouchUpInside)
         // slider开始滑动事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchBegan), forControlEvents: .TouchDown)
         // slider滑动中事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderValueChanged), forControlEvents: .ValueChanged)
         // slider结束滑动事件
         self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchEnded), forControlEvents: .TouchUpInside)
+        self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchEnded), forControlEvents: .TouchUpOutside)
+        self.controlView.videoSlider.addTarget(self, action: #selector(progressSliderTouchEnded), forControlEvents: .TouchCancel)
+        
         self.controlView.backButton.addTarget(self, action: #selector(backButtonAction), forControlEvents: .TouchUpInside)
         
+        self.controlView.menuButton.addTarget(self, action: #selector(self.popupMenu), forControlEvents: .TouchUpInside)
+        
         self.createGesture()
+        
+        do{
+            try reachability = Reachability.reachabilityForInternetConnection()
+        }catch{
+            
+        }
+        
     }
+    
     
     //创建手势
     func createGesture(){
-        let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapAction(_:)))
+        tap.cancelsTouchesInView = false
+        tap.delaysTouchesBegan = false
+        tap.delaysTouchesEnded = false
+        tap.delegate = self
         self.view.addGestureRecognizer(tap);
         //双击(播放/暂停)
         let doubleTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onPauseOrPlay))
@@ -229,7 +256,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if touch.view!.isKindOfClass(UISlider) {
+        //print(touch.view?.isDescendantOfView(controlView))
+        if touch.view!.isKindOfClass(UISlider) || touch.view!.isKindOfClass(UIButton) {
             return false
         } else {
             return true
@@ -237,14 +265,15 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     }
     
     //单击
-    func tapAction(){
-        if self.controlView.isShowed {
-            self.controlView.animationHide()
-        } else {
-            self.controlView.animationShow()
+    func tapAction(tap:UITapGestureRecognizer){
+        if menuView == nil || menuView.hidden{
+            if self.controlView.isShowed {
+                self.controlView.animationHide()
+            } else {
+                self.controlView.animationShow()
+            }
         }
     }
-    
     
     /**
      * 双击
@@ -252,8 +281,10 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     func onPauseOrPlay(){
         switch videoStatus! {
         case .PLAY:
+            videoPlayerView.isUserPause = true
             pausePlay()
         case .PAUSE:
+            videoPlayerView.isUserPause = false
             resumePlay()
         default:
             break
@@ -288,7 +319,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             switch self.moveDirection! {
             case .PanDirectionHorizontalMoved:
                 self.horizontalLabel.alpha           = 0.0
-                self.resumePlay()
+                netLoadingView.startAnimate()
                 self.videoPlayerView.seekToTime(Int.init(self.sumTime))
                 self.sumTime = 0
                 break
@@ -303,7 +334,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         default:
             break
         }
-        
     }
     
     //判断滑动方向
@@ -315,7 +345,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             self.horizontalLabel.alpha           = 1.0
             self.moveDirection = PanDirection.PanDirectionHorizontalMoved
             self.sumTime = CGFloat.init(self.videoPlayerView.getCurrentTime())
-            self.pausePlay()
         } else {
             self.moveDirection = PanDirection.PanDirectionVerticalMoved
             if locationPoint.x > self.screenWidth! / 2 {
@@ -339,7 +368,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         }
         // 每次滑动需要叠加时间
         self.sumTime += value / 200
-        
         // 需要限定sumTime的范围
         let totalTime:CGFloat = CGFloat.init(self.videoPlayerView.getDuration())
         if (self.sumTime > totalTime) {
@@ -389,7 +417,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         }
         self.videoStatus = PlayerStatus.PLAY
         self.videoPlayerView.play()
-        self.videoPlayerView.setTimering(true)
+        self.setTimering(true)
         self.controlView.changePlayButtonBg(false)
     }
     
@@ -402,22 +430,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         }
         self.videoStatus = PlayerStatus.PAUSE
         self.videoPlayerView.pause()
-        self.videoPlayerView.setTimering(false)
+        self.setTimering(false)
         self.controlView.changePlayButtonBg(true)
-    }
-    
-    /**
-     * APP进入前台相应事件
-     */
-    func appDidEnterPlayGround(){
-        resumePlay()
-    }
-    
-    /**
-     * APP进入后台相应事件
-     */
-    func appDidEnterBackground(){
-        pausePlay()
     }
     
     /**
@@ -427,8 +441,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
+        self.setTimering(false)
         self.lastPlayerPosition = self.videoPlayerView.getCurrentTime()
-        self.pausePlay()
     }
     
     func progressSliderValueChanged(slider:UISlider){
@@ -439,7 +453,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         var style:String = ""
         if (value < 0) {
             style.appendContentsOf("<<");
-        } else if (value > 0){
+        } else if (value >= 0){
             style.appendContentsOf(">>");
         }
         self.lastSlideValue = CGFloat(slider.value)
@@ -454,9 +468,11 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     }
     
     func progressSliderTouchEnded(slider:UISlider){
+        
         if self.videoPlayerView.getItemStatus() != .ReadyToPlay {
             return
         }
+        self.netLoadingView.startAnimate()
         self.lastSlideValue = 0
         let duration:Int = self.videoPlayerView.getDuration()
         //计算出拖动的当前秒数
@@ -467,79 +483,28 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         }
         self.horizontalLabel.alpha = 0.0
         self.videoPlayerView.seekToTime(dragedSeconds)
-        self.resumePlay()
+    }
+    
+    //弹出菜单
+    func popupMenu(){
+        self.controlView.animationHide()
+        self.onPauseOrPlay()
+        initMenuView()
+        menuView.hidden = false
+    }
+    
+    func popupDidDismiss() {
+        self.onPauseOrPlay()
     }
     
     //返回按钮操作
     func backButtonAction(){
+        if timer != nil {
+            timer.invalidate()
+            timer = nil
+        }
+        //videoPlayerView = nil
         self.dismissViewControllerAnimated(true,completion: nil)
-    }
-    
-    //播放进度
-    func onUpdateProgress(playView:AVPlayerView, currentTime:Int, totalTime:Int){
-        if currentTime == self.lastPlayerPosition {
-            return
-        }
-        self.controlView.updateProgress(currentTime, totalTime: totalTime)
-        self.controlView.videoSlider.maximumValue   = 1
-        let progress:Float = Float(currentTime) / Float(totalTime)
-        self.controlView.videoSlider.setValue(progress, animated: true)
-    }
-    
-    //准备完成
-    func onPreparedCompetion(playView:AVPlayerView) {
-        self.controlView.loadingView.stopAnimating()
-        self.videoStatus = PlayerStatus.PLAY
-        self.videoPlayerView.play()
-        self.netLoadingView.stopAnimat()
-        self.preLoadingView.hidden = true
-    }
-    
-    //播放错误
-    func onError(playView:AVPlayerView) {
-        self.videoStatus = PlayerStatus.ERROR
-        self.playNextDrama()
-    }
-    
-    //缓冲变化
-    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Float) {
-        self.controlView.progressView.setProgress(bufferingValue, animated: true)
-    }
-    
-    //加载信息
-    func onInfo(playView:AVPlayerView, value:Int) {
-        switch value {
-        case 701:
-            self.videoStatus = PlayerStatus.BUFFERING
-            self.controlView.loadingView.startAnimating()
-            self.netLoadingView.startAnimate()
-        case 702:
-            self.videoStatus = PlayerStatus.PLAY
-            self.controlView.loadingView.stopAnimating()
-            self.netLoadingView.stopAnimat()
-        default:
-            break
-        }
-    }
-    //结束
-    func onCompletion(playView:AVPlayerView) {
-        self.videoStatus = PlayerStatus.COMPLETION
-        self.playNextDrama()
-    }
-    
-    //播放下一集
-    func playNextDrama(){
-        self.controlView.resetControlView()
-        //self.controlView.loadingView.startAnimating()
-        self.videoPlayerView.resetPlayer()
-        self.horizontalLabel.alpha = 0.0
-        let size:Int = Constants.URLS.count
-        index  += 1
-        if index > size - 1 {
-            index = 0
-        }
-        self.videoPlayerView.setDataSource(Constants.URLS[index])
-        self.videoPlayerView.play()
     }
     
     func removeNotifications(){
@@ -548,7 +513,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     
     override func viewDidDisappear(animated: Bool) {
         self.removeNotifications()
-        self.videoPlayerView.resetPlayer()
+        // self.videoPlayerView.resetPlayer()
     }
     
     override func didReceiveMemoryWarning() {
@@ -604,6 +569,118 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     
     //xml解析
     private var currentElement = ""
+    
+    //更新进度条
+    func playerTimeAction(){
+        self.onUpdateProgress(videoPlayerView, currentTime: videoPlayerView.getCurrentTime(), totalTime: videoPlayerView.getDuration())
+    }
+    
+    func setTimering(timering:Bool){
+        if timering {
+            if timer == nil{
+                timer = NSTimer.scheduledTimerWithTimeInterval(1,target:self,selector:#selector(playerTimeAction),userInfo:nil,repeats:true)
+            }
+        }else{
+            if timer != nil {
+                timer!.invalidate()
+                timer = nil
+            }
+        }
+    }
+    
+    func changeDrama(index: Int) {
+        self.index = index
+        let size:Int = Constants.URLS.count
+        if index >= size {
+            return
+        }
+        self.controlView.resetControlView()
+        self.netLoadingView.startAnimate()
+        self.preLoadingView.hidden = false
+        self.horizontalLabel.alpha = 0.0
+        self.videoPlayerView.setDataSource(Constants.URLS[index])
+        
+    }
+}
+
+extension PlayerViewController{
+    //播放进度
+    func onUpdateProgress(playView:AVPlayerView, currentTime:Int, totalTime:Int){
+        if currentTime == self.lastPlayerPosition {
+            return
+        }
+        self.controlView.updateProgress(currentTime, totalTime: totalTime)
+        self.controlView.videoSlider.maximumValue   = 1
+        let progress:Float = Float(currentTime) / Float(totalTime)
+        self.controlView.videoSlider.setValue(progress, animated: true)
+    }
+    
+    //准备完成
+    func onPreparedCompetion(playView:AVPlayerView) {
+        self.videoStatus = PlayerStatus.PLAY
+        self.videoPlayerView.play()
+        self.netLoadingView.stopAnimat()
+        self.preLoadingView.hidden = true
+    }
+    
+    //播放错误
+    func onError(playView:AVPlayerView) {
+        self.videoStatus = PlayerStatus.ERROR
+        // self.playNextDrama()
+        self.view.makeToast("播放失败")
+    }
+    
+    //缓冲变化
+    func onUpdateBuffering(playView:AVPlayerView, bufferingValue:Float) {
+        guard controlView != nil else{
+            return
+        }
+        
+        self.controlView.progressView.setProgress(bufferingValue, animated: true)
+    }
+    
+    //加载信息
+    func onInfo(playView:AVPlayerView) {
+        
+        switch playView.bufferingState {
+        case .Ready:
+            self.setTimering(true)
+            self.netLoadingView.stopAnimat()
+        case .Delayed:
+            self.setTimering(false)
+            self.netLoadingView.startAnimate()
+        default:
+            self.netLoadingView.startAnimate()
+            break
+        }
+        
+    }
+    //结束
+    func onCompletion(playView:AVPlayerView) {
+        self.videoStatus = PlayerStatus.COMPLETION
+        self.playNextDrama()
+    }
+    
+    //播放下一集
+    func playNextDrama(){
+        self.controlView.resetControlView()
+        //self.controlView.loadingView.startAnimating()
+        self.netLoadingView.startAnimate()
+        self.preLoadingView.hidden = false
+        //self.videoPlayerView.resetPlayer()
+        self.horizontalLabel.alpha = 0.0
+        let size:Int = Constants.URLS.count
+        index  += 1
+        if index > size - 1 {
+            index = 0
+        }
+        self.videoPlayerView.setDataSource(Constants.URLS[index])
+        //self.videoPlayerView.play()
+    }
+}
+
+
+extension PlayerViewController : NSXMLParserDelegate{
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
@@ -681,17 +758,5 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             preLoadingView.hidden = false
         }
     }
-    
-    //------------------webview
-    func webViewDidFinishLoad(webView: UIWebView) {
-        let context = self.webView.valueForKeyPath("documentView.webView.mainFrame.javaScriptContext") as! JSContext
-        let value = context.objectForKeyedSubscript("getPlayUrl")
-        let ret = value.callWithArguments([])
-        let urls = ret.toArray()
-        print(urls)
-//        self.videoPlayerView.setDataSource(urls[0] as! String)
-//        self.videoPlayerView.play()
-    }
-    
     
 }

@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOptionBarDataSource,NSXMLParserDelegate {
+class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOptionBarDataSource {
     
     var position = 0
     var titleName = ""
@@ -22,10 +22,18 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
     
     let HOT_ITEM_POSITION = 1 // 热门
     let ALL_ITEM_POSITION = 5 // 全部
+    
+    //xml解析
+    private var currentElement : String!
+    private var categoryItem : CategoryItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initUI()
+        getListData()
+    }
+    
+    func initUI(){
         backImg = UIImageView()
         backImg.image = UIImage(named: "v2_vod_list_arrow_left")
         backImg.contentMode = .ScaleAspectFill
@@ -75,49 +83,16 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
             make.height.width.equalTo(40)
         }
         
-        getListData()
-    }
-    
-    //xml解析
-    private var currentElement : String!
-    private var categoryItem : CategoryItem!
-    
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-        currentElement = elementName
-        if currentElement == "subject" {
-            categoryItem = CategoryItem()
+        errorView = ErrorView()
+        errorView.hidden = true
+        errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
+        self.view.addSubview(errorView)
+        errorView.snp_makeConstraints { (make) in
+            make.left.right.equalTo(self.view)
+            make.top.equalTo(backImg.snp_bottom)
+            make.bottom.equalTo(self.view)
         }
-    }
-    
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if content.isEmpty {
-            return
-        }
-        if currentElement == "id"{
-            categoryItem.id = content
-        }else if currentElement == "name"{
-            categoryItem.name = content
-        }else if currentElement == "playCount"{
-            categoryItem.playCount = content
-        }else if currentElement == "picCoverUrl"{
-            categoryItem.poster = content
-        }else if currentElement == "picBackgroundUrl"{
-            categoryItem.backgroud = content
-        }
-    }
-    
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        if elementName == "subject" {
-            itemList.append(categoryItem)
-            categoryItem = nil
-        }
-    }
-    
-    func parserDidEndDocument(parser: NSXMLParser) {
-        countLbl.text = "共\(itemList.count)个专题"
-        loadingView.stopAnimat()
-        mOptionBar.reloadData()
+        
     }
     
     //横向tableview相关
@@ -167,7 +142,8 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
         Alamofire.request(.GET, url, parameters: ["pageSize" : String(Int32.max),"pageNo":"1"]).response{
             _,_,data,error in
             if error != nil{
-                print(error)
+                self.loadingView.stopAnimat()
+                self.errorView.hidden = false
                 return
             }
             let parser = NSXMLParser(data: data!)
@@ -181,3 +157,47 @@ class VideoCategoryListController: BaseViewController,ZXOptionBarDelegate,ZXOpti
     }
     
 }
+
+/*
+ xml解析
+ */
+extension VideoCategoryListController: NSXMLParserDelegate{
+    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+        currentElement = elementName
+        if currentElement == "subject" {
+            categoryItem = CategoryItem()
+        }
+    }
+    
+    func parser(parser: NSXMLParser, foundCharacters string: String) {
+        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        if content.isEmpty {
+            return
+        }
+        if currentElement == "id"{
+            categoryItem.id = content
+        }else if currentElement == "name"{
+            categoryItem.name = content
+        }else if currentElement == "playCount"{
+            categoryItem.playCount = content
+        }else if currentElement == "picCoverUrl"{
+            categoryItem.poster = content
+        }else if currentElement == "picBackgroundUrl"{
+            categoryItem.backgroud = content
+        }
+    }
+    
+    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if elementName == "subject" {
+            itemList.append(categoryItem)
+            categoryItem = nil
+        }
+    }
+    
+    func parserDidEndDocument(parser: NSXMLParser) {
+        countLbl.text = "共\(itemList.count)个专题"
+        loadingView.stopAnimat()
+        mOptionBar.reloadData()
+    }
+}
+
