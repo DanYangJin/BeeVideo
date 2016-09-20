@@ -8,7 +8,7 @@
 
 import Alamofire
 
-class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate,VideoListViewDelegate {
+class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate,VideoListViewDelegate,HistoryViewDelegate {
     
     lazy var menuData:[LeftViewTableData] = [
         LeftViewTableData(title: "观看历史", unSelectPic: "v2_my_video_history_default", selectedPic: "v2_my_video_history_selected"),
@@ -47,13 +47,13 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         
         myHistoryView = MyHistoryView(frame: CGRectZero,controller: self)
         contentView.addSubview(myHistoryView)
+        myHistoryView.delegate = self
         myHistoryView.snp_makeConstraints { (make) in
             make.left.equalTo(backView)
             make.top.equalTo(backView.snp_bottom)
             make.width.equalTo(self.view).offset(-20)
             make.bottom.equalTo(self.view)
         }
-        myHistoryView.setViewData([VideoBriefItem]())
         
         myFavoriteView = MyFavoriteView()
         myFavoriteView.hidden = true
@@ -76,10 +76,19 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         viewList.append(myFavoriteView)
         viewList.append(myDownloadView)
         
+        selectHistoryData()
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshFavoriteList), name: "FavoriteChangedNotify", object: nil)
-        
-        getRecommendData()
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.selectHistoryData), name: "HistroyChangedNotify", object: nil)
+    }
+    
+    func selectHistoryData(){
+        let data = VideoDBHelper.shareInstance().getHistoryList()
+        if data.isEmpty {
+            getRecommendData()
+        }else{
+            myHistoryView.setViewData(data)
+        }
     }
     
     
@@ -112,10 +121,12 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         viewList[indexPath.row].hidden = false
         lastPositon = indexPath.row
         switch indexPath.row {
+        case 0:
+            //myHistoryView.setViewData(VideoDBHelper.shareInstance().getHistoryList())
+            selectHistoryData()
         case 1:
             myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
-            break
-            
+    
         default:
             break
         }
@@ -125,6 +136,46 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
     private var currentElement = ""
     private var videoList:[VideoBriefItem] = [VideoBriefItem]()
     private var videoItem:VideoBriefItem!
+    
+    //列表点击事件
+    func onVideoListViewItemClick(videoId: String) {
+        let controller = VideoDetailViewController()
+        var extras:[ExtraData] = [ExtraData]()
+        extras.append(ExtraData(name: "videoId", value: videoId))
+        controller.extras = extras
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+    
+    func refreshFavoriteList(){
+        myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
+    }
+    
+    
+    func getRecommendData(){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HISTORY_RECOMMEND)!, parameters: nil).responseData{
+            response in
+            switch response.result{
+            case .Success(let data):
+                let parser = NSXMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
+                break
+            case .Failure(let error):
+                print(error)
+                break
+            }
+        }
+    }
+    
+    override func dismissViewController() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        super.dismissViewController()
+    }
+}
+
+
+extension MyVideoViewController
+{
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
@@ -165,38 +216,4 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         myHistoryView.setRecommendData(videoList)
     }
     
-    //列表点击事件
-    func onVideoListViewItemClick(videoId: String) {
-        let controller = VideoDetailViewController()
-        var extras:[ExtraData] = [ExtraData]()
-        extras.append(ExtraData(name: "videoId", value: videoId))
-        controller.extras = extras
-        self.presentViewController(controller, animated: true, completion: nil)
-    }
-    
-    func refreshFavoriteList(){
-        myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
-    }
-    
-    
-    func getRecommendData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HISTORY_RECOMMEND)!, parameters: nil).responseData{
-            response in
-            switch response.result{
-            case .Success(let data):
-                let parser = NSXMLParser(data: data)
-                parser.delegate = self
-                parser.parse()
-                break
-            case .Failure(let error):
-                print(error)
-                break
-            }
-        }
-    }
-    
-    override func dismissViewController() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-        super.dismissViewController()
-    }
 }

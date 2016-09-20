@@ -202,7 +202,7 @@ extension WeekHotViewController:NSXMLParserDelegate{
         }else if currentElement == "item_name"{
             videoDetailInfo.name = content
         }else if currentElement == "duration"{
-            videoDetailInfo.duration = content
+            videoDetailInfo.duration += content
         }else if currentElement == "smallImg"{
             videoDetailInfo.poster = content
         }

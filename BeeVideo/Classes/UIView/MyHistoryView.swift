@@ -8,31 +8,65 @@
 
 import UIKit
 import DZNEmptyDataSet
+import PopupController
 
-class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,DZNEmptyDataSetDelegate,DZNEmptyDataSetSource,ZXOptionBarDelegate,ZXOptionBarDataSource {
+protocol HistoryViewDelegate:class {
+    func getRecommendData()
+}
+
+class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,DZNEmptyDataSetDelegate,DZNEmptyDataSetSource,ZXOptionBarDelegate,ZXOptionBarDataSource,ClearDelegate {
 
     private var collentionView:UICollectionView!
     private var loadingView:LoadingView!
     private var recommendLbl:UILabel!
     private var mOptionBar:ZXOptionBar!
-    private var appearController:UIViewController
+    private weak var appearController:UIViewController?
+    private var longSelectIndex : NSIndexPath?
     
-    private var viewData:[VideoBriefItem] = [VideoBriefItem]()
+    private var viewData:[VideoHistoryItem] = [VideoHistoryItem]()
     private var recommendData:[VideoBriefItem] = [VideoBriefItem]()
+    private var popup:PopupController!
+    
+    weak var delegate:HistoryViewDelegate!
     
     init(frame: CGRect,controller: UIViewController) {
         
         self.appearController = controller
         super.init(frame: frame)
+        initUI()
         
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress(_:)))
+        longPress.minimumPressDuration = 1
+        collentionView.addGestureRecognizer(longPress)
+    }
+    
+    func longPress(gesture:UILongPressGestureRecognizer){
+        if gesture.state != .Began{
+            return
+        }
+        print("long press")
+        let point = gesture.locationInView(collentionView)
+        longSelectIndex = collentionView.indexPathForItemAtPoint(point)
+        guard longSelectIndex != nil else{
+            return
+        }
+        popup = PopupController.create(appearController!).customize([.Layout(.Bottom)])
+        let viewController = PopupClearViewController()
+        viewController.delegate = self
+        popup.show(viewController)
+    }
+    
+    func initUI(){
         let layout = UICollectionViewFlowLayout()
         collentionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
         collentionView.hidden = true
         collentionView.backgroundColor = UIColor.clearColor()
+        collentionView.delaysContentTouches = false
         collentionView.dataSource = self
         collentionView.delegate = self
         collentionView.emptyDataSetSource = self
         collentionView.emptyDataSetDelegate = self
+        collentionView.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "history")
         self.addSubview(collentionView)
         collentionView.snp_makeConstraints { (make) in
             make.top.bottom.equalTo(self)
@@ -41,7 +75,7 @@ class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateF
         
         recommendLbl = UILabel()
         recommendLbl.text = "随便看看"
-        recommendLbl.hidden = true
+        //recommendLbl.hidden = true
         recommendLbl.textColor = UIColor.whiteColor()
         recommendLbl.font = UIFont.systemFontOfSize(12)
         self.addSubview(recommendLbl)
@@ -68,9 +102,7 @@ class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateF
             make.center.equalTo(self)
             make.height.width.equalTo(40)
         }
-
     }
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -82,7 +114,24 @@ class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateF
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        return UICollectionViewCell()
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("history", forIndexPath: indexPath) as! VideoItemCell
+        cell.itemView.setDataFromDataBase(viewData[indexPath.row])
+        
+        return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let superWidth = collectionView.frame.width
+        let width = (superWidth - 50) / 6
+        return CGSize(width: width, height: width * 7/5)
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let controller = PlayerViewController()
+        controller.videoHistoryItem = viewData[indexPath.row]
+        controller.flag = .History
+        self.appearController?.presentViewController(controller, animated: true, completion: nil)
     }
     
     func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
@@ -122,22 +171,67 @@ class MyHistoryView: UIView,UICollectionViewDataSource,UICollectionViewDelegateF
         extras.append(ExtraData(name: "videoId", value: videoId))
         let controller = VideoDetailViewController()
         controller.extras = extras
-        appearController.presentViewController(controller, animated: true, completion: nil)
+        appearController!.presentViewController(controller, animated: true, completion: nil)
     }
     
-    func setViewData(viewData:[VideoBriefItem]){
+    func setViewData(viewData:[VideoHistoryItem]){
         self.viewData = viewData
         loadingView.stopAnimat()
         collentionView.hidden = false
-        recommendLbl.hidden = true
-        recommendLbl.hidden = true
+        hiddenOptionBar()
+        collentionView.reloadData()
     }
     
     func setRecommendData(data: [VideoBriefItem]){
         self.recommendData = data
-        recommendLbl.hidden = false
-        mOptionBar.hidden = false
+        loadingView.stopAnimat()
+        collentionView.hidden = false
+        showOptionBar()
         mOptionBar.reloadData()
     }
     
+    func showOptionBar(){
+        recommendLbl.hidden = false
+        mOptionBar.hidden = false
+    }
+    
+    func hiddenOptionBar(){
+        recommendLbl.hidden = true
+        mOptionBar.hidden = true
+    }
+    
+    func clearAll() {
+        if viewData.isEmpty{
+            return
+        }
+        for item in viewData {
+            VideoDBHelper.shareInstance().deleteHistory(item)
+        }
+        viewData.removeAll()
+        collentionView.reloadData()
+        showOptionBar()
+        popup.dismiss()
+        if delegate != nil {
+            loadingView.startAnimat()
+            collentionView.hidden = true
+            delegate.getRecommendData()
+        }
+    }
+    
+    func clearSelect() {
+        if longSelectIndex == nil{
+            return
+        }
+        let cell = collentionView.cellForItemAtIndexPath(longSelectIndex!) as! VideoItemCell
+        let item = cell.itemView.getDataFromDatabase()
+        VideoDBHelper.shareInstance().deleteHistory(item)
+        viewData = VideoDBHelper.shareInstance().getHistoryList()
+        collentionView.reloadData()
+        popup.dismiss()
+        if viewData.isEmpty && delegate != nil{
+            loadingView.startAnimat()
+            collentionView.hidden = true
+            delegate.getRecommendData()
+        }
+    }
 }

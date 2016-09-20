@@ -30,6 +30,10 @@ class ItemView: UIView {
         setConstraints()
     }
     
+    func longPress(gesture:UILongPressGestureRecognizer){
+        
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -136,8 +140,7 @@ class ItemView: UIView {
     func setDataFromDataBase(data: VideoHistoryItem){
         self.dataByDatabase = data
         poster.sd_setImageWithURL(NSURL(string: data.poster), placeholderImage: UIImage(named: "v2_image_default_bg.9"))
-       // durationLbl.text = data.duration
-        setDurationText(data.duration)
+        durationLbl.text =  "已观看" + TimeUtils.formatTime(data.playedDuration)
         nameLbl.text = data.videoName
         if data.score == nil || data.score.isEmpty {
             averageLbl.hidden = true
@@ -152,7 +155,6 @@ class ItemView: UIView {
                 flagImg.image = UIImage(named: "v2_video_flag_hd")
             }
         }
-
     }
     
     func setFlagHidden(hidden: Bool){
@@ -191,6 +193,10 @@ class ItemView: UIView {
             durationLbl.text = text
         }
         
+    }
+    
+    func getDataFromDatabase() -> VideoHistoryItem{
+        return self.dataByDatabase
     }
     
     

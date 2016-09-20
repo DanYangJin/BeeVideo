@@ -8,3 +8,23 @@ BeeVideo.xcworkspace/xcuserdata/jinzhang.xcuserdatad/UserInterfaceState.xcuserst
 Pods/Pods.xcodeproj/xcuserdata/jinzhang.xcuserdatad/xcschemes/xcschememanagement.plist
 
 *.xcbkptlist
+
+BeeVideo/Resources/.DS_Store
+
+BeeVideo/Classes/UIView/.DS_Store
+
+BeeVideo/Classes/Model/.DS_Store
+
+BeeVideo/Classes/Controllers/.DS_Store
+
+BeeVideo/Resources/Assets.xcassets/.DS_Store
+
+BeeVideo/Vendor/.DS_Store
+
+BeeVideo/Vendor/SqliteDB/.DS_Store
+
+BeeVideo/Classes/.DS_Store
+
+BeeVideo/.DS_Store
+
+.DS_Store

@@ -28,6 +28,7 @@ public enum PanDirection {
 }
 
 public enum Flag{
+    case UnKnow
     case Detail
     case History
 }
@@ -37,9 +38,10 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     enum RequestId {
         case GET_VIDEO_SOURCE
         case GET_VIDEO_PALY_URL
+        case GET_VIDEO_DETAIL
     }
     
-    var flag:Flag!
+    var flag:Flag = .Detail
     var videoDetailInfo:VideoDetailInfo!
     var videoHistoryItem:VideoHistoryItem!
     var subjectId = ""
@@ -66,7 +68,11 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     private var lastSlideValue:CGFloat = 0
     private var lastPlayerPosition:Int = 0
     
-    private var reachability : Reachability!
+    //xml临时变量
+    private var dramas:[Drama]!
+    private var drama:Drama!
+    
+    private var reachability : Reachability?
     
     var timer:NSTimer!
     
@@ -84,7 +90,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.addNotifications()
         self.configVolume()
         
-        self.videoPlayerView.setDataSource(Constants.URLS[index])
+        self.videoPlayerView.setDataSource(Constants.URLS[index],startTime: 60)
         self.videoPlayerView.playbackLoops = true
         //       // controlView.videoNameLabel.text = videoDetailInfo.currentDrama?.title
         //        getVideoPlayUrl()
@@ -94,6 +100,8 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
                 preLoadingView.hidden = true
                 getSourceInfo()
             }
+        }else if flag == Flag.History{
+            getVideoDetail(videoHistoryItem.videoId)
         }
     }
     
@@ -115,9 +123,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         
         self.makeSubViewsConstraints()
         
-        self.setTimering(true)
-        //self.videoPlayerView.play()
-        //        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(self.playerTimeAction), userInfo: nil, repeats: true)
+        //self.setTimering(true)
         
     }
     func makeSubViewsConstraints(){
@@ -155,6 +161,7 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             self.controlView.frame   = self.view.frame
             self.controlView.animationShow()
             self.controlView.changePlayButtonBg(false)
+            controlView.hideControlView()
         }
         return self.controlView
     }
@@ -180,9 +187,19 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     func initPreLoadingView() -> PreLoadingView{
         if preLoadingView == nil{
             preLoadingView = PreLoadingView()
-            preLoadingView.dramaLbl.text = "即将播放：第\(3)集"
-            preLoadingView.videoNameLbl.text = videoDetailInfo.name
-            preLoadingView.sourceNameLbl.text = videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo()?.source?.name
+            switch self.flag {
+            case .Detail:
+                preLoadingView.dramaLbl.text = "即将播放：第\(3)集"
+                preLoadingView.videoNameLbl.text = videoDetailInfo.name
+                preLoadingView.sourceNameLbl.text = videoDetailInfo.currentDrama?.getCurrentUsedSourceInfo()?.source?.name
+            case .History:
+                preLoadingView.dramaLbl.text = "即将播放：第\(videoHistoryItem.playedDrama)集"
+                preLoadingView.videoNameLbl.text = videoHistoryItem.videoName
+                preLoadingView.sourceNameLbl.text = videoHistoryItem.sourceName
+            case .UnKnow:
+                true
+            }
+            
         }
         return preLoadingView
     }
@@ -231,9 +248,30 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         do{
             try reachability = Reachability.reachabilityForInternetConnection()
         }catch{
-            
+            print("reachability start fail")
+            return
+        }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.reachabilityChanged(_:)), name: ReachabilityChangedNotification, object: nil)
+        do{
+            try reachability?.startNotifier()
+        }catch{
+            print("notifier can not start")
         }
         
+    }
+    
+    //网络改变
+    func reachabilityChanged(nate:NSNotification){
+        let reachability = nate.object as! Reachability
+        if reachability.isReachable() {
+            if reachability.isReachableViaWiFi(){
+                print("wifi connected")
+            }else{
+                print("mobile connnected")
+            }
+        }else{
+            print("net work disconnected")
+        }
     }
     
     
@@ -306,7 +344,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
             case .PanDirectionHorizontalMoved:
                 self.horizontalMoved(veloctyPoint.x) // 水平移动的方法只要x方向的值
                 break
-                
             case .PanDirectionVerticalMoved:
                 self.verticalMoved(veloctyPoint.y) // 垂直移动方法只要y方向的值
                 break
@@ -357,7 +394,6 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
     
     //水平移动
     func horizontalMoved(value:CGFloat){
-        
         // 快进快退的方法
         var style:String = ""
         
@@ -507,18 +543,36 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.dismissViewControllerAnimated(true,completion: nil)
     }
     
-    func removeNotifications(){
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
     override func viewDidDisappear(animated: Bool) {
-        self.removeNotifications()
-        // self.videoPlayerView.resetPlayer()
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.savePlayedDuration()
+        self.saveHistory()
+        NSNotificationCenter.defaultCenter().postNotificationName("HistroyChangedNotify", object: nil)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    //获取视频详情
+    func getVideoDetail(videoId:String){
+        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_VIDEO_DETAIL_INFO_V2)!, parameters: ["videoId": videoId]).responseData { (response) in
+            self.requestId = RequestId.GET_VIDEO_DETAIL
+            switch response.result {
+            case .Failure( _):
+                
+                break
+            case .Success(let data):
+                let parse = NSXMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
+                break
+                
+            }
+        }
+
+    }
+    
     
     //获取源
     func getSourceInfo(){
@@ -601,6 +655,15 @@ class PlayerViewController: UIViewController, AVPlayerDelegate, UIGestureRecogni
         self.videoPlayerView.setDataSource(Constants.URLS[index])
         
     }
+    
+    func saveHistory(){
+        VideoDBHelper.shareInstance().saveOrUpdate(videoDetailInfo)
+    }
+    
+    func savePlayedDuration(){
+        videoDetailInfo.dramaPlayedDuration = videoPlayerView.getCurrentTime()
+    }
+    
 }
 
 extension PlayerViewController{
@@ -617,10 +680,15 @@ extension PlayerViewController{
     
     //准备完成
     func onPreparedCompetion(playView:AVPlayerView) {
+        videoPlayerView.seekToTime(60)
         self.videoStatus = PlayerStatus.PLAY
         self.videoPlayerView.play()
         self.netLoadingView.stopAnimat()
         self.preLoadingView.hidden = true
+        controlView.changePlayButtonBg(false)
+        if videoHistoryItem != nil{
+            videoPlayerView.seekToTime(videoHistoryItem.playedDuration)
+        }
     }
     
     //播放错误
@@ -635,7 +703,6 @@ extension PlayerViewController{
         guard controlView != nil else{
             return
         }
-        
         self.controlView.progressView.setProgress(bufferingValue, animated: true)
     }
     
@@ -692,6 +759,20 @@ extension PlayerViewController : NSXMLParserDelegate{
                 source = Source()
                 currentDepth += 1
             }
+        }else if requestId == RequestId.GET_VIDEO_DETAIL{
+            if currentElement == "video" {
+                videoDetailInfo = VideoDetailInfo()
+                currentDepth += 1
+            }else if currentElement == "videoMergeInfoList"{
+                dramas = [Drama]()
+                currentDepth += 1
+            }else if currentElement == "videoMergeInfo"{
+                drama = Drama()
+                currentDepth += 1
+            }else if currentElement == "response"{
+                currentDepth += 1
+            }
+
         }
     }
     
@@ -724,6 +805,57 @@ extension PlayerViewController : NSXMLParserDelegate{
             }else if currentElement == "otherSource"{
                 source.otherSource = content
             }
+        }else if requestId == RequestId.GET_VIDEO_DETAIL{
+            if currentElement == "id" {
+                if currentDepth == 3 {
+                    videoDetailInfo.id = content
+                }else if currentDepth == 5{
+                    drama.id = content
+                }
+            }else if currentElement == "doubanId"{
+                videoDetailInfo.doubanId = content
+            }else if currentElement == "doubanAverage"{
+                videoDetailInfo.doubanAverage = content
+            }else if currentElement == "apikey"{
+                videoDetailInfo.doubanKey = content
+            }else if currentElement == "name"{
+                if currentDepth == 3 {
+                    videoDetailInfo.name = content
+                }else if currentDepth == 5{
+                    drama.title = content
+                }
+            }else if currentElement == "channel"{
+                videoDetailInfo.channel = content
+            }else if currentElement == "channelId"{
+                videoDetailInfo.channelId = content
+            }else if currentElement == "area"{
+                videoDetailInfo.area = content
+            }else if currentElement == "duration"{
+                videoDetailInfo.duration = content
+            }else if currentElement == "cate"{
+                videoDetailInfo.category = content
+            }else if currentElement == "screenTime"{
+                videoDetailInfo.publishTime = content
+            }else if currentElement == "director"{
+                videoDetailInfo.directorString = content
+            }else if currentElement == "isEpisode"{
+                videoDetailInfo.chooseDramaFlag = Int(content)!
+            }else if currentElement == "episodeOrder"{
+                videoDetailInfo.dramaOrderFlag = Int(content)!
+            }else if currentElement == "performer"{
+                videoDetailInfo.actorString = content
+            }else if currentElement == "annotation"{
+                videoDetailInfo.desc = content
+            }else if currentElement == "smallImg"{
+                videoDetailInfo.poster = content
+            }else if currentElement == "most"{
+                if currentDepth == 3 {
+                    videoDetailInfo.resolutionType = Int(content)
+                }
+            }else if currentElement == "totalInfo"{
+                videoDetailInfo.count = Int(content)
+            }
+
         }
     }
     
@@ -738,10 +870,24 @@ extension PlayerViewController : NSXMLParserDelegate{
                 videoSource.source = source
                 source = nil
             }
+        }else if requestId == RequestId.GET_VIDEO_DETAIL{
+            if elementName == "video" {
+                currentDepth -= 1
+            }else if elementName == "response"{
+                currentDepth -= 1
+            }else if elementName == "videoMergeInfo"{
+                currentDepth -= 1
+                dramas.append(drama)
+                drama = nil
+            }else if elementName == "videoMergeInfoList"{
+                currentDepth -= 1
+                videoDetailInfo.dramas = dramas
+            }
         }
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
+        currentDepth = 0
         if requestId == RequestId.GET_VIDEO_SOURCE {
             videoDetailInfo.currentDrama?.sources = sourceList
             if videoDetailInfo.currentDrama!.hasSource() {
@@ -756,6 +902,10 @@ extension PlayerViewController : NSXMLParserDelegate{
             let currentReadableDrama = VideoInfoUtils.getDramaReadablePosition(videoDetailInfo.dramaOrderFlag, dramaTotalSize: videoDetailInfo.dramas.count, index: videoDetailInfo.lastPlayDramaPosition)
             preLoadingView.setDrama(currentReadableDrama)
             preLoadingView.hidden = false
+        }else if requestId == RequestId.GET_VIDEO_DETAIL{
+            videoDetailInfo.dramaPlayedDuration = videoHistoryItem.playedDuration
+            videoDetailInfo.setLastPlayDramaPosition(videoHistoryItem.playedDrama)
+//            videoDetailInfo.currentDrama = videoDetailInfo.dramas[videoHistoryItem.playedDrama]
         }
     }
     

@@ -14,7 +14,7 @@ class VideoDetailInfo{
     var channel : String!//频道
     var channelId : String!
     var area : String!//地区
-    var duration : String!
+    var duration : String = ""
     var category : String!//视频分类
     var publishTime : String!//上映时间
     var directorString : String = "" //导演

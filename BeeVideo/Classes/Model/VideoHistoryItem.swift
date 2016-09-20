@@ -17,8 +17,8 @@ class VideoHistoryItem: NSObject {
     var sourceId:String!
     var sourceName:String!
     var resolutionType:Int!
-    var playedDrama:Int!
-    var playedDuration:Int!
+    var playedDrama:Int!    //播放的集
+    var playedDuration:Int! //播放时间
     var duration:String!
     var poster:String!
     var isFavorited:Bool!

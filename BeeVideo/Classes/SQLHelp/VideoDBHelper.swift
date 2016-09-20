@@ -114,8 +114,6 @@ class VideoDBHelper: NSObject {
         
         if db.open(){
             let result = db.executeQuery(sql, withArgumentsInArray: [videoDetailInfo.id])
-            //print("------------------------------>")
-           // print(result.columnNameForIndex(5))
             let flag = result.next()
             db.close()
             return flag
@@ -155,6 +153,8 @@ class VideoDBHelper: NSObject {
     }
     
     private func updateHistory(videoDetailInfo:VideoDetailInfo){
+        
+        print("update")
         
         let db = getDB()
         
@@ -306,5 +306,7 @@ class VideoDBHelper: NSObject {
         }
         return nil
     }
+    
+    
     
 }

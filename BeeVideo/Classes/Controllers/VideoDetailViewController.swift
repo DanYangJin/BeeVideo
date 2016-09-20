@@ -288,7 +288,6 @@ class VideoDetailViewController: BaseViewController,UITableViewDelegate,UITableV
                 parse.delegate = self
                 parse.parse()
                 break
-                
             }
         }
     }

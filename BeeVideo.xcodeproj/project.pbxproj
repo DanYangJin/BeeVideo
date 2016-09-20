@@ -152,6 +152,7 @@
 		B3F4200A1D1CE02F00895E51 /* VideoDetailBtnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F420091D1CE02F00895E51 /* VideoDetailBtnCell.swift */; };
 		B3F513BB1D228D6800C3A842 /* PopupChooseDramaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F513BA1D228D6800C3A842 /* PopupChooseDramaController.swift */; };
 		B3F6014E1D61B6FC00F576B5 /* T9KeyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6014D1D61B6FC00F576B5 /* T9KeyCollectionViewCell.swift */; };
+		B3F65F841D82B85000BB6E2C /* PopupClearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F65F831D82B85000BB6E2C /* PopupClearViewController.swift */; };
 		B3F6C1301D011A72002089E3 /* VodVideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C12F1D011A72002089E3 /* VodVideoTableViewCell.swift */; };
 		B3F6C1321D012DEB002089E3 /* VodVideoTableIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1311D012DEB002089E3 /* VodVideoTableIconCell.swift */; };
 		B3F6C1341D013247002089E3 /* AppRecommendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3F6C1331D013247002089E3 /* AppRecommendViewController.swift */; };
@@ -387,6 +388,7 @@
 		B3F420091D1CE02F00895E51 /* VideoDetailBtnCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoDetailBtnCell.swift; path = BeeVideo/Classes/TableCell/VideoDetailBtnCell.swift; sourceTree = SOURCE_ROOT; };
 		B3F513BA1D228D6800C3A842 /* PopupChooseDramaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupChooseDramaController.swift; sourceTree = "<group>"; };
 		B3F6014D1D61B6FC00F576B5 /* T9KeyCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = T9KeyCollectionViewCell.swift; path = TableCell/T9KeyCollectionViewCell.swift; sourceTree = "<group>"; };
+		B3F65F831D82B85000BB6E2C /* PopupClearViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupClearViewController.swift; sourceTree = "<group>"; };
 		B3F6C12F1D011A72002089E3 /* VodVideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VodVideoTableViewCell.swift; path = TableCell/VodVideoTableViewCell.swift; sourceTree = "<group>"; };
 		B3F6C1311D012DEB002089E3 /* VodVideoTableIconCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VodVideoTableIconCell.swift; path = TableCell/VodVideoTableIconCell.swift; sourceTree = "<group>"; };
 		B3F6C1331D013247002089E3 /* AppRecommendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppRecommendViewController.swift; sourceTree = "<group>"; };
@@ -618,6 +620,7 @@
 				B3ED81561D18D8AC00CF21EF /* AccountPoinRecordViewController.swift */,
 				B3F513BA1D228D6800C3A842 /* PopupChooseDramaController.swift */,
 				B3EF1F681D34DEF0006E5F6A /* VodFiltViewController.swift */,
+				B3F65F831D82B85000BB6E2C /* PopupClearViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1087,6 +1090,7 @@
 				2DDD4B941CA4D00800CD7F45 /* AppDelegate.swift in Sources */,
 				2D03D1051CA3EDEF00ED8B7E /* BaseRequest.swift in Sources */,
 				2D9163E01CC4DA5A0045163A /* UIImageView+WebCache.m in Sources */,
+				B3F65F841D82B85000BB6E2C /* PopupClearViewController.swift in Sources */,
 				B384FEA81CF82D3A0012E8FA /* BaseHorizontalViewController.swift in Sources */,
 				2D9163D81CC4DA5A0045163A /* SDWebImageDownloaderOperation.m in Sources */,
 				B3EE83431CFE736100A306FE /* RestVideoInfo.swift in Sources */,

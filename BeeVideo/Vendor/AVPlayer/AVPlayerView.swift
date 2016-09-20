@@ -217,7 +217,7 @@ public class AVPlayerView: UIView {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(applicationWillEnterForeground(_:)), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
     }
     
-    func setDataSource(videoUrl:String){
+    func setDataSource(videoUrl:String, startTime: Int = 0){
 
         if self.playbackState == .Playing{
             self.pause()
@@ -227,7 +227,7 @@ public class AVPlayerView: UIView {
         
         self.setupPlayItem(nil)
         let asset = AVURLAsset(URL: NSURL(string:videoUrl)!, options: .None)
-        self.setupAsset(asset)
+        self.setupAsset(asset,startTime: startTime)
         
     }
     
@@ -257,7 +257,7 @@ public class AVPlayerView: UIView {
     }
     
     
-    private func setupAsset(asset: AVAsset){
+    private func setupAsset(asset: AVAsset, startTime:Int = 0){
         if self.playbackState == .Playing{
             self.pause()
         }
@@ -288,14 +288,14 @@ public class AVPlayerView: UIView {
                 }
                 
                 let playItem = AVPlayerItem(asset: self.asset)
-                self.setupPlayItem(playItem)
+                self.setupPlayItem(playItem,startTime: startTime)
             })
         }
         
     }
     
     
-    private func setupPlayItem(playerItem: AVPlayerItem?){
+    private func setupPlayItem(playerItem: AVPlayerItem?,startTime:Int = 0){
         if self.playerItem != nil{
             self.playerItem?.removeObserver(self, forKeyPath: PlayerEmptyBufferKey, context: &PlayerItemObserverContext)
             self.playerItem?.removeObserver(self, forKeyPath: PlayerKeepUpKey, context: &PlayerItemObserverContext)
@@ -324,7 +324,7 @@ public class AVPlayerView: UIView {
         }else{
             self.player.actionAtItemEnd = .Pause
         }
-        
+       // self.seekToTime(startTime)
     }
     
     //播放进度
@@ -367,15 +367,14 @@ public class AVPlayerView: UIView {
      * 快进到某一时间
      */
     func seekToTime(dragedSeconds:Int){
-        if self.getItemStatus() != .ReadyToPlay {
-            return
-        }
+
         let dragedCMTime:CMTime  = CMTimeMake(Int64(dragedSeconds), 1);
         if let playerItem = self.playerItem {
+            self.bufferingState = .Delayed
             playerItem.seekToTime(dragedCMTime, completionHandler: { (finish) in
                 print(finish)
                 if finish{
-                    self.bufferingState = .Ready
+                    //self.bufferingState = .Ready
                 }else{
                     self.playFromCurrentTime()
                 }
@@ -490,7 +489,6 @@ extension AVPlayerView{
                 break
             case AVPlayerStatus.Failed.rawValue:
                 self.playbackState = PlaybackState.Failed
-                print("failed......")
             default:
                 true
             }
@@ -517,7 +515,6 @@ extension AVPlayerView{
             guard let item = self.playerItem else {
                 return
             }
-            print("range      \(playbackState)")
             let timerange = (change?[NSKeyValueChangeNewKey] as! NSArray)[0].CMTimeRangeValue
             let bufferedTime = CMTimeGetSeconds(CMTimeAdd(timerange.start, timerange.duration))
             let currentTime = CMTimeGetSeconds(item.currentTime())
@@ -527,7 +524,6 @@ extension AVPlayerView{
                     self.bufferingState = .Ready
                     self.playFromCurrentTime()
                 }
-                
             }
             
             guard delegate != nil else{
@@ -545,9 +541,7 @@ extension AVPlayerView{
             super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
             
         }
-        
     }
-    
 }
 
 

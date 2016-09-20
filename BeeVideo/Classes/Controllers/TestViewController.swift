@@ -33,14 +33,8 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
         super.viewDidLoad()
         
         initUI()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.chang), name: ReachabilityChangedNotification, object: nil)
         
     }
-    
-    func chang(){
-        print("network had changed")
-    }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
