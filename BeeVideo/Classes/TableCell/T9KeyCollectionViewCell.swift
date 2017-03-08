@@ -16,22 +16,22 @@ class T9KeyCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         titleLbl = UILabel()
-        titleLbl.textAlignment = .Center
-        titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.font = UIFont.systemFontOfSize(12)
+        titleLbl.textAlignment = .center
+        titleLbl.textColor = UIColor.white
+        titleLbl.font = UIFont.systemFont(ofSize: 12)
         self.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.centerY.equalTo(self).offset(-5)
         }
         
         subTitleLbl = UILabel()
-        subTitleLbl.textColor = UIColor.whiteColor()
-        subTitleLbl.textAlignment = .Center
-        subTitleLbl.font = UIFont.systemFontOfSize(10)
+        subTitleLbl.textColor = UIColor.white
+        subTitleLbl.textAlignment = .center
+        subTitleLbl.font = UIFont.systemFont(ofSize: 10)
         self.addSubview(subTitleLbl)
-        subTitleLbl.snp_makeConstraints { (make) in
-            make.top.equalTo(titleLbl.snp_bottom)
+        subTitleLbl.snp.makeConstraints { (make) in
+            make.top.equalTo(titleLbl.snp.bottom)
             make.centerX.equalTo(self)
         }
         

@@ -9,7 +9,7 @@
 import SnapKit
 import Alamofire
 
-class LauncherViewController: BaseViewController,NSXMLParserDelegate{
+class LauncherViewController: BaseViewController,XMLParserDelegate{
     //变量
     var homeData:HomeData!
     var currentName:String!
@@ -33,38 +33,39 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
 
         let bagroundImage:UIImageView = UIImageView()
         bagroundImage.image = UIImage(named: "home_start_bg")
-        bagroundImage.sd_setImageWithURL(NSURL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"), placeholderImage: UIImage(named: "home_start_bg"))
+        bagroundImage.sd_setImage(with: URL(string: "http://img.beevideo.tv/filestore/1354/baanvuf78.jpg"), placeholderImage: UIImage(named: "home_start_bg"))
         self.view.addSubview(bagroundImage)
-        bagroundImage.snp_makeConstraints{ (make) -> Void in
+        bagroundImage.snp.makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
             make.height.equalTo(self.view.frame.height)
         }
         
         
-        Alamofire.request(.GET, "http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2", parameters: nil, encoding: .URL, headers: ["X-Kds-Ver" : "2.10.07"]).response { request, response, data, error in
-            if error != nil {
-                self.view.makeToast("网络不给力，请稍后再试")
-                return
+        Alamofire.request("http://www.beevideo.tv/api/hometv2.0/listBlockByVersion.action?borqsPassport=3p3kgHRqy244-VwtggWOVCAQEkAsn3SyyqGnCWqhScQNC_vyA9wYQ18Vvq7XJl8U&sdkLevel=19&version=2", method: .get, parameters: nil, encoding: URLEncoding.default, headers:  ["X-Kds-Ver" : "2.10.07"]).responseData { (response) in
+            switch response.result{
+            case .failure:
+                self.view.makeToast("网络连接失败，请稍后再试")
+            case .success(let data):
+                self.parseXml(data)
             }
-            self.parseXml(data!)
         }
         
     }
     
     
-    func parseXml(data:NSData){
-        let parse = NSXMLParser(data: data)
+    func parseXml(_ data:Data){
+        let parse = XMLParser(data: data)
         parse.delegate = self
         parse.parse()
     }
     
     //开始解析
-    func parserDidStartDocument(parser: NSXMLParser) {
+    func parserDidStartDocument(_ parser: XMLParser) {
         //print("parserDidStartDocument")
     }
     
     // 监听解析节点的属性
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]){
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]){
         self.currentName = elementName
         if currentName == "result" {
             homeData = HomeData()
@@ -101,8 +102,8 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
     }
     
     // 监听解析节点的内容
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content:String = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content:String = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
         if currentName == nil{
             return
@@ -177,7 +178,7 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         
         if elementName == "block" {
             space.items.append(homeItem)
@@ -212,10 +213,10 @@ class LauncherViewController: BaseViewController,NSXMLParserDelegate{
         self.currentName = nil
     }
     //解析结束
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         let viewController = TestViewController()
         viewController.homeData = self.homeData
-        self.presentViewController(viewController,animated: true,completion: nil)
+        self.present(viewController,animated: true,completion: nil)
     }
 
 }

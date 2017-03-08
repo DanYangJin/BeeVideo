@@ -37,12 +37,12 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         contentView.delegate = self
         contentView.delaysContentTouches = false
         contentView.tag = 20
-        contentView.contentSize = CGSizeMake(self.view.frame.width + CGFloat(leftWidth), self.view.frame.height)
+        contentView.contentSize = CGSize(width: self.view.frame.width + CGFloat(leftWidth), height: self.view.frame.height)
         self.view.addSubview(contentView)
         
         leftView = UIView()
         contentView.addSubview(leftView)
-        leftView.snp_makeConstraints { (make) in
+        leftView.snp.makeConstraints { (make) in
             make.left.equalTo(contentView)
             make.top.equalTo(contentView)
             make.height.equalTo(contentView)
@@ -50,10 +50,10 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         }
         
         let leftViewBckground = UIImageView()
-        leftViewBckground.contentMode = .Redraw
-        leftViewBckground.image = UIImage(named: "v2_search_keyboard_background")?.resizableImageWithCapInsets(UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .Stretch)
+        leftViewBckground.contentMode = .redraw
+        leftViewBckground.image = UIImage(named: "v2_search_keyboard_background")?.resizableImage(withCapInsets: UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .stretch)
         leftView.addSubview(leftViewBckground)
-        leftViewBckground.snp_makeConstraints { (make) in
+        leftViewBckground.snp.makeConstraints { (make) in
             make.left.right.equalTo(leftView)
             make.top.bottom.equalTo(leftView)
         }
@@ -61,52 +61,52 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         
         strinkView = UIImageView()
         strinkView = UIImageView()
-        strinkView.contentMode = .ScaleAspectFit
+        strinkView.contentMode = .scaleAspectFit
         strinkView.image = UIImage(named: "v2_arrow_shrink_right")
         contentView.addSubview(strinkView)
-        strinkView.snp_makeConstraints { (make) in
+        strinkView.snp.makeConstraints { (make) in
             make.centerY.equalTo(contentView)
             make.height.equalTo(20)
-            make.left.equalTo(leftView.snp_right)
+            make.left.equalTo(leftView.snp.right)
             make.width.equalTo(20)
         }
             
         backView = UIButton()
-        backView.setImage(UIImage(named: "v2_title_arrow_default"), forState: .Normal)
-        backView.setImage(UIImage(named: "v2_title_arrow_selected"), forState: .Highlighted)
-        backView.addTarget(self, action: #selector(self.dismissViewController), forControlEvents: .TouchUpInside)
+        backView.setImage(UIImage(named: "v2_title_arrow_default"), for: UIControlState())
+        backView.setImage(UIImage(named: "v2_title_arrow_selected"), for: .highlighted)
+        backView.addTarget(self, action: #selector(self.dismissViewController), for: .touchUpInside)
         contentView.addSubview(backView)
-        backView.snp_makeConstraints { (make) in
-            make.left.equalTo(strinkView.snp_right)
-            make.topMargin.equalTo(25)
+        backView.snp.makeConstraints { (make) in
+            make.left.equalTo(strinkView.snp.right)
+            make.top.equalTo(25)
             make.height.width.equalTo(30)
         }
         
         titleLbl = UILabel()
-        titleLbl.font = UIFont.systemFontOfSize(16)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.font = UIFont.systemFont(ofSize: 16)
+        titleLbl.textColor = UIColor.white
         contentView.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(backView.snp_right)
+        titleLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(backView.snp.right)
             make.centerY.equalTo(backView)
         }
         
         subTitleLbl = UILabel()
-        subTitleLbl.font = UIFont.systemFontOfSize(12)
-        subTitleLbl.textColor = UIColor.whiteColor()
+        subTitleLbl.font = UIFont.systemFont(ofSize: 12)
+        subTitleLbl.textColor = UIColor.white
         contentView.addSubview(subTitleLbl)
-        subTitleLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(titleLbl.snp_right).offset(5)
+        subTitleLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(titleLbl.snp.right).offset(5)
             make.centerY.equalTo(titleLbl)
         }
         
     }
     
-    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if scrollView.tag == 20 {
             if decelerate {
                 //关闭惯性滑动
-                dispatch_async(dispatch_get_main_queue(), {[weak self] in
+                DispatchQueue.main.async(execute: {[weak self] in
                     guard let strongSelf = self else{
                         return
                     }
@@ -129,12 +129,12 @@ class BaseHorizontalViewController: BaseViewController,UIScrollViewDelegate {
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.tag == 20 {
             if strinkView != nil {
                 let offsetX = scrollView.contentOffset.x
                 let rotation = offsetX / CGFloat(leftWidth)
-                strinkView.transform = CGAffineTransformMakeRotation(-rotation * CGFloat(M_PI))
+                strinkView.transform = CGAffineTransform(rotationAngle: -rotation * CGFloat(M_PI))
             }
         }
     }

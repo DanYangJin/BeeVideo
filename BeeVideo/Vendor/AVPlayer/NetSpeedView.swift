@@ -9,19 +9,19 @@
 
 class NetSpeedView: UIView {
 
-    private var backgroundView:UIView!
-    private var loadingImg:UIImageView!
-    private var loadingLbl:UILabel!
+    fileprivate var backgroundView:UIView!
+    fileprivate var loadingImg:UIImageView!
+    fileprivate var loadingLbl:UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundView = UIImageView(image: UIImage(named: "v2_video_play_loading_pb_bg"))
         self.addSubview(backgroundView)
-        backgroundView.snp_makeConstraints { (make) in
+        backgroundView.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.right.equalTo(self)
             make.height.equalTo(self)
-            make.width.equalTo(self.snp_width)
+            make.width.equalTo(self.snp.width)
         }
         
         let picPreName = "video_loading"
@@ -36,19 +36,19 @@ class NetSpeedView: UIView {
         loadingImg.animationDuration = 0.7
         loadingImg.startAnimating()
         self.addSubview(loadingImg)
-        loadingImg.snp_makeConstraints { (make) in
+        loadingImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.right.equalTo(self)
-            make.width.equalTo(self.snp_height)
+            make.width.equalTo(self.snp.height)
         }
         
         loadingLbl = UILabel()
-        loadingLbl.textColor = UIColor.whiteColor()
-        loadingLbl.font = UIFont.systemFontOfSize(12)
+        loadingLbl.textColor = UIColor.white
+        loadingLbl.font = UIFont.systemFont(ofSize: 12)
         loadingLbl.text = "加载中..."
         self.addSubview(loadingLbl)
-        loadingLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(self.snp_right).dividedBy(3)
+        loadingLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(self.snp.right).dividedBy(3)
             make.centerY.equalTo(self)
         }
         
@@ -59,15 +59,15 @@ class NetSpeedView: UIView {
     }
     
     func startAnimate(){
-        self.hidden = false
-        if !loadingImg.isAnimating() {
+        self.isHidden = false
+        if !loadingImg.isAnimating {
             loadingImg.startAnimating()
         }
     }
     
     func stopAnimat(){
-        self.hidden = true
-        if loadingImg.isAnimating() {
+        self.isHidden = true
+        if loadingImg.isAnimating {
             loadingImg.stopAnimating()
         }
     }

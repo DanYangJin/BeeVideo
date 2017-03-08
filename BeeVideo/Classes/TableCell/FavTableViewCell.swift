@@ -16,11 +16,11 @@ class FavTableViewCell: UITableViewCell {
     }
     
     //设置图片
-    func setImageView(url: String) {
-        favImageView.sd_setImageWithURL(NSURL(string: url))
+    func setImageView(_ url: String) {
+        favImageView.sd_setImage(with: URL(string: url))
     }
     
-    func setLabel(label:String){
+    func setLabel(_ label:String){
         favLabel.text = label
     }
     

@@ -18,6 +18,7 @@ class Constants {
     
     
     static let URLS:[String] = [
+        "http://120.87.4.70/PLTV/88888894/224/3221225507/1.m3u8",
         "http://wvideo.spriteapp.cn/video/2016/0328/56f8ec01d9bfe_wpd.mp4",
         "http://baobab.wdjcdn.com/1456117847747a_x264.mp4",
         "http://baobab.wdjcdn.com/14525705791193.mp4",
@@ -34,5 +35,15 @@ class Constants {
         "http://baobab.wdjcdn.com/1456734464766B(13).mp4",
         "http://baobab.wdjcdn.com/1456653443902B.mp4",
         "http://baobab.wdjcdn.com/1456231710844S(24).mp4"]
+    
+    static let LIVE_URLS:[String] = [
+        "http://rrsm.iptv.gd.cn:30001/PLTV/88888956/224/3221227839/index.m3u8",
+        "http://120.87.4.70/PLTV/88888894/224/3221225507/1.m3u8",
+        "http://live.zscz0768.com/live/ggpd.m3u8",
+        "http://110.249.158.132/channels/hebtv/video_channel_08/m3u8:2000k/live",
+        "http://www.cctv1949.com/TJIPTV/TJ2.m3u8",
+        "http://live.cjyun.org/video/s10008-ls/index.m3u8",
+        "http://223.255.29.9/zhcs/live/cstv16_800k/live.m3u8"
+    ]
     
 }

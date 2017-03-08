@@ -11,14 +11,14 @@
 class VideoDetailBtnCell: ZXOptionBarCell {
 
     var imgBtn:ImageButton!
-    private var viewData:VideoDetailInfoView.Item!
+    fileprivate var viewData:VideoDetailInfoView.Item!
     
     override init(style: ZXOptionBarCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         imgBtn = ImageButton()
         self.addSubview(imgBtn)
-        imgBtn.snp_makeConstraints { (make) in
+        imgBtn.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.right.left.equalTo(self)
         }
@@ -29,7 +29,7 @@ class VideoDetailBtnCell: ZXOptionBarCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setViewData(viewData: VideoDetailInfoView.Item){
+    func setViewData(_ viewData: VideoDetailInfoView.Item){
         self.viewData = viewData
         imgBtn.setTitle(viewData.title)
         imgBtn.setImage(viewData.icon)

@@ -15,16 +15,16 @@ import UIKit
  class CategoryGroupView: UIView,CateGroupBlockClick {
     
     var controller : UIViewController!
-    private var groupItems : Array<CategoryGroupItem>!
+    fileprivate var groupItems : Array<CategoryGroupItem>!
     
-    private var blockView1:CateGroupBlockView!
-    private var blockView2:CateGroupBlockView!
-    private var blockView3:CateGroupBlockView!
-    private var blockView4:CateGroupBlockView!
-    private var blockView5:CateGroupBlockView!
-    private var blockView6:CateGroupBlockView!
-    private var blockView7:CateGroupBlockView!
-    private var blockView8:CateGroupBlockView!
+    fileprivate var blockView1:CateGroupBlockView!
+    fileprivate var blockView2:CateGroupBlockView!
+    fileprivate var blockView3:CateGroupBlockView!
+    fileprivate var blockView4:CateGroupBlockView!
+    fileprivate var blockView5:CateGroupBlockView!
+    fileprivate var blockView6:CateGroupBlockView!
+    fileprivate var blockView7:CateGroupBlockView!
+    fileprivate var blockView8:CateGroupBlockView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,7 +34,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setGroupItems(items: Array<CategoryGroupItem>){
+    func setGroupItems(_ items: Array<CategoryGroupItem>){
         self.groupItems = items
         blockView1 = CateGroupBlockView()
         blockView1.setData(groupItems[0])
@@ -79,67 +79,67 @@ import UIKit
         setConstraints()
     }
     
-    private func setConstraints(){
-        blockView1.snp_makeConstraints { (make) in
+    fileprivate func setConstraints(){
+        blockView1.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.left.equalTo(self)
             make.height.equalTo(self).multipliedBy(0.48)
-            make.width.equalTo(self.snp_height).multipliedBy(0.48)
+            make.width.equalTo(self.snp.height).multipliedBy(0.48)
         }
         
-        blockView2.snp_makeConstraints { (make) in
+        blockView2.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView1)
-            make.left.equalTo(blockView1.snp_right).offset(5)
+            make.left.equalTo(blockView1.snp.right).offset(5)
             make.width.equalTo(blockView1).multipliedBy(1.7)
         }
         
-        blockView3.snp_makeConstraints { (make) in
+        blockView3.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView1)
-            make.left.equalTo(blockView2.snp_right).offset(5)
+            make.left.equalTo(blockView2.snp.right).offset(5)
             make.width.equalTo(blockView1)
         }
         
-        blockView4.snp_makeConstraints { (make) in
+        blockView4.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView1)
-            make.left.equalTo(blockView3.snp_right).offset(5)
+            make.left.equalTo(blockView3.snp.right).offset(5)
             make.width.equalTo(blockView1)
         }
         
-        blockView5.snp_makeConstraints { (make) in
+        blockView5.snp.makeConstraints { (make) in
             make.height.width.equalTo(blockView1)
             make.left.equalTo(blockView1)
             make.bottom.equalTo(self)
         }
         
-        blockView6.snp_makeConstraints { (make) in
+        blockView6.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView5)
             make.left.right.equalTo(blockView2)
         }
         
-        blockView7.snp_makeConstraints { (make) in
+        blockView7.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView5)
             make.left.right.equalTo(blockView3)
         }
         
-        blockView8.snp_makeConstraints { (make) in
+        blockView8.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(blockView5)
             make.left.right.equalTo(blockView4)
         }
     }
     
-    func cateGroupBlockClick(categoryGroupItem: CategoryGroupItem) {
+    func cateGroupBlockClick(_ categoryGroupItem: CategoryGroupItem) {
         let position = categoryGroupItem.position
         if position % 4 == 1 {
             let cateListController = VideoCategoryListController()
             cateListController.position = position
             cateListController.titleName = categoryGroupItem.name
-            controller.presentViewController(cateListController, animated: true, completion: nil)
+            controller.present(cateListController, animated: true, completion: nil)
         }else{
             var extras = [ExtraData]()
             extras.append(ExtraData(name: "", value: categoryGroupItem.id))
             let cateController = VideoCategoryController()
             cateController.extras = extras
-            controller.presentViewController(cateController, animated: true, completion: nil)
+            controller.present(cateController, animated: true, completion: nil)
         }
     }
 

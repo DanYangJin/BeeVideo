@@ -7,19 +7,19 @@
 //
 
 enum BlockViewMode {
-    case Center
-    case Left
-    case Right
+    case center
+    case left
+    case right
 }
 
 
 class BaseBlockView: UIView {
 
-    private var blockImage:CornerImageView!
+    fileprivate var blockImage:CornerImageView!
     var blockName:UILabel!
-    private var clickBackgroudnImg:CornerImageView!
+    fileprivate var clickBackgroudnImg:CornerImageView!
     
-    private var blockViewMode : BlockViewMode = BlockViewMode.Center
+    fileprivate var blockViewMode : BlockViewMode = BlockViewMode.center
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,15 +29,15 @@ class BaseBlockView: UIView {
         addSubview(blockImage)
         
         blockName = UILabel()
-        blockName.textAlignment = NSTextAlignment.Center
-        blockName.textColor = UIColor.whiteColor()
+        blockName.textAlignment = NSTextAlignment.center
+        blockName.textColor = UIColor.white
         blockName.font = UIFont(name: "Helvetica", size: 12.0)
         addSubview(blockName)
         
         clickBackgroudnImg = CornerImageView()
         clickBackgroudnImg.setCorner(6.0)
         clickBackgroudnImg.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
-        clickBackgroudnImg.hidden = true
+        clickBackgroudnImg.isHidden = true
         self.addSubview(clickBackgroudnImg)
         
         setConstriants()
@@ -48,85 +48,87 @@ class BaseBlockView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setBlockViewMode(mode: BlockViewMode){
+    func setBlockViewMode(_ mode: BlockViewMode){
         self.blockViewMode = mode
-        blockImage.snp_removeConstraints()
-        blockName.snp_removeConstraints()
+        blockImage.snp.removeConstraints()
+        blockName.snp.removeConstraints()
         setConstriants()
     }
     
-    func setTitle(text:String){
+    func setTitle(_ text:String){
         blockName.text = text
     }
     
-    func setImage(url:String){
-        blockImage.sd_setImageWithURL(NSURL(string: url), placeholderImage: UIImage(named: "v2_image_default_bg.9")!) { (image, error, _, _) in
+    func setImage(_ url:String){
+
+        blockImage.sd_setImage(with: URL(string:url), placeholderImage: UIImage(named: "v2_image_default_bg.9"), options: SDWebImageOptions.retryFailed) { (_, _, _, _) in
             self.blockImage.setCorner(6)
         }
+        
     }
     
     
-    private func setConstriants(){
-        blockImage.snp_makeConstraints { (make) in
+    fileprivate func setConstriants(){
+        blockImage.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.bottom.equalTo(self)
             make.left.equalTo(self)
             make.right.equalTo(self)
         }
         
-        blockName.snp_makeConstraints { (make) in
+        blockName.snp.makeConstraints { (make) in
             make.bottom.equalTo(self)
             make.height.equalTo(20)
             switch blockViewMode {
-            case .Center:
+            case .center:
                 make.left.equalTo(self)
                 make.right.equalTo(self)
                 break
-            case .Left:
+            case .left:
                 
                 break
                 
-            case .Right:
+            case .right:
                 make.left.equalTo(self)
-                make.right.equalTo(self.snp_right).offset(-20)
-                blockName.textAlignment = .Right
+                make.right.equalTo(self.snp.right).offset(-20)
+                blockName.textAlignment = .right
                 break
                 
             }
         }
         
-        clickBackgroudnImg.snp_makeConstraints { (make) in
+        clickBackgroudnImg.snp.makeConstraints { (make) in
             make.left.right.equalTo(blockImage)
             make.top.bottom.equalTo(blockImage)
         }
     }
 
     
-    func hiddenLbl(hidden: Bool){
-        blockName.hidden = hidden
+    func hiddenLbl(_ hidden: Bool){
+        blockName.isHidden = hidden
     }
 
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        clickBackgroudnImg.hidden = false
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        clickBackgroudnImg.isHidden = false
     }
     
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
-        clickBackgroudnImg.hidden = true
+    override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
+        clickBackgroudnImg.isHidden = true
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let point:CGPoint = (touches.first?.locationInView(self))!
-        let isInside = self.pointInside(point, withEvent: event)
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let point:CGPoint = (touches.first?.location(in: self))!
+        let isInside = self.point(inside: point, with: event)
         if !isInside {
             //clickBackgroudnImg.hidden = true
-            self.touchesCancelled(touches, withEvent: event)
+            self.touchesCancelled(touches, with: event)
         }
 
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        clickBackgroudnImg.hidden = true
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        clickBackgroudnImg.isHidden = true
     }
     
 }

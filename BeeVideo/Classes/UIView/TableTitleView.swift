@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol TableTitleViewDelegate{
-    func selectButtonIndex(index:Int)
+    func selectButtonIndex(_ index:Int)
 }
 
 
@@ -26,12 +26,12 @@ class TableTitleView: UIScrollView {
         
         let button_1 = UIButton()
         button_1.tag = 0
-        button_1.setTitle(mTitles[0], forState: UIControlState.Normal)
-        button_1.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        button_1.addTarget(self, action: #selector(onClickBtn(_:)), forControlEvents: UIControlEvents.TouchDown)
+        button_1.setTitle(mTitles[0], for: UIControlState())
+        button_1.setTitleColor(UIColor.gray, for: UIControlState())
+        button_1.addTarget(self, action: #selector(onClickBtn(_:)), for: UIControlEvents.touchDown)
         mButtons.append(button_1)
         addSubview(button_1)
-        button_1.snp_makeConstraints { (make) in
+        button_1.snp.makeConstraints { (make) in
             make.left.equalTo(self)
             make.top.bottom.equalTo(self)
             make.width.equalTo(self).dividedBy(4)
@@ -39,39 +39,39 @@ class TableTitleView: UIScrollView {
         
         let button_2 = UIButton()
         button_2.tag = 1
-        button_2.setTitle(mTitles[1], forState: UIControlState.Normal)
-        button_2.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        button_2.addTarget(self, action: #selector(onClickBtn(_:)), forControlEvents: UIControlEvents.TouchDown)
+        button_2.setTitle(mTitles[1], for: UIControlState())
+        button_2.setTitleColor(UIColor.gray, for: UIControlState())
+        button_2.addTarget(self, action: #selector(onClickBtn(_:)), for: UIControlEvents.touchDown)
         mButtons.append(button_2)
         addSubview(button_2)
-        button_2.snp_makeConstraints { (make) in
-            make.left.equalTo(button_1.snp_right)
+        button_2.snp.makeConstraints { (make) in
+            make.left.equalTo(button_1.snp.right)
             make.top.bottom.equalTo(self)
             make.width.equalTo(button_1)
         }
         
         let button_3 = UIButton()
         button_3.tag = 2
-        button_3.setTitle(mTitles[2], forState: UIControlState.Normal)
-        button_3.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        button_3.addTarget(self, action: #selector(onClickBtn(_:)), forControlEvents: UIControlEvents.TouchDown)
+        button_3.setTitle(mTitles[2], for: UIControlState())
+        button_3.setTitleColor(UIColor.gray, for: UIControlState())
+        button_3.addTarget(self, action: #selector(onClickBtn(_:)), for: UIControlEvents.touchDown)
         mButtons.append(button_3)
         addSubview(button_3)
-        button_3.snp_makeConstraints { (make) in
-            make.left.equalTo(button_2.snp_right)
+        button_3.snp.makeConstraints { (make) in
+            make.left.equalTo(button_2.snp.right)
             make.top.bottom.equalTo(self)
             make.width.equalTo(button_1)
         }
         
         let button_4 = UIButton()
         button_4.tag = 3
-        button_4.setTitle(mTitles[3], forState: UIControlState.Normal)
-        button_4.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        button_4.addTarget(self, action: #selector(onClickBtn(_:)), forControlEvents: UIControlEvents.TouchDown)
+        button_4.setTitle(mTitles[3], for: UIControlState())
+        button_4.setTitleColor(UIColor.gray, for: UIControlState())
+        button_4.addTarget(self, action: #selector(onClickBtn(_:)), for: UIControlEvents.touchDown)
         mButtons.append(button_4)
         addSubview(button_4)
-        button_4.snp_makeConstraints { (make) in
-            make.left.equalTo(button_3.snp_right)
+        button_4.snp.makeConstraints { (make) in
+            make.left.equalTo(button_3.snp.right)
             make.top.bottom.equalTo(self)
             make.width.equalTo(button_1)
         }
@@ -87,25 +87,25 @@ class TableTitleView: UIScrollView {
     
 
     
-    func onClickBtn(button:UIButton) {
+    func onClickBtn(_ button:UIButton) {
         mDelegate?.selectButtonIndex(button.tag)
         setOnSelectButton(button)
     }
     
-    func setOnSelectButtonByPosition(index:Int){
-        self.mSelectButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        self.mSelectButton.transform = CGAffineTransformIdentity
-        mButtons[index].setTitleColor(UIColor.textBlueColor(), forState: UIControlState.Normal)
-        mButtons[index].transform = CGAffineTransformMakeScale(1.1, 1.1)
+    func setOnSelectButtonByPosition(_ index:Int){
+        self.mSelectButton.setTitleColor(UIColor.gray, for: UIControlState())
+        self.mSelectButton.transform = CGAffineTransform.identity
+        mButtons[index].setTitleColor(UIColor.textBlueColor(), for: UIControlState())
+        mButtons[index].transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
         self.mSelectButton = mButtons[index]
     }
     
 
-    func setOnSelectButton(button:UIButton){
-        self.mSelectButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
-        self.mSelectButton.transform = CGAffineTransformIdentity
-        button.setTitleColor(UIColor.textBlueColor(), forState: UIControlState.Normal)
-        button.transform = CGAffineTransformMakeScale(1.1, 1.1)
+    func setOnSelectButton(_ button:UIButton){
+        self.mSelectButton.setTitleColor(UIColor.gray, for: UIControlState())
+        self.mSelectButton.transform = CGAffineTransform.identity
+        button.setTitleColor(UIColor.textBlueColor(), for: UIControlState())
+        button.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
         self.mSelectButton = button
     }
 

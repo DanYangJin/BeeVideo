@@ -6,7 +6,7 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 
-public class Source {
+open class Source {
     var id : String = ""
     var name : String = ""
     var otherSource : String = ""

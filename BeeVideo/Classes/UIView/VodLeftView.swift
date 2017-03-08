@@ -15,7 +15,7 @@ class VodLeftView: UIView {
     var topArrow : UIImageView!
     var bottomArrow : UIImageView!
     var tableView : UITableView!
-    private var backgroundImg : UIImageView!
+    fileprivate var backgroundImg : UIImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,30 +29,30 @@ class VodLeftView: UIView {
     func initView(){
         
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .Redraw
-        backgroundImg.image = UIImage(named: "v2_search_keyboard_background")?.resizableImageWithCapInsets(UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .Stretch)
+        backgroundImg.contentMode = .redraw
+        backgroundImg.image = UIImage(named: "v2_search_keyboard_background")?.resizableImage(withCapInsets: UIEdgeInsets(top: 4,left: 20,bottom: 4,right: 20), resizingMode: .stretch)
         self.addSubview(backgroundImg)
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
         
         topArrow = UIImageView()
         topArrow.image = UIImage(named: "v2_vod_list_arrow_top")
-        topArrow.contentMode = .ScaleAspectFill
+        topArrow.contentMode = .scaleAspectFill
         self.addSubview(topArrow)
-        topArrow.snp_makeConstraints { (make) in
+        topArrow.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.height.equalTo(10)
             make.width.equalTo(20)
-            make.topMargin.equalTo(20)
+            make.top.equalTo(20)
         }
         
         bottomArrow = UIImageView()
         bottomArrow.image = UIImage(named: "v2_vod_list_arrow_bottom")
-        bottomArrow.contentMode = .ScaleAspectFill
+        bottomArrow.contentMode = .scaleAspectFill
         self.addSubview(bottomArrow)
-        bottomArrow.snp_makeConstraints { (make) in
+        bottomArrow.snp.makeConstraints { (make) in
             make.bottom.equalTo(self).offset(-20)
             make.height.equalTo(10)
             make.width.equalTo(20)
@@ -61,13 +61,13 @@ class VodLeftView: UIView {
         
         tableView = UITableView()
         tableView.showsVerticalScrollIndicator = false
-        tableView.backgroundColor = UIColor.clearColor()
-        tableView.separatorStyle = .None
+        tableView.backgroundColor = UIColor.clear
+        tableView.separatorStyle = .none
         self.addSubview(tableView)
-        tableView.snp_makeConstraints { (make) in
-            make.top.equalTo(topArrow.snp_bottom).offset(10)
+        tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(topArrow.snp.bottom).offset(10)
             make.left.equalTo(self)
-            make.bottom.equalTo(bottomArrow.snp_top).offset(-10)
+            make.bottom.equalTo(bottomArrow.snp.top).offset(-10)
             make.width.equalTo(self)
         }
     }

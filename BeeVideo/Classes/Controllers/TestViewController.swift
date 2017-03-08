@@ -12,20 +12,20 @@ import PopupController
 class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollViewDelegate{
     
     
-    private var mTableTitleView:TableTitleView!
-    private var mContentScrollView:UIScrollView!
-    private var remmondedPageView:RemmondedPageView!
-    private var livePageView:LivePageView!
-    private var videoPageView:VideoPageView!
-    private var settingPageView:SettingPageView!
-    private var searchImage:UIButton!
+    fileprivate var mTableTitleView:TableTitleView!
+    fileprivate var mContentScrollView:UIScrollView!
+    fileprivate var remmondedPageView:RemmondedPageView!
+    fileprivate var livePageView:LivePageView!
+    fileprivate var videoPageView:VideoPageView!
+    fileprivate var settingPageView:SettingPageView!
+    fileprivate var searchImage:UIButton!
     
-    private var mPagesWidth:[CGFloat] = Array()
+    fileprivate var mPagesWidth:[CGFloat] = Array()
     
-    private var recommondScrollerView : UIScrollView!//首页
-    private var liveScrollerView : UIScrollView!//直播
-    private var videoScrollerView : UIScrollView!//点播
-    private var settingScrollerView : UIScrollView!//设置
+    fileprivate var recommondScrollerView : UIScrollView!//首页
+    fileprivate var liveScrollerView : UIScrollView!//直播
+    fileprivate var videoScrollerView : UIScrollView!//点播
+    fileprivate var settingScrollerView : UIScrollView!//设置
     
     internal var homeData:HomeData!
     
@@ -46,19 +46,19 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
         //mTableTitleView.initTitleData()
         self.view.addSubview(mTableTitleView)
         
-        mTableTitleView.snp_makeConstraints{ (make) -> Void in
+        mTableTitleView.snp.makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view).dividedBy(2)
             make.height.equalTo(40)
-            make.topMargin.equalTo(30)
+            make.top.equalTo(30)
             make.leftMargin.equalTo(20)
         }
         
         searchImage = UIButton()
-        searchImage.setImage(UIImage(named: "v2_launch_search"), forState: .Normal)
-        searchImage.setImage(UIImage(named: "v2_launch_search_select"), forState: .Highlighted)
-        searchImage.addTarget(self, action: #selector(self.toSearchViewController), forControlEvents: .TouchUpInside)
+        searchImage.setImage(UIImage(named: "v2_launch_search"), for: UIControlState())
+        searchImage.setImage(UIImage(named: "v2_launch_search_select"), for: .highlighted)
+        searchImage.addTarget(self, action: #selector(self.toSearchViewController), for: .touchUpInside)
         self.view.addSubview(searchImage)
-        searchImage.snp_makeConstraints { (make) in
+        searchImage.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(mTableTitleView)
             make.right.equalTo(self.view).offset(-30)
             make.width.equalTo(40)
@@ -68,7 +68,7 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
         
         mContentScrollView = UIScrollView()
         setScrollCommen(mContentScrollView)
-        mContentScrollView.pagingEnabled = true
+        mContentScrollView.isPagingEnabled = true
         mContentScrollView.delegate = self
         mContentScrollView.delaysContentTouches = false
         self.view.addSubview(mContentScrollView)
@@ -122,14 +122,14 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
         
         self.setConstraints()
         
-        mContentScrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.width * 4, height: self.view.frame.height - 120)
+        mContentScrollView.contentSize = CGSize(width: UIScreen.main.bounds.width * 4, height: self.view.frame.height - 120)
         recommondScrollerView.contentSize = CGSize(width: mPagesWidth[0],height: scrollerHeight)
         videoScrollerView.contentSize = CGSize(width: mPagesWidth[1],height: scrollerHeight)
         liveScrollerView.contentSize = CGSize(width: mPagesWidth[2],height: scrollerHeight)
     }
     
-    func selectButtonIndex(index: Int) {
-        let width = UIScreen.mainScreen().bounds.width
+    func selectButtonIndex(_ index: Int) {
+        let width = UIScreen.main.bounds.width
         if mContentScrollView == nil {
             return
         }
@@ -137,15 +137,15 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
     }
     
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         let index:Int = getScrollViewIndex(scrollView.contentOffset.x)
         mTableTitleView.setOnSelectButtonByPosition(index)
     }
     
     //获取当前滚动属于第几页
-    func getScrollViewIndex(contentOffset:CGFloat) -> Int {
-        let width = UIScreen.mainScreen().bounds.width
+    func getScrollViewIndex(_ contentOffset:CGFloat) -> Int {
+        let width = UIScreen.main.bounds.width
         if contentOffset < width {
             return 0
         } else if contentOffset < 2 * width {
@@ -158,7 +158,7 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
     }
     
     //获取当前滚动的偏移量
-    func calcTotalSizeByIndex(index: Int) -> CGFloat{
+    func calcTotalSizeByIndex(_ index: Int) -> CGFloat{
         var totalSize:CGFloat = 0
         for i in 0 ..< index {
             totalSize += mPagesWidth[i]
@@ -166,7 +166,7 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
         return totalSize
     }
     
-    func setScrollCommen(scrollerView:UIScrollView){
+    func setScrollCommen(_ scrollerView:UIScrollView){
         scrollerView.showsHorizontalScrollIndicator = false
         scrollerView.showsVerticalScrollIndicator = false
         
@@ -175,64 +175,64 @@ class TestViewController: BaseViewController ,TableTitleViewDelegate, UIScrollVi
     
     func toSearchViewController(){
                 let searchViewController = SearchViewController()
-                self.presentViewController(searchViewController, animated: true, completion: nil)
+                self.present(searchViewController, animated: true, completion: nil)
         //self.dismissViewController()
     }
     
     func setConstraints(){
-        mContentScrollView.snp_makeConstraints{ (make) -> Void in
+        mContentScrollView.snp.makeConstraints{ (make) -> Void in
             make.width.equalTo(self.view.frame.width)
             make.bottom.equalTo(self.view).multipliedBy(0.9)
-            make.top.equalTo(self.mTableTitleView.snp_bottom)
+            make.top.equalTo(self.mTableTitleView.snp.bottom)
             make.left.equalTo(self.view)
         }
         
-        recommondScrollerView.snp_makeConstraints { (make) in
+        recommondScrollerView.snp.makeConstraints { (make) in
             make.width.equalTo(self.view)
             make.height.equalTo(mContentScrollView)
             make.top.equalTo(mContentScrollView)
             make.leading.equalTo(mContentScrollView)
         }
         
-        videoScrollerView.snp_makeConstraints { (make) in
+        videoScrollerView.snp.makeConstraints { (make) in
             make.width.equalTo(self.view)
             make.height.equalTo(mContentScrollView)
             make.top.equalTo(mContentScrollView)
-            make.leading.equalTo(recommondScrollerView.snp_trailing)
+            make.leading.equalTo(recommondScrollerView.snp.trailing)
         }
         
-        liveScrollerView.snp_makeConstraints { (make) in
+        liveScrollerView.snp.makeConstraints { (make) in
             make.width.equalTo(self.view)
             make.height.equalTo(mContentScrollView)
             make.top.equalTo(mContentScrollView)
-            make.leading.equalTo(videoScrollerView.snp_trailing)
+            make.leading.equalTo(videoScrollerView.snp.trailing)
         }
         
-        self.remmondedPageView.snp_makeConstraints{ (make) -> Void in
+        self.remmondedPageView.snp.makeConstraints{ (make) -> Void in
             make.height.equalTo(self.recommondScrollerView)
-            make.topMargin.equalTo(self.recommondScrollerView)
+            make.top.equalTo(self.recommondScrollerView)
             make.leftMargin.equalTo(self.recommondScrollerView).offset(30)
             make.width.equalTo(self.remmondedPageView.getViewWidth())
         }
         
-        self.videoPageView.snp_makeConstraints{ (make) -> Void in
+        self.videoPageView.snp.makeConstraints{ (make) -> Void in
             make.height.equalTo(self.videoScrollerView)
-            make.topMargin.equalTo(self.videoScrollerView).offset(0)
+            make.top.equalTo(self.videoScrollerView).offset(0)
             make.leftMargin.equalTo(self.videoScrollerView).offset(30)
             make.width.equalTo(self.videoPageView.getViewWidth());
         }
         
-        self.livePageView.snp_makeConstraints{ (make) -> Void in
+        self.livePageView.snp.makeConstraints{ (make) -> Void in
             make.height.equalTo(self.liveScrollerView)
-            make.topMargin.equalTo(self.liveScrollerView)
+            make.top.equalTo(self.liveScrollerView)
             make.leftMargin.equalTo(self.liveScrollerView).offset(30)
             make.width.equalTo(self.livePageView.getViewWidth());
         }
         
-        self.settingPageView.snp_makeConstraints{ (make) -> Void in
+        self.settingPageView.snp.makeConstraints{ (make) -> Void in
             make.height.equalTo(self.liveScrollerView)
-            make.topMargin.equalTo(self.liveScrollerView)
-            make.leftMargin.equalTo(self.liveScrollerView.snp_right).offset(30)
+            make.top.equalTo(self.liveScrollerView)
+            make.leftMargin.equalTo(self.liveScrollerView.snp.right).offset(30)
             make.width.equalTo(liveScrollerView)
         }
     }

@@ -9,33 +9,33 @@ import UIKit
 
 // MARK: - Enum - ZXOptionBarOrigin
 enum ZXOptionBarOrigin{
-    case ZXOptionBarOriginTap, ZXOptionBarOriginSlide
+    case zxOptionBarOriginTap, zxOptionBarOriginSlide
 }
 
 // MARK: - ZXOptionBarDataSource
 protocol ZXOptionBarDataSource: NSObjectProtocol {
     
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell
+    func numberOfColumnsInOptionBar(_ optionBar: ZXOptionBar) -> Int
+    func optionBar(_ optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell
 }
 
 // MARK: - ZXOptionBarDelegate
 @objc protocol ZXOptionBarDelegate: UIScrollViewDelegate {
     
     // Display customization
-    optional func optionBar(optionBar: ZXOptionBar, willDisplayCell cell: ZXOptionBarCell, forColumnAtIndex index: Int)
-    optional func optionBar(optionBar: ZXOptionBar, didEndDisplayingCell cell: ZXOptionBarCell, forColumnAtIndex index: Int)
+    @objc optional func optionBar(_ optionBar: ZXOptionBar, willDisplayCell cell: ZXOptionBarCell, forColumnAtIndex index: Int)
+    @objc optional func optionBar(_ optionBar: ZXOptionBar, didEndDisplayingCell cell: ZXOptionBarCell, forColumnAtIndex index: Int)
     
     // Variable height support
-    optional func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float
+    @objc optional func optionBar(_ optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float
     
     //Select
-    optional func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int)
-    optional func optionBar(optionBar: ZXOptionBar, didDeselectColumnAtIndex index: Int)
+    @objc optional func optionBar(_ optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int)
+    @objc optional func optionBar(_ optionBar: ZXOptionBar, didDeselectColumnAtIndex index: Int)
     
     //Reload
-    optional func optionBarWillReloadData(optionBar: ZXOptionBar)
-    optional func optionBarDidReloadData(optionBar: ZXOptionBar)
+    @objc optional func optionBarWillReloadData(_ optionBar: ZXOptionBar)
+    @objc optional func optionBarDidReloadData(_ optionBar: ZXOptionBar)
 
 }
 
@@ -48,18 +48,18 @@ class ZXOptionBar: UIScrollView {
     internal var selectedIndex: Int?
     
     // MARK: Private Var
-    private var reusableOptionCells: Dictionary<String, NSMutableArray>!
+    fileprivate var reusableOptionCells: Dictionary<String, NSMutableArray>!
     
-    private var visibleItems: Dictionary<String, ZXOptionBarCell>!
+    fileprivate var visibleItems: Dictionary<String, ZXOptionBarCell>!
 
-    private var flags: ZXOptionBarFlag = ZXOptionBarFlag()
+    fileprivate var flags: ZXOptionBarFlag = ZXOptionBarFlag()
     
-    private var dividerWidth : Float = 0.0
+    fileprivate var dividerWidth : Float = 0.0
     
-    private var oldCount : Int = 0
+    fileprivate var oldCount : Int = 0
     
     // MARK: Private ZXOptionBarFlag
-    private struct ZXOptionBarFlag {
+    fileprivate struct ZXOptionBarFlag {
         
         var respondsToDidSelectColumnAtIndexSelector: Bool = false
         var respondsToDeselectColumnAtIndex: Bool = false
@@ -81,12 +81,12 @@ class ZXOptionBar: UIScrollView {
         self.barDataSource = barDataSource
         self.barDelegate = barDelegate
         
-        flags.respondsToDidSelectColumnAtIndexSelector = self.barDelegate!.respondsToSelector(#selector(ZXOptionBarDelegate.optionBar(_:didSelectColumnAtIndex:)))
-        flags.respondsToDeselectColumnAtIndex = self.barDelegate!.respondsToSelector(#selector(ZXOptionBarDelegate.optionBar(_:didDeselectColumnAtIndex:)))
+        flags.respondsToDidSelectColumnAtIndexSelector = self.barDelegate!.responds(to: #selector(ZXOptionBarDelegate.optionBar(_:didSelectColumnAtIndex:)))
+        flags.respondsToDeselectColumnAtIndex = self.barDelegate!.responds(to: #selector(ZXOptionBarDelegate.optionBar(_:didDeselectColumnAtIndex:)))
         
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = UIColor.white
         self.scrollsToTop = false
         
         var totleWidth: Float = 0.0;
@@ -96,7 +96,7 @@ class ZXOptionBar: UIScrollView {
                 totleWidth += self.columnWidthAtIndex(i)
             }
         }
-        self.contentSize = CGSizeMake(CGFloat(totleWidth), self.bounds.size.height);
+        self.contentSize = CGSize(width: CGFloat(totleWidth), height: self.bounds.size.height);
         
         reusableOptionCells = Dictionary<String, NSMutableArray>()
         visibleItems = Dictionary<String, ZXOptionBarCell>()
@@ -107,7 +107,7 @@ class ZXOptionBar: UIScrollView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    internal func selectColumnAtIndex(index: Int, origin:ZXOptionBarOrigin) {
+    internal func selectColumnAtIndex(_ index: Int, origin:ZXOptionBarOrigin) {
         if !self.indexIsValid(index){
             return
         }
@@ -120,7 +120,7 @@ class ZXOptionBar: UIScrollView {
             self.selectedIndex = index
         }
         
-        if origin == ZXOptionBarOrigin.ZXOptionBarOriginTap {
+        if origin == ZXOptionBarOrigin.zxOptionBarOriginTap {
             if flags.respondsToDidSelectColumnAtIndexSelector {
                 self.barDelegate!.optionBar!(self, didSelectColumnAtIndex: index)
             }
@@ -128,7 +128,7 @@ class ZXOptionBar: UIScrollView {
         
     }
     
-    internal func deselectColumnAtIndex(index: Int) {
+    internal func deselectColumnAtIndex(_ index: Int) {
         if !self.indexIsValid(index) || !self.indexIsValid(self.selectedIndex!) {
             return
         }
@@ -146,10 +146,10 @@ class ZXOptionBar: UIScrollView {
         }
     }
     
-    internal func dequeueReusableCellWithIdentifier(identifier: String) -> AnyObject? {
+    internal func dequeueReusableCellWithIdentifier(_ identifier: String) -> AnyObject? {
         let array: NSMutableArray? = self.reusableOptionCells[identifier]
         if array != nil {
-            if let c: AnyObject = array!.lastObject {
+            if let c: AnyObject = array!.lastObject as AnyObject? {
                 array!.removeLastObject()
                 c.prepareForReuse()
                 return c
@@ -189,7 +189,7 @@ class ZXOptionBar: UIScrollView {
                 totleWidth += self.columnWidthAtIndex(i)
             }
         }
-        self.contentSize = CGSizeMake(CGFloat(totleWidth), self.bounds.size.height);
+        self.contentSize = CGSize(width: CGFloat(totleWidth), height: self.bounds.size.height);
         reusableOptionCells = Dictionary<String, NSMutableArray>()
         visibleItems = Dictionary<String, ZXOptionBarCell>()
         self.layoutSubviews()
@@ -206,7 +206,7 @@ class ZXOptionBar: UIScrollView {
 // MARK: - ZXOptionBar - Private Extension
 extension ZXOptionBar {
     
-    private func scrollByIndex(index: Int) {
+    fileprivate func scrollByIndex(_ index: Int) {
         
         var columnWidthCountLeft: Float = 0.0
         for i in 0 ..< index {
@@ -219,9 +219,9 @@ extension ZXOptionBar {
         }
         
         if columnWidthCountLeft < Float(self.bounds.size.width) / 2.0 {
-            self.setContentOffset(CGPointMake(0, self.contentOffset.y), animated: true)
+            self.setContentOffset(CGPoint(x: 0, y: self.contentOffset.y), animated: true)
         }else if (columnWidthCountRight < Float(self.bounds.size.width) / 2.0) {
-            self.setContentOffset(CGPointMake(self.contentSize.width - self.bounds.size.width, self.contentOffset.y), animated: true)
+            self.setContentOffset(CGPoint(x: self.contentSize.width - self.bounds.size.width, y: self.contentOffset.y), animated: true)
         }else {
             var columnWidthCount: Float = 0.0
             for i in 0 ..< index {
@@ -229,11 +229,11 @@ extension ZXOptionBar {
             }
             columnWidthCount += self.columnWidthAtIndex(index) / 2.0
             columnWidthCount -= Float(self.bounds.size.width) / 2.0
-            self.setContentOffset(CGPointMake(CGFloat(columnWidthCount), self.contentOffset.y), animated: true)
+            self.setContentOffset(CGPoint(x: CGFloat(columnWidthCount), y: self.contentOffset.y), animated: true)
         }
     }
     
-    private func layoutCells() {
+    fileprivate func layoutCells() {
         let visible = self.visibleRect()
         // Example:
         // old:            0 1 2 3 4 5 6 7
@@ -245,10 +245,10 @@ extension ZXOptionBar {
         let newVisibleIndex: Array<String> = self.indexsForColumnInRect(visible)
         
         let indexsToRemove: NSMutableArray = NSMutableArray(array: oldVisibleIndex)
-        indexsToRemove.removeObjectsInArray(newVisibleIndex)
+        indexsToRemove.removeObjects(in: newVisibleIndex)
         
         let indexsToAdd: NSMutableArray = NSMutableArray(array: newVisibleIndex)
-        indexsToAdd.removeObjectsInArray(oldVisibleIndex)
+        indexsToAdd.removeObjects(in: oldVisibleIndex)
         
         
         //delete the cells which frame out
@@ -256,7 +256,7 @@ extension ZXOptionBar {
             let cell: ZXOptionBarCell = self.cellForColumnAtIndex(self.indexFromIdentifyKey(i as! String))!
             self.enqueueReusableCell(cell)
             cell.removeFromSuperview()
-            self.visibleItems.removeValueForKey(i as! String)
+            self.visibleItems.removeValue(forKey: i as! String)
         }
         
         //add the new cell which frame in
@@ -270,7 +270,7 @@ extension ZXOptionBar {
             cell.index = indexToAdd
             cell.selected = (indexToAdd == self.selectedIndex)
             
-            if self.barDelegate!.respondsToSelector(#selector(ZXOptionBarDelegate.optionBar(_:willDisplayCell:forColumnAtIndex:))) {
+            if self.barDelegate!.responds(to: #selector(ZXOptionBarDelegate.optionBar(_:willDisplayCell:forColumnAtIndex:))) {
                 self.barDelegate!.optionBar!(self, willDisplayCell: cell, forColumnAtIndex: indexToAdd)
             }
             
@@ -280,25 +280,25 @@ extension ZXOptionBar {
         }
     }
     
-    private func enqueueReusableCell(cell: ZXOptionBarCell) {
+    fileprivate func enqueueReusableCell(_ cell: ZXOptionBarCell) {
         if let identifier: String = cell.reuseIdentifier {
             var array: NSMutableArray? = self.reusableOptionCells[identifier]
             if (array == nil) {
                 array = NSMutableArray()
                 self.reusableOptionCells.updateValue(array!, forKey: identifier)
             }
-            array?.addObject(cell)
+            array?.add(cell)
             
         }else{
             return
         }
     }
     
-    private func visibleRect() -> CGRect {
-        return CGRectMake(self.contentOffset.x, self.contentOffset.y, self.bounds.size.width, self.bounds.size.height)
+    fileprivate func visibleRect() -> CGRect {
+        return CGRect(x: self.contentOffset.x, y: self.contentOffset.y, width: self.bounds.size.width, height: self.bounds.size.height)
     }
     
-    private func indexsForVisibleColumns() -> Array<String> {
+    fileprivate func indexsForVisibleColumns() -> Array<String> {
         var keyArr: [String] = []
         for (key, _) in self.visibleItems {
             keyArr.append(key)
@@ -306,13 +306,13 @@ extension ZXOptionBar {
         return keyArr
     }
     
-    private func indexsForColumnInRect(rect: CGRect) -> Array<String> {
+    fileprivate func indexsForColumnInRect(_ rect: CGRect) -> Array<String> {
         
         var indexs: [String] = []
         if columnCount() > 0 {
             for column in 0...(self.columnCount()-1) {
                 let cellRect: CGRect = self.rectForColumnAtIndex(column)
-                if CGRectIntersectsRect(cellRect, rect) {
+                if cellRect.intersects(rect) {
                     indexs.append(self.identifyKeyFromIndex(column))
                 }
             }
@@ -320,12 +320,12 @@ extension ZXOptionBar {
         return indexs
     }
     
-    private func columnCount() -> Int {
+    fileprivate func columnCount() -> Int {
         return self.barDataSource!.numberOfColumnsInOptionBar(self)
     }
     
     
-    private func columnWidthAtIndex(index: Int) -> Float {
+    fileprivate func columnWidthAtIndex(_ index: Int) -> Float {
         if let result = self.barDelegate!.optionBar?(self, widthForColumnsAtIndex: index) {
             if index == self.columnCount() - 1 {
                 return result
@@ -336,25 +336,25 @@ extension ZXOptionBar {
         }
     }
     
-    private func rectForColumnAtIndex(index: Int) -> CGRect {
+    fileprivate func rectForColumnAtIndex(_ index: Int) -> CGRect {
         let width: Float = self.columnWidthAtIndex(index);
         if index == columnCount() - 1 {
-            return CGRectMake(CGFloat((width + dividerWidth) * Float(index)), 0, CGFloat(width), self.bounds.size.height)
+            return CGRect(x: CGFloat((width + dividerWidth) * Float(index)), y: 0, width: CGFloat(width), height: self.bounds.size.height)
         }
-        return CGRectMake(CGFloat((width) * Float(index)), 0, CGFloat(width - dividerWidth), self.bounds.size.height)
+        return CGRect(x: CGFloat((width) * Float(index)), y: 0, width: CGFloat(width - dividerWidth), height: self.bounds.size.height)
     }
 
     
-    func cellForColumnAtIndex(index: Int) -> ZXOptionBarCell? {
+    func cellForColumnAtIndex(_ index: Int) -> ZXOptionBarCell? {
         return self.visibleItems[self.identifyKeyFromIndex(index)]
     }
     
     
-    private func identifyKeyFromIndex(index: Int) -> String {
+    fileprivate func identifyKeyFromIndex(_ index: Int) -> String {
         return "\(index)"
     }
     
-    private func indexFromIdentifyKey(identifyKey: String) -> Int {
+    fileprivate func indexFromIdentifyKey(_ identifyKey: String) -> Int {
         if let index = Int(identifyKey) {
             return index
         }else{
@@ -362,7 +362,7 @@ extension ZXOptionBar {
         }
     }
     
-    private func indexIsValid(index: Int) -> Bool {
+    fileprivate func indexIsValid(_ index: Int) -> Bool {
         return index >= 0 && index < self.columnCount()
     }
 }

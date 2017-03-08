@@ -17,7 +17,7 @@ class T9KeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelegate
     // var t9PopupView:T9PopupView!
     
     weak var keyboardDelegate : IKeyboardDelegate!
-    private var pupView:[UIView] = [UIView]()
+    fileprivate var pupView:[UIView] = [UIView]()
     
     let data = [
         ["1"],
@@ -31,7 +31,7 @@ class T9KeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelegate
         ["9","WXYZ"]
     ]
     
-    private var digitalList:[String] = [String]()
+    fileprivate var digitalList:[String] = [String]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -39,57 +39,57 @@ class T9KeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelegate
         initData()
         
         clearBtn = KeyBoardViewButton()
-        clearBtn.buttonMode = .Icon
-        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_normal"), forState: .Normal)
-        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_selected"), forState: .Highlighted)
-        clearBtn.addTarget(self, action: #selector(self.clearBtnClick), forControlEvents: .TouchUpInside)
+        clearBtn.buttonMode = .icon
+        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_normal"), for: UIControlState())
+        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_selected"), for: .highlighted)
+        clearBtn.addTarget(self, action: #selector(self.clearBtnClick), for: .touchUpInside)
         self.addSubview(clearBtn)
         
         digitalSwitcherBtn = KeyBoardViewButton()
-        digitalSwitcherBtn.buttonMode = .Text
+        digitalSwitcherBtn.buttonMode = .text
         digitalSwitcherBtn.textLbl.text = "0"
-        digitalSwitcherBtn.addTarget(self, action: #selector(self.keySwitcherClick), forControlEvents: .TouchUpInside)
+        digitalSwitcherBtn.addTarget(self, action: #selector(self.keySwitcherClick), for: .touchUpInside)
         self.addSubview(digitalSwitcherBtn)
         
         backspaceBtn = KeyBoardViewButton()
-        backspaceBtn.buttonMode = .Icon
-        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_normal"), forState: .Normal)
-        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_selected"), forState: .Highlighted)
-        backspaceBtn.addTarget(self, action: #selector(self.backspaceClick), forControlEvents: .TouchUpInside)
+        backspaceBtn.buttonMode = .icon
+        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_normal"), for: UIControlState())
+        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_selected"), for: .highlighted)
+        backspaceBtn.addTarget(self, action: #selector(self.backspaceClick), for: .touchUpInside)
         self.addSubview(backspaceBtn)
         
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
-        mCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        mCollectionView.backgroundColor = UIColor.clearColor()
+        mCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        mCollectionView.backgroundColor = UIColor.clear
         mCollectionView.delegate = self
         mCollectionView.dataSource = self
-        mCollectionView.registerClass(T9KeyCollectionViewCell.self, forCellWithReuseIdentifier: "t9CollectionView")
+        mCollectionView.register(T9KeyCollectionViewCell.self, forCellWithReuseIdentifier: "t9CollectionView")
         self.addSubview(mCollectionView)
         
-        clearBtn.snp_makeConstraints { (make) in
+        clearBtn.snp.makeConstraints { (make) in
             make.left.equalTo(self)
             make.top.equalTo(self)
             make.height.equalTo(30)
             make.width.equalTo(self).multipliedBy(0.32)
         }
         
-        digitalSwitcherBtn.snp_makeConstraints { (make) in
+        digitalSwitcherBtn.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.top.equalTo(self)
             make.width.height.equalTo(clearBtn)
         }
         
-        backspaceBtn.snp_makeConstraints { (make) in
+        backspaceBtn.snp.makeConstraints { (make) in
             make.right.equalTo(self)
             make.top.equalTo(self)
             make.height.width.equalTo(clearBtn)
         }
         
-        mCollectionView.snp_makeConstraints { (make) in
+        mCollectionView.snp.makeConstraints { (make) in
             make.right.left.equalTo(self)
-            make.top.equalTo(clearBtn.snp_bottom)
+            make.top.equalTo(clearBtn.snp.bottom)
             make.bottom.equalTo(self)
         }
     }
@@ -106,40 +106,40 @@ class T9KeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelegate
     }
     
     //CollectionViewDataSource
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return digitalList.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("t9CollectionView", forIndexPath: indexPath) as! T9KeyCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "t9CollectionView", for: indexPath) as! T9KeyCollectionViewCell
         
-        cell.titleLbl.text = digitalList[indexPath.row]
-        if indexPath.row > 0{
-            cell.subTitleLbl.text = data[indexPath.row][1]
+        cell.titleLbl.text = digitalList[(indexPath as NSIndexPath).row]
+        if (indexPath as NSIndexPath).row > 0{
+            cell.subTitleLbl.text = data[(indexPath as NSIndexPath).row][1]
         }
         
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let collectionWidth = collectionView.bounds.width
         let cellWidth = collectionWidth / 3.3
         return CGSize(width: cellWidth, height: cellWidth)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! T9KeyCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as! T9KeyCollectionViewCell
         
-        let  window = UIApplication.sharedApplication().delegate?.window
-        let rect = cell.convertRect((cell.bounds), toView: window!)
+        let  window = UIApplication.shared.delegate?.window
+        let rect = cell.convert((cell.bounds), to: window!)
         
         if keyboardDelegate != nil {
-            if indexPath.row > 0{
+            if (indexPath as NSIndexPath).row > 0{
                 var charaDatas = [String]()
-                let dataString = data[indexPath.row][1]
-                charaDatas.append(data[indexPath.row][0])
+                let dataString = data[(indexPath as NSIndexPath).row][1]
+                charaDatas.append(data[(indexPath as NSIndexPath).row][0])
                 for c in dataString.characters {
                     charaDatas.append(String(c))
                 }

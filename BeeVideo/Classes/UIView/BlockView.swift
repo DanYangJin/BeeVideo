@@ -9,13 +9,13 @@
 import UIKit
 
 @objc protocol BlockViewDelegate {
-    func blockClick(homeSpace:HomeSpace)
+    func blockClick(_ homeSpace:HomeSpace)
 }
 
 class BlockView: BaseBlockView {
 
     internal var homeSpace:HomeSpace!
-    private weak var delegate : BlockViewDelegate!
+    fileprivate weak var delegate : BlockViewDelegate!
     
     
     override init(frame: CGRect) {
@@ -27,22 +27,22 @@ class BlockView: BaseBlockView {
         super.init(coder: aDecoder)
     }
     
-    func setDelegate(delegate:BlockViewDelegate){
+    func setDelegate(_ delegate:BlockViewDelegate){
         self.delegate = delegate
     }
 
     
-    func setData(homeSpace:HomeSpace){
+    func setData(_ homeSpace:HomeSpace){
         self.homeSpace = homeSpace
         setImage(homeSpace.items[0].icon)
         setTitle(homeSpace.items[0].name)
     }
     
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesEnded(touches, withEvent: event)
-        let point = touches.first?.locationInView(self)
-        let inside = self.pointInside(point!, withEvent: event)
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        let point = touches.first?.location(in: self)
+        let inside = self.point(inside: point!, with: event)
         if delegate == nil || !inside {
             return
         }

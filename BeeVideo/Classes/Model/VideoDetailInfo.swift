@@ -40,7 +40,7 @@ class VideoDetailInfo{
     var chooseDramaFlag : Int = 0
     var dramaOrderFlag : Int = 0
 
-    func setLastPlayDramaPosition(lastPlayDramaPosition: Int){
+    func setLastPlayDramaPosition(_ lastPlayDramaPosition: Int){
         if dramas.isEmpty {
             return
         }

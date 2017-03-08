@@ -10,17 +10,17 @@ import UIKit
 
 class BaseViewController: UIViewController {
     
-    private var backgroundImg : UIImageView!
+    fileprivate var backgroundImg : UIImageView!
     var loadingView : LoadingView!
     var errorView:ErrorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .ScaleToFill
+        backgroundImg.contentMode = .scaleToFill
         backgroundImg.image = UIImage(named: "background")
         self.view.addSubview(backgroundImg)
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.equalTo(self.view)
             make.bottom.equalTo(self.view)
             make.left.equalTo(self.view)
@@ -32,16 +32,16 @@ class BaseViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    func setBackgroundImg(imgURL: String){
-        backgroundImg.sd_setImageWithURL(NSURL(string: imgURL), placeholderImage: UIImage(named: "background"))
+    func setBackgroundImg(_ imgURL: String){
+        backgroundImg.sd_setImage(with: URL(string: imgURL), placeholderImage: UIImage(named: "background"))
     }
     
     func dismissViewController(){
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     func onClick(){}

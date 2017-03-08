@@ -9,7 +9,7 @@
 import PopupController
 
 @objc protocol ChooseDramaDelegate {
-    func onDramaChooseListener(dramaIndex: Int)
+    func onDramaChooseListener(_ dramaIndex: Int)
 }
 
 class PopupChooseDramaController: UIViewController,PopupContentViewController,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,ZXOptionBarDelegate,ZXOptionBarDataSource {
@@ -17,23 +17,23 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
     var videoDetailInfo:VideoDetailInfo!
     weak var delegate:ChooseDramaDelegate!
     
-    private var backgroundImg:UIImageView!
-    private var mCollectionView:UICollectionView!
-    private var mOptionBar:ZXOptionBar!
+    fileprivate var backgroundImg:UIImageView!
+    fileprivate var mCollectionView:UICollectionView!
+    fileprivate var mOptionBar:ZXOptionBar!
     
-    private var dramas:[Item] = [Item]() //collectionview 数据源
-    private var dramaCollector:[String] = [String]() //optionbar 数据源
-    private var startIndex = 0
-    private var endIndex = 0
-    private var currentPage = 0
+    fileprivate var dramas:[Item] = [Item]() //collectionview 数据源
+    fileprivate var dramaCollector:[String] = [String]() //optionbar 数据源
+    fileprivate var startIndex = 0
+    fileprivate var endIndex = 0
+    fileprivate var currentPage = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .ScaleToFill
-        backgroundImg.image = UIImage(named: "v2_choose_drama_dlg_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 5,left: 3,bottom: 5,right: 3), resizingMode: .Stretch)
+        backgroundImg.contentMode = .scaleToFill
+        backgroundImg.image = UIImage(named: "v2_choose_drama_dlg_bg")?.resizableImage(withCapInsets: UIEdgeInsets(top: 5,left: 3,bottom: 5,right: 3), resizingMode: .stretch)
         self.view.addSubview(backgroundImg)
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self.view)
             make.left.right.equalTo(self.view)
         }
@@ -44,81 +44,81 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 5
-        mCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        mCollectionView.backgroundColor = UIColor.clearColor()
-        mCollectionView.registerClass(KeyboardCollectionViewCell.self, forCellWithReuseIdentifier: "chooseDrama")
+        mCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        mCollectionView.backgroundColor = UIColor.clear
+        mCollectionView.register(KeyboardCollectionViewCell.self, forCellWithReuseIdentifier: "chooseDrama")
         mCollectionView.delegate = self
         mCollectionView.dataSource = self
         self.view.addSubview(mCollectionView)
-        mCollectionView.snp_makeConstraints { (make) in
+        mCollectionView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self.view)
             make.top.equalTo(backgroundImg).offset(5)
             make.height.equalTo(self.view).multipliedBy(0.6)
         }
         
-        mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self,dividerWidth: 5)
-        mOptionBar.backgroundColor = UIColor.clearColor()
+        mOptionBar = ZXOptionBar(frame: CGRect.zero, barDelegate: self, barDataSource: self,dividerWidth: 5)
+        mOptionBar.backgroundColor = UIColor.clear
         self.view.addSubview(mOptionBar)
-        mOptionBar.snp_makeConstraints { (make) in
+        mOptionBar.snp.makeConstraints { (make) in
             make.left.equalTo(self.view).offset(10)
             make.right.equalTo(self.view).offset(-10)
-            make.top.equalTo(mCollectionView.snp_bottom)
+            make.top.equalTo(mCollectionView.snp.bottom)
             make.height.equalTo(self.view).multipliedBy(0.3)
         }
     
     }
     
-    func sizeForPopup(popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
-        let screenWidth = UIScreen.mainScreen().bounds.width
-        let screenHeight = UIScreen.mainScreen().bounds.height
+    func sizeForPopup(_ popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
+        let screenWidth = UIScreen.main.bounds.width
+        let screenHeight = UIScreen.main.bounds.height
         
         return CGSize(width: screenWidth,height: screenHeight/3)
     }
     
     //  collectionView
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 5, left: 10, bottom: 0, right: 10)
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dramas.count
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.bounds.width
         let height = collectionView.bounds.height
         
         let cellWidth = (width - 65)/10
         let cellHeight = (height - 20)/2
         
-        return CGSizeMake(cellWidth, cellHeight)
+        return CGSize(width: cellWidth, height: cellHeight)
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell:KeyboardCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("chooseDrama", forIndexPath: indexPath) as! KeyboardCollectionViewCell
-        cell.titleLabel.text = dramas[indexPath.row].dramaReadablePosition
-        cell.backgroundView?.hidden = false
+        let cell:KeyboardCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "chooseDrama", for: indexPath) as! KeyboardCollectionViewCell
+        cell.titleLabel.text = dramas[(indexPath as NSIndexPath).row].dramaReadablePosition
+        cell.backgroundView?.isHidden = false
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if delegate != nil {
-            delegate.onDramaChooseListener(dramas[indexPath.row].dramaIndex)
+            delegate.onDramaChooseListener(dramas[(indexPath as NSIndexPath).row].dramaIndex)
         }
     }
     
     //optionBar
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+    func numberOfColumnsInOptionBar(_ optionBar: ZXOptionBar) -> Int {
         return dramaCollector.count
     }
     
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+    func optionBar(_ optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         
         var cell:ChooseOptionBarCell? = optionBar.dequeueReusableCellWithIdentifier("chooseDrama") as? ChooseOptionBarCell
         
         if cell == nil {
-            cell = ChooseOptionBarCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "chooseDrama")
+            cell = ChooseOptionBarCell(style: .zxOptionBarCellStyleDefault, reuseIdentifier: "chooseDrama")
         }
         cell?.titleLable.text = dramaCollector[index]
         
@@ -130,17 +130,17 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
         return cell!
     }
     
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+    func optionBar(_ optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
         return (Float(self.view.bounds.width) - 65)/5 + 5
     }
     
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+    func optionBar(_ optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         currentPage = index
         collectSubDrama()
         mCollectionView.reloadData()
     }
     
-    private func collectSubDrama(){
+    fileprivate func collectSubDrama(){
         if !dramas.isEmpty {
             dramas.removeAll()
         }
@@ -155,7 +155,7 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
         }
     }
     
-    private func calculateDramaCollector(){
+    fileprivate func calculateDramaCollector(){
         let totalSize = videoDetailInfo.dramas.count
         let dramaCollectorCount = Int(ceilf(Float(totalSize)/Float(VideoInfoUtils.GRID_ITEM_COUNT)))
         for i in 0..<dramaCollectorCount {
@@ -170,7 +170,7 @@ class PopupChooseDramaController: UIViewController,PopupContentViewController,UI
         }
     }
     
-    private class Item{
+    fileprivate class Item{
         var dramaIndex = 0
         var dramaReadablePosition = ""
         

@@ -12,8 +12,8 @@
 
 class AppRecommendCell: UICollectionViewCell {
     
-    private var backgroundImg : UIImageView!
-    private var titleBkImg : UIImageView!
+    fileprivate var backgroundImg : UIImageView!
+    fileprivate var titleBkImg : UIImageView!
     var appIconImg : UIImageView!
     var titleLabl : UILabel!
     
@@ -21,43 +21,43 @@ class AppRecommendCell: UICollectionViewCell {
         super.init(frame: frame)
         
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .Redraw
-        backgroundImg.image = UIImage(named: "v2_app_item_background")!.resizableImageWithCapInsets(UIEdgeInsetsMake(20, 40, 20, 40), resizingMode: .Stretch)
+        backgroundImg.contentMode = .redraw
+        backgroundImg.image = UIImage(named: "v2_app_item_background")!.resizableImage(withCapInsets: UIEdgeInsetsMake(20, 40, 20, 40), resizingMode: .stretch)
         self.contentView.addSubview(backgroundImg)
         
         titleBkImg = UIImageView()
-        titleBkImg.contentMode = .Redraw
-        titleBkImg.image = UIImage(named: "v2_app_item_text_background")!.resizableImageWithCapInsets(UIEdgeInsetsMake(0, 40, 30, 40), resizingMode: .Stretch)
+        titleBkImg.contentMode = .redraw
+        titleBkImg.image = UIImage(named: "v2_app_item_text_background")!.resizableImage(withCapInsets: UIEdgeInsetsMake(0, 40, 30, 40), resizingMode: .stretch)
         self.contentView.addSubview(titleBkImg)
         
         appIconImg = UIImageView()
-        appIconImg.contentMode = .Redraw
+        appIconImg.contentMode = .redraw
         appIconImg.image = UIImage(named: "v2_image_default_bg.9")
         self.contentView.addSubview(appIconImg)
         
         titleLabl = UILabel()
-        titleLabl.textColor = UIColor.whiteColor()
-        titleLabl.font = UIFont.systemFontOfSize(12)
-        titleLabl.textAlignment = .Center
+        titleLabl.textColor = UIColor.white
+        titleLabl.font = UIFont.systemFont(ofSize: 12)
+        titleLabl.textAlignment = .center
         self.contentView.addSubview(titleLabl)
         
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(contentView)
             make.left.right.equalTo(contentView)
         }
         
-        titleBkImg.snp_makeConstraints { (make) in
+        titleBkImg.snp.makeConstraints { (make) in
             make.bottom.equalTo(contentView)
             make.left.right.equalTo(contentView)
             make.height.equalTo(contentView).dividedBy(4)
         }
         
-        titleLabl.snp_makeConstraints { (make) in
+        titleLabl.snp.makeConstraints { (make) in
             make.left.right.equalTo(titleBkImg)
             make.top.bottom.equalTo(titleBkImg)
         }
         
-        appIconImg.snp_makeConstraints { (make) in
+        appIconImg.snp.makeConstraints { (make) in
             make.centerX.equalTo(contentView)
             make.centerY.equalTo(contentView).multipliedBy(0.75)
             make.height.width.equalTo(contentView).dividedBy(2)

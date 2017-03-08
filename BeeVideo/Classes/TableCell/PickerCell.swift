@@ -15,10 +15,10 @@ class PickerCell: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         label = UILabel()
-        label.font = UIFont.systemFontOfSize(12)
-        label.textColor = UIColor.whiteColor()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor.white
         self.addSubview(label)
-        label.snp_makeConstraints { (make) in
+        label.snp.makeConstraints { (make) in
             make.center.equalTo(self)
         }
     }

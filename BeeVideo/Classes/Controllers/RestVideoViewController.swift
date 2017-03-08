@@ -12,35 +12,35 @@ import Alamofire
  点播更多页面
  */
 
-class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+class RestVideoViewController: BaseBackViewController,XMLParserDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
-    private var mCollectionView:UICollectionView!
+    fileprivate var mCollectionView:UICollectionView!
     
-    private var restInfoes:Array<RestVideoInfo> = Array<RestVideoInfo>()
-    private var restInfo:RestVideoInfo!
-    private var intent:RestVideoInfo.IntentInfo!
-    private var extras:Array<ExtraData>!
-    private var extraData:ExtraData!
+    fileprivate var restInfoes:Array<RestVideoInfo> = Array<RestVideoInfo>()
+    fileprivate var restInfo:RestVideoInfo!
+    fileprivate var intent:RestVideoInfo.IntentInfo!
+    fileprivate var extras:Array<ExtraData>!
+    fileprivate var extraData:ExtraData!
     
     //xml解析
-    private var currentElement = ""
-    private var parentElement = ""
-
+    fileprivate var currentElement = ""
+    fileprivate var parentElement = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLbl.text = "更多"
         
         let layout = UICollectionViewFlowLayout()
-        mCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        mCollectionView.registerClass(RestVideoCollectionCell.self, forCellWithReuseIdentifier: "restCellId")
+        mCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        mCollectionView.register(RestVideoCollectionCell.self, forCellWithReuseIdentifier: "restCellId")
         mCollectionView.delegate = self
         mCollectionView.dataSource = self
-        mCollectionView.backgroundColor = UIColor.clearColor()
+        mCollectionView.backgroundColor = UIColor.clear
         view.addSubview(mCollectionView)
-        mCollectionView.snp_makeConstraints { (make) in
+        mCollectionView.snp.makeConstraints { (make) in
             make.left.equalTo(backView)
             make.right.equalTo(view)
-            make.top.equalTo(backView.snp_bottom)
+            make.top.equalTo(backView.snp.bottom)
             make.bottom.equalTo(view)
         }
         
@@ -53,20 +53,20 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
     
     //collectionview
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return restInfoes.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    
-        let cell:RestVideoCollectionCell = collectionView.dequeueReusableCellWithReuseIdentifier("restCellId", forIndexPath: indexPath) as! RestVideoCollectionCell
-        cell.icon.sd_setImageWithURL(NSURL(string: restInfoes[indexPath.row].iconUrl))
-        cell.titleLbl.text = restInfoes[indexPath.row].title
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell:RestVideoCollectionCell = collectionView.dequeueReusableCell(withReuseIdentifier: "restCellId", for: indexPath) as! RestVideoCollectionCell
+        cell.icon.sd_setImage(with: URL(string: restInfoes[(indexPath as NSIndexPath).row].iconUrl))
+        cell.titleLbl.text = restInfoes[(indexPath as NSIndexPath).row].title
         
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let collWidth = collectionView.frame.width
         let width = (collWidth - 40) / 4
@@ -74,8 +74,8 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let info = restInfoes[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let info = restInfoes[(indexPath as NSIndexPath).row]
         let action = info.intentInfo.action
         if action == "com.mipt.videohj.intent.action.VOD_CompositeStdiuoUI_ACTION" {
             var channelId = ""
@@ -86,23 +86,20 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
             }
             let vodcate = VodVideoController()
             vodcate.channelId = channelId
-            self.presentViewController(vodcate, animated: true, completion: nil)
+            self.present(vodcate, animated: true, completion: nil)
         }
     }
     
     func getData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_REST_VIDEO_ACTION)!, parameters: nil).response{
-            _,_,data,error in
-            
-            if error != nil {
+        Alamofire.request(CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_REST_VIDEO_ACTION)!).responseData { (response) in
+            switch response.result{
+            case .failure(let error):
                 print(error)
-                return
+            case .success(let data):
+                let parse = XMLParser(data: data)
+                parse.delegate = self
+                parse.parse()
             }
-            
-            let parse = NSXMLParser(data: data!)
-            parse.delegate = self
-            parse.parse()
-            
         }
     }
     
@@ -112,7 +109,7 @@ class RestVideoViewController: BaseBackViewController,NSXMLParserDelegate,UIColl
  xml解析
  */
 extension RestVideoViewController{
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "block"{
             restInfo = RestVideoInfo()
@@ -127,8 +124,8 @@ extension RestVideoViewController{
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if content.isEmpty {
             return
         }
@@ -157,7 +154,7 @@ extension RestVideoViewController{
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "extra"{
             extras.append(extraData)
             extraData = nil
@@ -173,7 +170,7 @@ extension RestVideoViewController{
         }
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         mCollectionView.reloadData()
     }
     

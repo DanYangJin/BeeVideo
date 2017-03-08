@@ -12,22 +12,22 @@
 
 class PlaySettingViewController: BaseBackViewController {
     
-    private let playSettingList:[String] = ["标清","高清","超清"]
+    fileprivate let playSettingList:[String] = ["标清","高清","超清"]
     
-    private var playSettingItem:PlaySettingItemView!
+    fileprivate var playSettingItem:PlaySettingItemView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         titleLbl.text = "播放设置"
         
-        playSettingItem = PlaySettingItemView(frame: CGRectZero, title: "清晰度选择", selectionList: playSettingList)
-        let userDefault = NSUserDefaults.standardUserDefaults()
-        print(userDefault.integerForKey("play_setting"))
-        playSettingItem.currentIndex = userDefault.integerForKey("play_setting")
+        playSettingItem = PlaySettingItemView(frame: CGRect.zero, title: "清晰度选择", selectionList: playSettingList)
+        let userDefault = UserDefaults.standard
+        print(userDefault.integer(forKey: "play_setting"))
+        playSettingItem.currentIndex = userDefault.integer(forKey: "play_setting")
         playSettingItem.iconImg.image = UIImage(named: "v2_play_setting_definition_default")
         view.addSubview(playSettingItem)
-        playSettingItem.snp_makeConstraints { (make) in
-            make.top.equalTo(backView.snp_bottom)
+        playSettingItem.snp.makeConstraints { (make) in
+            make.top.equalTo(backView.snp.bottom)
             make.left.equalTo(titleLbl)
             make.right.equalTo(self.view).offset(-50)
             make.height.equalTo(40)
@@ -42,8 +42,8 @@ class PlaySettingViewController: BaseBackViewController {
 
     override func dismissViewController() {
         if playSettingItem.contentChanged {
-            let userDefault = NSUserDefaults.standardUserDefaults()
-             userDefault.setInteger(playSettingItem.currentIndex, forKey: "play_setting")
+            let userDefault = UserDefaults.standard
+             userDefault.set(playSettingItem.currentIndex, forKey: "play_setting")
         }
         super.dismissViewController()
     }

@@ -11,8 +11,8 @@ import Alamofire
 
 class VideoCategoryGroupController:BaseBackViewController {
     
-    private var groupList : Array<CategoryGroupItem>!
-    private var groupView : CategoryGroupView!
+    fileprivate var groupList : Array<CategoryGroupItem>!
+    fileprivate var groupView : CategoryGroupView!
     
     //xml解析
     var currentElement = ""
@@ -30,14 +30,14 @@ class VideoCategoryGroupController:BaseBackViewController {
         super.didReceiveMemoryWarning()
     }
     
-    private func initView(){
+    fileprivate func initView(){
         
         groupView = CategoryGroupView()
         groupView.controller = self
         view.addSubview(groupView)
-        groupView.snp_makeConstraints { (make) in
+        groupView.snp.makeConstraints { (make) in
             make.left.equalTo(backView)
-            make.top.equalTo(backView.snp_bottom).offset(20)
+            make.top.equalTo(backView.snp.bottom).offset(20)
             make.right.equalTo(view)
             make.bottom.equalTo(view).multipliedBy(0.9)
         }
@@ -45,7 +45,7 @@ class VideoCategoryGroupController:BaseBackViewController {
         loadingView = LoadingView()
         loadingView.startAnimat()
         self.view.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
+        loadingView.snp.makeConstraints { (make) in
             make.center.equalTo(groupView)
             make.height.width.equalTo(40)
         }
@@ -53,16 +53,17 @@ class VideoCategoryGroupController:BaseBackViewController {
     }
     
     
-    private func getGroupListData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_CATEGORY_GROUP)!, parameters: nil).response{
-            _,_,data,error in
-            if error != nil{
+    fileprivate func getGroupListData(){
+
+        Alamofire.request(CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_GET_CATEGORY_GROUP)!).responseData { (response) in
+            switch response.result{
+            case .failure(let error):
                 print(error)
-                return
+            case .success(let data):
+                let parser = XMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
             }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
         }
     }
 }
@@ -71,9 +72,9 @@ class VideoCategoryGroupController:BaseBackViewController {
 /*
  xml解析
  */
-extension VideoCategoryGroupController: NSXMLParserDelegate{
+extension VideoCategoryGroupController: XMLParserDelegate{
     
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "list"{
             groupList = Array<CategoryGroupItem>()
@@ -82,8 +83,8 @@ extension VideoCategoryGroupController: NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if content.isEmpty {
             return
         }
@@ -100,14 +101,14 @@ extension VideoCategoryGroupController: NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item"{
             groupList.append(cateItem)
             cateItem = nil
         }
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         loadingView.stopAnimat()
         groupView.setGroupItems(groupList)
     }

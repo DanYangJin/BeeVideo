@@ -11,14 +11,14 @@ import Alamofire
 
 class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBarDataSource {
     
-    private var backBtn : UIButton!
-    private var mOptionBar : ZXOptionBar!
+    fileprivate var backBtn : UIButton!
+    fileprivate var mOptionBar : ZXOptionBar!
     
-    private var mBackgroundUrl : String = ""
-    private var mDataList : Array<VideoBriefItem>!
-    private var mVideoBriefItem : VideoBriefItem!
+    fileprivate var mBackgroundUrl : String = ""
+    fileprivate var mDataList : Array<VideoBriefItem>!
+    fileprivate var mVideoBriefItem : VideoBriefItem!
     
-    private var currentElement : String = ""
+    fileprivate var currentElement : String = ""
     
     var extras : [ExtraData]!
     
@@ -29,69 +29,81 @@ class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBa
 
         initView()
         
-        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/subject_videos.action", parameters: ["subjectId":categoryId]).response{ _,_,data,error in
-            if (error != nil) {
+//        Alamofire.request(.GET, "http://www.beevideo.tv/api/video2.0/subject_videos.action", parameters: ["subjectId":categoryId]).response{ _,_,data,error in
+//            if (error != nil) {
+//                self.loadingView.stopAnimat()
+//                self.errorView.isHidden = false
+//                return
+//            }
+//            let parser = XMLParser(data: data!)
+//            parser.delegate = self
+//            parser.parse()
+//        }
+        
+        Alamofire.request("http://www.beevideo.tv/api/video2.0/subject_videos.action",parameters: ["subjectId":categoryId!]).responseData { (response) in
+            switch response.result{
+            case .failure(_):
                 self.loadingView.stopAnimat()
-                self.errorView.hidden = false
-                return
+                self.errorView.isHidden = false
+            case .success(let data):
+                let parser = XMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
             }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
         }
     }
     
-    private func initView(){
+    fileprivate func initView(){
         backBtn = UIButton()
-        backBtn.setImage(UIImage(named: "play_back_full"), forState: .Normal)
-        backBtn.addTarget(self, action: #selector(self.dismissViewController), forControlEvents: .TouchUpInside)
+        backBtn.setImage(UIImage(named: "play_back_full"), for: UIControlState())
+        backBtn.addTarget(self, action: #selector(self.dismissViewController), for: .touchUpInside)
         self.view.addSubview(backBtn)
-        backBtn.snp_makeConstraints { (make) in
+        backBtn.snp.makeConstraints { (make) in
             make.top.equalTo(self.view).offset(30)
             make.left.equalTo(self.view).offset(30)
             make.height.width.equalTo(30)
         }
         
-        mOptionBar = ZXOptionBar(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height * 1/3), barDelegate: self, barDataSource: self)
-        mOptionBar.backgroundColor = UIColor.clearColor()
+        mOptionBar = ZXOptionBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height * 1/3), barDelegate: self, barDataSource: self)
+        mOptionBar.backgroundColor = UIColor.clear
         mOptionBar.setDividerWidth(dividerWidth: 20)
         self.view.addSubview(mOptionBar)
-        mOptionBar.snp_makeConstraints { (make) in
+        mOptionBar.snp.makeConstraints { (make) in
             make.left.equalTo(self.view)
             make.right.equalTo(self.view)
-            make.bottom.equalTo(self.view.snp_bottom).inset(30)
+            make.bottom.equalTo(self.view.snp.bottom).inset(30)
             make.height.equalTo(self.view.frame.height * 1/3)
         }
         
         loadingView = LoadingView()
         loadingView.startAnimat()
         self.view.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
+        loadingView.snp.makeConstraints { (make) in
             make.center.equalTo(self.view)
             make.height.width.equalTo(40)
         }
         
         errorView = ErrorView()
         errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
-        errorView.hidden = true
+        errorView.isHidden = true
         self.view.addSubview(errorView)
-        errorView.snp_makeConstraints { (make) in
+        errorView.snp.makeConstraints { (make) in
             make.left.right.equalTo(self.view)
-            make.top.equalTo(backBtn.snp_bottom)
+            make.top.equalTo(backBtn.snp.bottom)
             make.bottom.equalTo(self.view)
         }
     }
     
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+    func numberOfColumnsInOptionBar(_ optionBar: ZXOptionBar) -> Int {
         return mDataList.count
     }
     
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+    func optionBar(_ optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         let cellId = "optionCell"
         
         var cell : VideoCategoryCell? = optionBar.dequeueReusableCellWithIdentifier(cellId) as? VideoCategoryCell
         if cell == nil {
-            cell = VideoCategoryCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: cellId)
+            cell = VideoCategoryCell(style: .zxOptionBarCellStyleDefault, reuseIdentifier: cellId)
         }
         
         cell?.itemView.setData(mDataList[index])
@@ -99,11 +111,11 @@ class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBa
         return cell!
     }
     
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+    func optionBar(_ optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
         return Float(self.view.frame.height) * 1/3 * 5/7
     }
     
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+    func optionBar(_ optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         let videoId = mDataList[index].id
         var extras = [ExtraData]()
         let data = ExtraData()
@@ -111,7 +123,7 @@ class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBa
         extras.append(data)
         let detailViewController = VideoDetailViewController()
         detailViewController.extras = extras
-        self.presentViewController(detailViewController, animated: true, completion: nil)
+        self.present(detailViewController, animated: true, completion: nil)
     }
     
     
@@ -124,16 +136,16 @@ class VideoCategoryController: BaseViewController,ZXOptionBarDelegate,ZXOptionBa
 /*
  xml解析
  */
-extension VideoCategoryController:NSXMLParserDelegate{
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+extension VideoCategoryController:XMLParserDelegate{
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "video" {
             mVideoBriefItem = VideoBriefItem()
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if content.isEmpty {
             return
         }
@@ -160,7 +172,7 @@ extension VideoCategoryController:NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "video" {
             mDataList.append(mVideoBriefItem)
             mVideoBriefItem = nil
@@ -168,7 +180,7 @@ extension VideoCategoryController:NSXMLParserDelegate{
         currentElement = ""
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         loadingView.stopAnimat()
         self.setBackgroundImg(mBackgroundUrl)
         mOptionBar.reloadData()

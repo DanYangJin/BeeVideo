@@ -9,14 +9,14 @@
 import UIKit
 
 enum KeyBoardViewButtonMode {
-    case Icon
-    case Text
+    case icon
+    case text
 }
 
 
 class KeyBoardViewButton: UIButton {
 
-    private var icon : UIImageView!
+    fileprivate var icon : UIImageView!
     var textLbl : UILabel!
     var buttonMode:KeyBoardViewButtonMode {
         get{
@@ -25,11 +25,11 @@ class KeyBoardViewButton: UIButton {
         
         set{
             switch newValue {
-            case .Icon:
-                self.textLbl.hidden = true
+            case .icon:
+                self.textLbl.isHidden = true
                 break
-            case .Text:
-                self.imageView?.hidden = true
+            case .text:
+                self.imageView?.isHidden = true
                 break
             }
         }
@@ -37,20 +37,20 @@ class KeyBoardViewButton: UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.imageView?.contentMode = .ScaleAspectFit
-        imageView!.snp_makeConstraints { (make) in
+        self.imageView?.contentMode = .scaleAspectFit
+        imageView!.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.center.equalTo(self)
             make.width.equalTo(self).dividedBy(3)
         }
         
-        self.setBackgroundImage(UIImage(named: "v2_normal_button_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 18,left: 20,bottom: 18,right: 20), resizingMode: .Stretch), forState: .Normal)
+        self.setBackgroundImage(UIImage(named: "v2_normal_button_bg")?.resizableImage(withCapInsets: UIEdgeInsets(top: 18,left: 20,bottom: 18,right: 20), resizingMode: .stretch), for: UIControlState())
         
         textLbl = UILabel()
-        textLbl.textColor = UIColor.whiteColor()
-        textLbl.textAlignment = .Center
+        textLbl.textColor = UIColor.white
+        textLbl.textAlignment = .center
         self.addSubview(textLbl)
-        textLbl.snp_makeConstraints { (make) in
+        textLbl.snp.makeConstraints { (make) in
             make.center.equalTo(self)
         }
         

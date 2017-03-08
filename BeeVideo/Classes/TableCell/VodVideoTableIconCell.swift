@@ -12,26 +12,26 @@ class VodVideoTableIconCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.contentView.backgroundColor = UIColor.clearColor()
-        self.backgroundColor = UIColor.clearColor()
+        self.contentView.backgroundColor = UIColor.clear
+        self.backgroundColor = UIColor.clear
         icon = UIImageView()
-        icon.contentMode = .ScaleAspectFit
+        icon.contentMode = .scaleAspectFit
         self.contentView.addSubview(icon)
         
         titleLbl = UILabel()
-        titleLbl.font = UIFont.systemFontOfSize(14)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.font = UIFont.systemFont(ofSize: 14)
+        titleLbl.textColor = UIColor.white
         self.contentView.addSubview(titleLbl)
         
-        icon.snp_makeConstraints { (make) in
+        icon.snp.makeConstraints { (make) in
             make.centerY.equalTo(contentView)
-            make.left.equalTo(contentView.snp_right).dividedBy(4)
+            make.left.equalTo(contentView.snp.right).dividedBy(4)
             make.width.height.equalTo(18)
         }
         
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.centerY.equalTo(icon)
-            make.left.equalTo(icon.snp_right).offset(3)
+            make.left.equalTo(icon.snp.right).offset(3)
         }
     }
     

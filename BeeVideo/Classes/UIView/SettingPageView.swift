@@ -10,21 +10,21 @@ import UIKit
 
 class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
 
-    private var cycleImage:UIImageView!
+    fileprivate var cycleImage:UIImageView!
     
-    private var multiControllerSettingBlock : SettingBlockView!
-    private var moreSettingBlock : SettingBlockView!
-    private var accountSettingBlock : SettingBlockView!
-    private var playSettingBlock : SettingBlockView!
-    private var recommendSettingBlock : SettingBlockView!
-    private var wxShareBlock : SettingBlockView!
+    fileprivate var multiControllerSettingBlock : SettingBlockView!
+    fileprivate var moreSettingBlock : SettingBlockView!
+    fileprivate var accountSettingBlock : SettingBlockView!
+    fileprivate var playSettingBlock : SettingBlockView!
+    fileprivate var recommendSettingBlock : SettingBlockView!
+    fileprivate var wxShareBlock : SettingBlockView!
     
-    private var aboutView : AboutView!
+    fileprivate var aboutView : AboutView!
     
-    private let PLAY_SETTING_CONTROLLER = "playSetting"
-    private let APP_RECOMMEND_CONTROLLER = "appRecommend"
-    private let ACCOUNT_CONTROLLER = "account"
-    private let REST_SETTING_CONTROLLER = "restSetting"
+    fileprivate let PLAY_SETTING_CONTROLLER = "playSetting"
+    fileprivate let APP_RECOMMEND_CONTROLLER = "appRecommend"
+    fileprivate let ACCOUNT_CONTROLLER = "account"
+    fileprivate let REST_SETTING_CONTROLLER = "restSetting"
     
     override func initView(){
         super.initView()
@@ -34,10 +34,10 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         playSettingBlock.setData(playSettingData)
         playSettingBlock.clickDelegate = self
         addSubview(playSettingBlock)
-        playSettingBlock.snp_makeConstraints { (make) in
+        playSettingBlock.snp.makeConstraints { (make) in
             make.left.equalTo(self)
             make.top.equalTo(self)
-            make.height.width.equalTo(self.snp_height).multipliedBy(0.49)
+            make.height.width.equalTo(self.snp.height).multipliedBy(0.49)
         }
         
         multiControllerSettingBlock = SettingBlockView()
@@ -45,10 +45,10 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         multiControllerSettingBlock.setData(mutiSettingData)
         multiControllerSettingBlock.clickDelegate = self
         addSubview(multiControllerSettingBlock)
-        multiControllerSettingBlock.snp_makeConstraints { (make) in
+        multiControllerSettingBlock.snp.makeConstraints { (make) in
             make.top.equalTo(playSettingBlock)
             make.bottom.equalTo(playSettingBlock)
-            make.left.equalTo(playSettingBlock.snp_right).offset(height * 0.02)
+            make.left.equalTo(playSettingBlock.snp.right).offset(height * 0.02)
             make.width.equalTo(playSettingBlock)
         }
         
@@ -58,10 +58,10 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         recommendSettingBlock.setData(recommendSettingData)
         recommendSettingBlock.clickDelegate = self
         addSubview(recommendSettingBlock)
-        recommendSettingBlock.snp_makeConstraints { (make) in
+        recommendSettingBlock.snp.makeConstraints { (make) in
             make.top.equalTo(playSettingBlock)
             make.bottom.equalTo(playSettingBlock)
-            make.left.equalTo(multiControllerSettingBlock.snp_right).offset(height * 0.02)
+            make.left.equalTo(multiControllerSettingBlock.snp.right).offset(height * 0.02)
             make.width.equalTo(playSettingBlock)
         }
         
@@ -70,9 +70,9 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         wxShareBlock.setData(wxShareData)
         wxShareBlock.clickDelegate = self
         addSubview(wxShareBlock)
-        wxShareBlock.snp_makeConstraints { (make) in
+        wxShareBlock.snp.makeConstraints { (make) in
             make.left.right.equalTo(playSettingBlock)
-            make.top.equalTo(playSettingBlock.snp_bottom).offset(height * 0.02)
+            make.top.equalTo(playSettingBlock.snp.bottom).offset(height * 0.02)
             make.height.equalTo(playSettingBlock)
         }
         
@@ -81,7 +81,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         accountSettingBlock.setData(accountSettingData)
         accountSettingBlock.clickDelegate = self
         addSubview(accountSettingBlock)
-        accountSettingBlock.snp_makeConstraints { (make) in
+        accountSettingBlock.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(wxShareBlock)
             make.right.left.equalTo(multiControllerSettingBlock)
         }
@@ -91,7 +91,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         moreSettingBlock.setData(moreSettingData)
         moreSettingBlock.clickDelegate = self
         addSubview(moreSettingBlock)
-        moreSettingBlock.snp_makeConstraints { (make) in
+        moreSettingBlock.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(accountSettingBlock)
             make.left.equalTo(recommendSettingBlock)
             make.width.equalTo(recommendSettingBlock)
@@ -99,8 +99,8 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         
         aboutView = AboutView()
         addSubview(aboutView)
-        aboutView.snp_makeConstraints { (make) in
-            make.left.equalTo(moreSettingBlock.snp_right).offset(height * 0.02)
+        aboutView.snp.makeConstraints { (make) in
+            make.left.equalTo(moreSettingBlock.snp.right).offset(height * 0.02)
             make.top.equalTo(playSettingBlock)
             make.bottom.equalTo(moreSettingBlock)
             make.width.equalTo(height * 5/7)
@@ -108,7 +108,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
         
     }
     
-    func settingBlockViewClick(settingData: SettingBlockData) {
+    func settingBlockViewClick(_ settingData: SettingBlockData) {
         var controller:UIViewController?
         switch settingData.targetController {
         case PLAY_SETTING_CONTROLLER:
@@ -132,7 +132,7 @@ class SettingPageView: BasePageView,SettingBlockViewClickDelegate {
             return
         }
         
-        viewController.presentViewController(controller!, animated: true, completion: nil)
+        viewController.present(controller!, animated: true, completion: nil)
     }
     
     

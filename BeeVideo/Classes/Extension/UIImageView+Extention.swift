@@ -7,7 +7,7 @@
 //
 
 extension UIImageView{
-    func addCorner(radius radius: CGFloat) {
+    func addCorner(radius: CGFloat) {
         self.image = self.image?.drawRectWithRoundedCorner(radius: radius, self.bounds.size)
     }
 }

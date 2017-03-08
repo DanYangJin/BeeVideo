@@ -11,8 +11,8 @@
  */
 
 enum VodTableCellMode {
-    case IconMode
-    case TitleMode
+    case iconMode
+    case titleMode
 }
 
 class VodVideoTableViewCell: UITableViewCell {
@@ -21,17 +21,17 @@ class VodVideoTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.contentView.backgroundColor = UIColor.clearColor()
-        self.backgroundColor = UIColor.clearColor()
+        self.contentView.backgroundColor = UIColor.clear
+        self.backgroundColor = UIColor.clear
         
         titleLbl = UILabel()
-        titleLbl.font = UIFont.systemFontOfSize(14)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.font = UIFont.systemFont(ofSize: 14)
+        titleLbl.textColor = UIColor.white
         self.contentView.addSubview(titleLbl)
         
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.centerY.equalTo(self)
-            make.left.equalTo(contentView.snp_right).dividedBy(4)
+            make.left.equalTo(contentView.snp.right).dividedBy(4)
         }
 
     }

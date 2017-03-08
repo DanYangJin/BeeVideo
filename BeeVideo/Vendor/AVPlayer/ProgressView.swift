@@ -10,16 +10,16 @@ import UIKit
 
 class ProgressView: UIView {
     
-    private var toolBar:UIToolbar!
-    private var properyImage:UIImageView!
-    private var properyName:UILabel!
-    private var longView:UIView!
+    fileprivate var toolBar:UIToolbar!
+    fileprivate var properyImage:UIImageView!
+    fileprivate var properyName:UILabel!
+    fileprivate var longView:UIView!
     
     //临时变量
-    private var screenWidth:CGFloat!
-    private var screenHeight:CGFloat!
-    private var images:[UIImageView]!
-    private var timer:NSTimer!
+    fileprivate var screenWidth:CGFloat!
+    fileprivate var screenHeight:CGFloat!
+    fileprivate var images:[UIImageView]!
+    fileprivate var timer:Timer!
     
     
     override init(frame: CGRect) {
@@ -38,10 +38,10 @@ class ProgressView: UIView {
     }
     
     func initUI(){
-        self.screenWidth     = UIScreen.mainScreen().bounds.size.width
-        self.screenHeight    = UIScreen.mainScreen().bounds.size.height
+        self.screenWidth     = UIScreen.main.bounds.size.width
+        self.screenHeight    = UIScreen.main.bounds.size.height
         //自定义View
-        self.frame                  = CGRectMake(screenWidth * 0.36, screenHeight * 0.26, 155, 155)
+        self.frame                  = CGRect(x: screenWidth * 0.36, y: screenHeight * 0.26, width: 155, height: 155)
         self.layer.cornerRadius     = 10;
         self.layer.masksToBounds    = true;
         self.alpha                  = 0.0
@@ -60,7 +60,7 @@ class ProgressView: UIView {
     func initToolBar() -> UIToolbar{
         if self.toolBar == nil {
             self.toolBar                = UIToolbar()
-            self.toolBar.frame          = CGRectMake(0, 0, self.frame.width, self.frame.height)
+            self.toolBar.frame          = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
             self.toolBar.alpha          = 0.7
         }
         return self.toolBar
@@ -70,7 +70,7 @@ class ProgressView: UIView {
     func initProperyImage() -> UIImageView{
         if self.properyImage == nil {
             self.properyImage       = UIImageView()
-            self.properyImage.frame = CGRectMake(35, 40, 79, 76)
+            self.properyImage.frame = CGRect(x: 35, y: 40, width: 79, height: 76)
             self.properyImage.image = UIImage(named: "playgesture_BrightnessSun6")
         }
         return self.properyImage
@@ -79,10 +79,10 @@ class ProgressView: UIView {
     func initProperyName() -> UILabel{
         if self.properyName == nil {
             self.properyName                = UILabel()
-            self.properyName.frame          = CGRectMake(0, 5, self.frame.width, 30)
-            self.properyName.font           = UIFont.boldSystemFontOfSize(16)
-            self.properyName.textColor      = UIColor.whiteColor()
-            self.properyName.textAlignment  = NSTextAlignment.Center
+            self.properyName.frame          = CGRect(x: 0, y: 5, width: self.frame.width, height: 30)
+            self.properyName.font           = UIFont.boldSystemFont(ofSize: 16)
+            self.properyName.textColor      = UIColor.white
+            self.properyName.textAlignment  = NSTextAlignment.center
             self.properyName.text           = "亮度"
         }
         return self.properyName
@@ -91,7 +91,7 @@ class ProgressView: UIView {
     func initLongView() ->UIView {
         if self.longView == nil {
             self.longView                   = UIView()
-            self.longView.frame             = CGRectMake(13, 132, self.bounds.size.width - 26, 7)
+            self.longView.frame             = CGRect(x: 13, y: 132, width: self.bounds.size.width - 26, height: 7)
             self.longView.backgroundColor   = UIColor.init(red: 0.25, green: 0.22, blue: 0.21, alpha: 1.00)
         }
         return self.longView
@@ -106,34 +106,35 @@ class ProgressView: UIView {
         
         for i in 0..<16 {
             let image:UIImageView = UIImageView()
-            image.backgroundColor = UIColor.whiteColor()
-            image.frame           = CGRectMake(CGFloat(i) * (tipW + 1) + 1, tipY, tipW, tipH);
+            image.backgroundColor = UIColor.white
+            image.frame           = CGRect(x: CGFloat(i) * (tipW + 1) + 1, y: tipY, width: tipW, height: tipH);
             
             self.longView.addSubview(image)
             self.images.append(image)
         }
-        self.updateLongView(UIScreen.mainScreen().brightness)
+        self.updateLongView(UIScreen.main.brightness)
     }
     
     func addObserver(){
-        UIScreen.mainScreen().addObserver(self, forKeyPath: "brightness", options: .New, context: nil)
+        UIScreen.main.addObserver(self, forKeyPath: "brightness", options: .new, context: nil)
     }
     
-    func updateLongView(progress:CGFloat){
+    func updateLongView(_ progress:CGFloat){
         let stage:CGFloat = 1 / 15.0
         let level:Int = Int.init(progress / stage)
         for i in 0 ..< self.images.count {
             let image:UIImageView = self.images[i]
             if i <= level {
-                image.hidden = false
+                image.isHidden = false
             } else {
-                image.hidden = true
+                image.isHidden = true
             }
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        let brightness:CGFloat = CGFloat((change!["new"]?.floatValue)!)
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+       // let brightness:CGFloat = CGFloat((change!["new"]?.floatValue)!)
+        let brightness: CGFloat = 0.9
         self.showProgressView()
         self.updateLongView(brightness)
     }
@@ -149,8 +150,8 @@ class ProgressView: UIView {
         if self.timer != nil {
             return
         }
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1,target:self,selector:#selector(hideProgressView),userInfo:nil,repeats:true)
-        NSRunLoop.currentRunLoop().addTimer(self.timer, forMode: NSRunLoopCommonModes)
+        self.timer = Timer.scheduledTimer(timeInterval: 1,target:self,selector:#selector(hideProgressView),userInfo:nil,repeats:true)
+        RunLoop.current.add(self.timer, forMode: RunLoopMode.commonModes)
     }
     
     func removeTimer(){
@@ -167,7 +168,7 @@ class ProgressView: UIView {
     
     func hideProgressView(){
         if self.alpha == 1.0 {
-            UIView.animateWithDuration(0.8, animations: {
+            UIView.animate(withDuration: 0.8, animations: {
                     self.alpha = 0.0
                 }, completion: { (falg:Bool) in
             
@@ -176,7 +177,7 @@ class ProgressView: UIView {
     }
     
     deinit{
-        UIScreen.mainScreen().removeObserver(self, forKeyPath: "brightness")
+        UIScreen.main.removeObserver(self, forKeyPath: "brightness")
     }
     
 }

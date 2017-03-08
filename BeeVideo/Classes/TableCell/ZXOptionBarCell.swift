@@ -9,7 +9,7 @@
 import UIKit
 
 enum ZXOptionBarCellStyle{
-    case ZXOptionBarCellStyleDefault
+    case zxOptionBarCellStyleDefault
 }
 
 // MARK: - ZXOptionBarCell
@@ -28,16 +28,16 @@ class ZXOptionBarCell: UIView {
     }
     
     // MARK: ReadOnly Var
-    private(set) var reuseIdentifier: String?
+    fileprivate(set) var reuseIdentifier: String?
     
     // MARK: Private Var
-    private var optionBarCellDidMovedFlag: Bool = false
+    fileprivate var optionBarCellDidMovedFlag: Bool = false
     
-    private var optionBarCellDidSelectedFlag: Bool = false
+    fileprivate var optionBarCellDidSelectedFlag: Bool = false
     
     
     internal init(style: ZXOptionBarCellStyle, reuseIdentifier: String?) {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         self.reuseIdentifier = reuseIdentifier
         
     }
@@ -59,26 +59,26 @@ class ZXOptionBarCell: UIView {
 }
 
 extension ZXOptionBarCell {
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesBegan(touches , withEvent: event)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches , with: event)
         optionBarCellDidMovedFlag = false
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesMoved(touches , withEvent: event)
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches , with: event)
         optionBarCellDidMovedFlag = true
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesEnded(touches  , withEvent: event)
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches  , with: event)
         if optionBarCellDidMovedFlag == false {
             
-            self.optionBar?.selectColumnAtIndex(self.index!, origin: ZXOptionBarOrigin.ZXOptionBarOriginTap)
+            self.optionBar?.selectColumnAtIndex(self.index!, origin: ZXOptionBarOrigin.zxOptionBarOriginTap)
         }
     }
     
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
-        super.touchesCancelled(touches, withEvent: event)
+    override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
+        super.touchesCancelled(touches!, with: event)
         optionBarCellDidMovedFlag = false
     }
     
@@ -87,7 +87,7 @@ extension ZXOptionBarCell {
 
 // MARK: - ZXOptionBarCell - Private Extension
 extension ZXOptionBarCell {
-    private func removeAllAnimations() {
+    fileprivate func removeAllAnimations() {
         self.layer.removeAllAnimations()
         for view in self.subviews {
             view.layer.removeAllAnimations()

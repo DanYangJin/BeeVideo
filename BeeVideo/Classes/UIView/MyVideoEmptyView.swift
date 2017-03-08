@@ -16,14 +16,14 @@ class MyVideoEmptyView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        titleLabel = UILabel(frame: CGRectMake(0,0,frame.width,20))
-        titleLabel.textColor = UIColor.whiteColor()
-        titleLabel.font = UIFont.systemFontOfSize(8)
-        titleLabel.textAlignment = .Center
+        titleLabel = UILabel(frame: CGRect(x: 0,y: 0,width: frame.width,height: 20))
+        titleLabel.textColor = UIColor.white
+        titleLabel.font = UIFont.systemFont(ofSize: 8)
+        titleLabel.textAlignment = .center
         self.addSubview(titleLabel)
         
-        emptyImage = UIImageView(frame: CGRectMake(0, 20, frame.width, frame.width * 410/1160))
-        emptyImage.contentMode = .ScaleAspectFit
+        emptyImage = UIImageView(frame: CGRect(x: 0, y: 20, width: frame.width, height: frame.width * 410/1160))
+        emptyImage.contentMode = .scaleAspectFit
         self.addSubview(emptyImage)
         
         

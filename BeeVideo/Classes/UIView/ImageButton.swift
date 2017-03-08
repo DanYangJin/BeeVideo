@@ -18,9 +18,9 @@ class ImageButton: UIView {
     }
     */
     
-    private var backgroundImge : UIView!
-    private var iconImg : UIImageView!
-    private var titleLbl : UILabel!
+    fileprivate var backgroundImge : UIView!
+    fileprivate var iconImg : UIImageView!
+    fileprivate var titleLbl : UILabel!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,42 +41,42 @@ class ImageButton: UIView {
         self.addSubview(backgroundImge)
         
         iconImg = UIImageView()
-        iconImg.contentMode = .ScaleAspectFill
+        iconImg.contentMode = .scaleAspectFill
         self.addSubview(iconImg)
         
         titleLbl = UILabel()
-        titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.font = UIFont.systemFontOfSize(11)
+        titleLbl.textColor = UIColor.white
+        titleLbl.font = UIFont.systemFont(ofSize: 11)
         self.addSubview(titleLbl)
     
     }
     
     func setConstraint(){
-        backgroundImge.snp_makeConstraints { (make) in
+        backgroundImge.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.bottom.equalTo(self)
             make.left.equalTo(self)
             make.right.equalTo(self)
         }
-        iconImg.snp_makeConstraints { (make) in
+        iconImg.snp.makeConstraints { (make) in
             make.centerY.equalTo(self)
-            make.centerX.equalTo(self.snp_right).dividedBy(4)
-            make.height.equalTo(self.snp_height).multipliedBy(0.6)
-            make.width.equalTo(self.snp_height).multipliedBy(0.6)
+            make.centerX.equalTo(self.snp.right).dividedBy(4)
+            make.height.equalTo(self.snp.height).multipliedBy(0.6)
+            make.width.equalTo(self.snp.height).multipliedBy(0.6)
         }
         
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.centerY.equalTo(iconImg)
-            make.left.equalTo(iconImg.snp_right)
+            make.left.equalTo(iconImg.snp.right)
             make.right.equalTo(self).offset(-5)
         }
     }
     
-    func setImage(imgName: String){
+    func setImage(_ imgName: String){
         iconImg.image = UIImage(named: imgName)
     }
     
-    func setTitle(title : String){
+    func setTitle(_ title : String){
         titleLbl.text = title
     }
     

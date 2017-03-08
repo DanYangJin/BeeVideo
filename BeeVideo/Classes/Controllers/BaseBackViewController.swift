@@ -15,23 +15,23 @@ class BaseBackViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         backView = UIButton()
-        backView.setImage(UIImage(named: "v2_title_arrow_default"), forState: .Normal)
-        backView.setImage(UIImage(named: "v2_title_arrow_selected"), forState: .Highlighted)
-        backView.addTarget(self, action: #selector(self.dismissViewController), forControlEvents: .TouchUpInside)
+        backView.setImage(UIImage(named: "v2_title_arrow_default"), for: UIControlState())
+        backView.setImage(UIImage(named: "v2_title_arrow_selected"), for: .highlighted)
+        backView.addTarget(self, action: #selector(self.dismissViewController), for: .touchUpInside)
         view.addSubview(backView)
-        backView.snp_makeConstraints { (make) in
+        backView.snp.makeConstraints { (make) in
             make.left.equalTo(view).offset(30)
             make.top.equalTo(view).offset(20)
             make.width.height.equalTo(40)
         }
         
         titleLbl = UILabel()
-        titleLbl.font = UIFont.systemFontOfSize(14)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.font = UIFont.systemFont(ofSize: 14)
+        titleLbl.textColor = UIColor.white
         view.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.centerY.equalTo(backView)
-            make.left.equalTo(backView.snp_right)
+            make.left.equalTo(backView.snp.right)
         }
         
     }

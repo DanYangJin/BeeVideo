@@ -8,7 +8,7 @@
 
 import Alamofire
 
-class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,NSXMLParserDelegate,VideoListViewDelegate,HistoryViewDelegate {
+class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,UITableViewDelegate,XMLParserDelegate,VideoListViewDelegate,HistoryViewDelegate {
     
     lazy var menuData:[LeftViewTableData] = [
         LeftViewTableData(title: "观看历史", unSelectPic: "v2_my_video_history_default", selectedPic: "v2_my_video_history_selected"),
@@ -16,13 +16,13 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         LeftViewTableData(title: "我的下载", unSelectPic: "v2_my_video_download_bg_normal", selectedPic: "v2_my_video_download_selected")
     ]
     
-    private var menuTable:UITableView!
-    private var myHistoryView:MyHistoryView!
-    private var myFavoriteView:MyFavoriteView!
-    private var myDownloadView:MyDownloadView!
+    fileprivate var menuTable:UITableView!
+    fileprivate var myHistoryView:MyHistoryView!
+    fileprivate var myFavoriteView:MyFavoriteView!
+    fileprivate var myDownloadView:MyDownloadView!
     
-    private var viewList:[UIView] = [UIView]()
-    private var lastPositon = 0
+    fileprivate var viewList:[UIView] = [UIView]()
+    fileprivate var lastPositon = 0
     
     override func viewDidLoad() {
         leftWidth = Float(self.view.frame.width * 0.2)
@@ -33,41 +33,41 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         menuTable = UITableView()
         menuTable.dataSource = self
         menuTable.delegate = self
-        menuTable.backgroundColor = UIColor.clearColor()
-        menuTable.separatorStyle = .None
-        menuTable.scrollEnabled = false
-        menuTable.registerClass(MyVideoMenuCell.self, forCellReuseIdentifier: "myVideoCell")
-        menuTable.selectRowAtIndexPath(NSIndexPath(forRow: 0,inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition(rawValue: 0)!)
+        menuTable.backgroundColor = UIColor.clear
+        menuTable.separatorStyle = .none
+        menuTable.isScrollEnabled = false
+        menuTable.register(MyVideoMenuCell.self, forCellReuseIdentifier: "myVideoCell")
+        menuTable.selectRow(at: IndexPath(row: 0,section: 0), animated: true, scrollPosition: UITableViewScrollPosition(rawValue: 0)!)
         self.leftView.addSubview(menuTable)
-        menuTable.snp_makeConstraints { (make) in
+        menuTable.snp.makeConstraints { (make) in
             make.left.right.equalTo(leftView)
-            make.top.equalTo(leftView.snp_bottom).multipliedBy(0.2)
+            make.top.equalTo(leftView.snp.bottom).multipliedBy(0.2)
             make.bottom.equalTo(leftView)
         }
         
-        myHistoryView = MyHistoryView(frame: CGRectZero,controller: self)
+        myHistoryView = MyHistoryView(frame: CGRect.zero,controller: self)
         contentView.addSubview(myHistoryView)
         myHistoryView.delegate = self
-        myHistoryView.snp_makeConstraints { (make) in
+        myHistoryView.snp.makeConstraints { (make) in
             make.left.equalTo(backView)
-            make.top.equalTo(backView.snp_bottom)
+            make.top.equalTo(backView.snp.bottom)
             make.width.equalTo(self.view).offset(-20)
             make.bottom.equalTo(self.view)
         }
         
-        myFavoriteView = MyFavoriteView()
-        myFavoriteView.hidden = true
+        myFavoriteView = MyFavoriteView(frame: CGRect.zero, controller: self)
+        myFavoriteView.isHidden = true
         myFavoriteView.delegate = self
         contentView.addSubview(myFavoriteView)
-        myFavoriteView.snp_makeConstraints { (make) in
+        myFavoriteView.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(myHistoryView)
             make.right.left.equalTo(myHistoryView)
         }
         
         myDownloadView = MyDownloadView()
-        myDownloadView.hidden = true
+        myDownloadView.isHidden = true
         contentView.addSubview(myDownloadView)
-        myDownloadView.snp_makeConstraints { (make) in
+        myDownloadView.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(myHistoryView)
             make.right.left.equalTo(myHistoryView)
         }
@@ -78,12 +78,12 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
         
         selectHistoryData()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.refreshFavoriteList), name: "FavoriteChangedNotify", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.selectHistoryData), name: "HistroyChangedNotify", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshFavoriteList), name: NSNotification.Name(rawValue: "FavoriteChangedNotify"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.selectHistoryData), name: NSNotification.Name(rawValue: "HistroyChangedNotify"), object: nil)
     }
     
     func selectHistoryData(){
-        let data = VideoDBHelper.shareInstance().getHistoryList()
+        let data = VideoDBHelper.shareInstance.getHistoryList()
         if data.isEmpty {
             getRecommendData()
         }else{
@@ -97,35 +97,35 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
     }
     
     //uitableview
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuData.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.view.frame.height * 0.12
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("myVideoCell", forIndexPath: indexPath) as! MyVideoMenuCell
-        cell.setViewData(menuData[indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "myVideoCell", for: indexPath) as! MyVideoMenuCell
+        cell.setViewData(menuData[(indexPath as NSIndexPath).row])
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if lastPositon == indexPath.row {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if lastPositon == (indexPath as NSIndexPath).row {
             return
         }
-        viewList[lastPositon].hidden = true
-        viewList[indexPath.row].hidden = false
-        lastPositon = indexPath.row
-        switch indexPath.row {
+        viewList[lastPositon].isHidden = true
+        viewList[(indexPath as NSIndexPath).row].isHidden = false
+        lastPositon = (indexPath as NSIndexPath).row
+        switch (indexPath as NSIndexPath).row {
         case 0:
             //myHistoryView.setViewData(VideoDBHelper.shareInstance().getHistoryList())
             selectHistoryData()
         case 1:
-            myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
+            myFavoriteView.setVideoList(VideoDBHelper.shareInstance.getFavoriteList())
     
         default:
             break
@@ -133,34 +133,34 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
     }
     
     //xml解析
-    private var currentElement = ""
-    private var videoList:[VideoBriefItem] = [VideoBriefItem]()
-    private var videoItem:VideoBriefItem!
+    fileprivate var currentElement = ""
+    fileprivate var videoList:[VideoBriefItem] = [VideoBriefItem]()
+    fileprivate var videoItem:VideoBriefItem!
     
     //列表点击事件
-    func onVideoListViewItemClick(videoId: String) {
+    func onVideoListViewItemClick(_ videoId: String) {
         let controller = VideoDetailViewController()
         var extras:[ExtraData] = [ExtraData]()
         extras.append(ExtraData(name: "videoId", value: videoId))
         controller.extras = extras
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     func refreshFavoriteList(){
-        myFavoriteView.setVideoList(VideoDBHelper.shareInstance().getFavoriteList())
+        myFavoriteView.setVideoList(VideoDBHelper.shareInstance.getFavoriteList())
     }
     
     
     func getRecommendData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HISTORY_RECOMMEND)!, parameters: nil).responseData{
+        Alamofire.request(CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_HISTORY_RECOMMEND)!).responseData{
             response in
             switch response.result{
-            case .Success(let data):
-                let parser = NSXMLParser(data: data)
+            case .success(let data):
+                let parser = XMLParser(data: data)
                 parser.delegate = self
                 parser.parse()
                 break
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 break
             }
@@ -168,7 +168,7 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
     }
     
     override func dismissViewController() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
         super.dismissViewController()
     }
 }
@@ -177,15 +177,15 @@ class MyVideoViewController: BaseHorizontalViewController,UITableViewDataSource,
 extension MyVideoViewController
 {
     
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "video_item" {
             videoItem = VideoBriefItem()
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if content.isEmpty{
             return
         }
@@ -204,7 +204,7 @@ extension MyVideoViewController
         
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "video_item"{
             videoList.append(videoItem)
             videoItem = nil
@@ -212,7 +212,7 @@ extension MyVideoViewController
         currentElement = ""
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         myHistoryView.setRecommendData(videoList)
     }
     

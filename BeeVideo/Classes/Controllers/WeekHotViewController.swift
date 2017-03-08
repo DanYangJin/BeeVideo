@@ -10,19 +10,19 @@ import Alamofire
 
 class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZXOptionBarDataSource,UITableViewDelegate,UITableViewDataSource {
     
-    private var mOptionBar : ZXOptionBar!
-    private var menuTable : UITableView!
+    fileprivate var mOptionBar : ZXOptionBar!
+    fileprivate var menuTable : UITableView!
     
-    private var channels:Array<WeekChannel> = Array<WeekChannel>()
-    private var infoItems:Array<VideoDetailInfo>!
-    private var channel:WeekChannel!
-    private var videoDetailInfo:VideoDetailInfo!
+    fileprivate var channels:Array<WeekChannel> = Array<WeekChannel>()
+    fileprivate var infoItems:Array<VideoDetailInfo>!
+    fileprivate var channel:WeekChannel!
+    fileprivate var videoDetailInfo:VideoDetailInfo!
     
-    private let leftMenu = DataFactory.weekHotItems
-    private var lastPosition:Int = 0
+    fileprivate let leftMenu = DataFactory.weekHotItems
+    fileprivate var lastPosition:Int = 0
     
     //xml解析
-    private var currentElement = ""
+    fileprivate var currentElement = ""
     
     override func viewDidLoad() {
         leftWidth = Float(view.frame.width * 0.2)
@@ -37,12 +37,12 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
     func initUI(){
         titleLbl.text = "周热播榜"
         
-        mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self)
-        mOptionBar.backgroundColor = UIColor.clearColor()
+        mOptionBar = ZXOptionBar(frame: CGRect.zero, barDelegate: self, barDataSource: self)
+        mOptionBar.backgroundColor = UIColor.clear
         mOptionBar.setDividerWidth(dividerWidth: 10)
         self.contentView.addSubview(mOptionBar)
-        mOptionBar.snp_makeConstraints { (make) in
-            make.left.equalTo(strinkView.snp_right)
+        mOptionBar.snp.makeConstraints { (make) in
+            make.left.equalTo(strinkView.snp.right)
             make.width.equalTo(contentView).offset(-20)
             make.centerY.equalTo(contentView)
             make.height.equalTo(contentView).dividedBy(3)
@@ -51,21 +51,21 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
         menuTable = UITableView()
         menuTable.dataSource = self
         menuTable.delegate = self
-        menuTable.backgroundColor = UIColor.clearColor()
-        menuTable.separatorStyle = .None
-        menuTable.scrollEnabled = false
-        menuTable.registerClass(LeftViewCell.self, forCellReuseIdentifier: "weekHotCell")
+        menuTable.backgroundColor = UIColor.clear
+        menuTable.separatorStyle = .none
+        menuTable.isScrollEnabled = false
+        menuTable.register(LeftViewCell.self, forCellReuseIdentifier: "weekHotCell")
         self.leftView.addSubview(menuTable)
-        menuTable.selectRowAtIndexPath(NSIndexPath(forRow: 0,inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition(rawValue: 0)!)
-        menuTable.snp_makeConstraints { (make) in
+        menuTable.selectRow(at: IndexPath(row: 0,section: 0), animated: false, scrollPosition: UITableViewScrollPosition(rawValue: 0)!)
+        menuTable.snp.makeConstraints { (make) in
             make.left.right.equalTo(leftView)
-            make.top.equalTo(leftView.snp_bottom).multipliedBy(0.2)
+            make.top.equalTo(leftView.snp.bottom).multipliedBy(0.2)
             make.bottom.equalTo(leftView)
         }
         
         loadingView = LoadingView()
         self.contentView.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
+        loadingView.snp.makeConstraints { (make) in
             make.center.equalTo(mOptionBar)
             make.height.width.equalTo(50)
         }
@@ -73,11 +73,11 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
         
         errorView = ErrorView()
         errorView.errorInfoLable.text = Constants.NET_ERROR_MESSAGE_VOD
-        errorView.hidden = true
+        errorView.isHidden = true
         self.contentView.addSubview(errorView)
-        errorView.snp_makeConstraints { (make) in
+        errorView.snp.makeConstraints { (make) in
             make.left.right.equalTo(mOptionBar)
-            make.top.equalTo(backView.snp_bottom)
+            make.top.equalTo(backView.snp.bottom)
             make.bottom.equalTo(self.view)
         }
     }
@@ -89,54 +89,54 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
     
     //uitable datasource,delegate
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellId = "weekHotCell"
-        let cell : LeftViewCell? = tableView.dequeueReusableCellWithIdentifier(cellId,forIndexPath:  indexPath) as? LeftViewCell
+        let cell : LeftViewCell? = tableView.dequeueReusableCell(withIdentifier: cellId,for:  indexPath) as? LeftViewCell
         
-        cell?.setViewData(leftMenu[indexPath.row])
+        cell?.setViewData(leftMenu[(indexPath as NSIndexPath).row])
         
         return cell!
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return leftMenu.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.view.frame.height * 0.12
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if lastPosition == indexPath.row {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if lastPosition == (indexPath as NSIndexPath).row {
             return
         }
-        lastPosition = indexPath.row
+        lastPosition = (indexPath as NSIndexPath).row
         mOptionBar.reloadData()
         
         if channels.isEmpty {
             return
         }
         
-        subTitleLbl.text = "\(channels[indexPath.row].channelName) 共\(channels[indexPath.row].videoItem.count)部"
+        subTitleLbl.text = "\(channels[(indexPath as NSIndexPath).row].channelName) 共\(channels[(indexPath as NSIndexPath).row].videoItem.count)部"
     }
     
     //optionbarDataSource,delegate
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+    func numberOfColumnsInOptionBar(_ optionBar: ZXOptionBar) -> Int {
         if channels.isEmpty {
             return 0
         }
         return channels[lastPosition].videoItem.count
     }
     
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+    func optionBar(_ optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         var cell:BaseTableViewCell? = optionBar.dequeueReusableCellWithIdentifier("weekOpt") as? BaseTableViewCell
         if cell == nil {
-            cell = BaseTableViewCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "weekOpt")
+            cell = BaseTableViewCell(style: .zxOptionBarCellStyleDefault, reuseIdentifier: "weekOpt")
         }
         if channels.count != 0{
             let viewDetail = channels[lastPosition].videoItem[index]
-            cell?.averageLbl.hidden = true
-            cell?.icon.sd_setImageWithURL(NSURL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
+            cell?.averageLbl.isHidden = true
+            cell?.icon.sd_setImage(with: URL(string:viewDetail.poster),placeholderImage: UIImage(named: "v2_image_default_bg.9"))
             cell?.videoNameLbl.text = viewDetail.name
             cell?.durationLbl.text = viewDetail.duration
         }
@@ -144,31 +144,31 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
         return cell!
     }
     
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+    func optionBar(_ optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
         return Float(self.view.frame.height/3 * 5/7)
     }
     
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+    func optionBar(_ optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         let detailController = VideoDetailViewController()
         let videoId = channels[lastPosition].videoItem[index].id
         var extras = Array<ExtraData>()
-        extras.append(ExtraData(name: "", value: videoId))
+        extras.append(ExtraData(name: "", value: videoId!))
         detailController.extras = extras
-        self.presentViewController(detailController, animated: true, completion: nil)
+        self.present(detailController, animated: true, completion: nil)
     }
     
     
-    private func getData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_WEEK_HOT)!, parameters: nil).response{
-            _,_,data,error in
-            if error != nil {
+    fileprivate func getData(){
+        Alamofire.request(CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.URL_WEEK_HOT)!).responseData { (response) in
+            switch response.result{
+            case .failure(_):
                 self.loadingView.stopAnimat()
-                self.errorView.hidden = false
-                return
+                self.errorView.isHidden = false
+            case .success(let data):
+                let parser = XMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
             }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
         }
     }
 }
@@ -178,8 +178,8 @@ class WeekHotViewController: BaseHorizontalViewController,ZXOptionBarDelegate,ZX
 /*
  xml解析
  */
-extension WeekHotViewController:NSXMLParserDelegate{
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+extension WeekHotViewController:XMLParserDelegate{
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
         if currentElement == "video_item" {
             videoDetailInfo = VideoDetailInfo()
@@ -190,8 +190,8 @@ extension WeekHotViewController:NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         if content.isEmpty {
             return
         }
@@ -208,7 +208,7 @@ extension WeekHotViewController:NSXMLParserDelegate{
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "video_item"{
             infoItems.append(videoDetailInfo)
             videoDetailInfo = nil
@@ -221,10 +221,10 @@ extension WeekHotViewController:NSXMLParserDelegate{
         }
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         subTitleLbl.text = "\(channels[lastPosition].channelName) 共\(channels[lastPosition].videoItem.count)部"
         mOptionBar.reloadData()
-        loadingView.hidden = true
+        loadingView.isHidden = true
         loadingView.stopAnimat()
     }
     

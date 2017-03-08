@@ -15,47 +15,47 @@ import UIKit
 
 class VerticalAlignmentLabel: UILabel {
     
-    var verticalAlignmentMode : VerticalAlignmentMode = VerticalAlignmentMode.VerticalAlignmentMiddle
+    var verticalAlignmentMode : VerticalAlignmentMode = VerticalAlignmentMode.verticalAlignmentMiddle
     
     
     internal enum VerticalAlignmentMode {
-        case VerticalAlignmentTop
-        case VerticalAlignmentMiddle
-        case VerticalAligmentBottom
+        case verticalAlignmentTop
+        case verticalAlignmentMiddle
+        case verticalAligmentBottom
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        verticalAlignmentMode = VerticalAlignmentMode.VerticalAlignmentMiddle
+        verticalAlignmentMode = VerticalAlignmentMode.verticalAlignmentMiddle
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setVerticalAlignmentMode(mode: VerticalAlignmentMode){
+    func setVerticalAlignmentMode(_ mode: VerticalAlignmentMode){
         self.verticalAlignmentMode = mode
     }
     
-    override func textRectForBounds(bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
-        var textRect = super.textRectForBounds(bounds, limitedToNumberOfLines: numberOfLines)
+    override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        var textRect = super.textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines)
         switch verticalAlignmentMode {
-        case .VerticalAlignmentTop:
+        case .verticalAlignmentTop:
             textRect.origin.y = bounds.origin.y
             break
-        case .VerticalAligmentBottom:
+        case .verticalAligmentBottom:
             textRect.origin.y = bounds.origin.y + bounds.size.height - textRect.size.height
             break
-        case .VerticalAlignmentMiddle:
+        case .verticalAlignmentMiddle:
             textRect.origin.y = bounds.origin.y + (bounds.size.height - textRect.size.height) / 2.0
             break
         }
         return textRect
     }
     
-    override func drawTextInRect(rect: CGRect) {
-        let actualRect = textRectForBounds(rect, limitedToNumberOfLines: self.numberOfLines)
-        super.drawTextInRect(actualRect)
+    override func drawText(in rect: CGRect) {
+        let actualRect = textRect(forBounds: rect, limitedToNumberOfLines: self.numberOfLines)
+        super.drawText(in: actualRect)
     }
     
 }

@@ -9,15 +9,15 @@
 import UIKit
 
 @objc protocol SettingBlockViewClickDelegate{
-    func settingBlockViewClick(settingData:SettingBlockData)
+    func settingBlockViewClick(_ settingData:SettingBlockData)
 }
 
 class SettingBlockView: UIView {
     
-    private var titleLbl : UILabel!
-    private var inco : UIImageView!
-    private var backgroundImg : UIImageView!
-    private var clickView : UIView!
+    fileprivate var titleLbl : UILabel!
+    fileprivate var inco : UIImageView!
+    fileprivate var backgroundImg : UIImageView!
+    fileprivate var clickView : UIView!
     
     var settingData:SettingBlockData!
     weak var clickDelegate:SettingBlockViewClickDelegate!
@@ -29,11 +29,11 @@ class SettingBlockView: UIView {
         initInco()
         clickView = UIView()
         clickView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
-        clickView.hidden = true
+        clickView.isHidden = true
         self.addSubview(clickView)
         setConstraints()
         
-        clickView.snp_makeConstraints { (make) in
+        clickView.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
@@ -43,45 +43,45 @@ class SettingBlockView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func initBackgroundImg(){
-        backgroundImg = UIImageView(frame: CGRectMake(0, 0, frame.width, frame.height))
-        backgroundImg.contentMode = .ScaleAspectFill
+    fileprivate func initBackgroundImg(){
+        backgroundImg = UIImageView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
+        backgroundImg.contentMode = .scaleAspectFill
         addSubview(backgroundImg)
     }
     
-    private func initTitleLbl(){
-        titleLbl = UILabel(frame: CGRectMake(0, frame.height - 20, frame.width, 20))
-        titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.textAlignment = .Center
-        titleLbl.font = UIFont.systemFontOfSize(12)
+    fileprivate func initTitleLbl(){
+        titleLbl = UILabel(frame: CGRect(x: 0, y: frame.height - 20, width: frame.width, height: 20))
+        titleLbl.textColor = UIColor.white
+        titleLbl.textAlignment = .center
+        titleLbl.font = UIFont.systemFont(ofSize: 12)
         addSubview(titleLbl)
     }
     
-    private func initInco(){
-        inco = UIImageView(frame: CGRectMake(0, 10, frame.width, frame.height - 20))
-        inco.contentMode = .ScaleAspectFill
+    fileprivate func initInco(){
+        inco = UIImageView(frame: CGRect(x: 0, y: 10, width: frame.width, height: frame.height - 20))
+        inco.contentMode = .scaleAspectFill
         addSubview(inco)
     }
     
-    private func setConstraints(){
-        backgroundImg.snp_makeConstraints { (make) in
+    fileprivate func setConstraints(){
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.equalTo(self)
             make.left.equalTo(self)
             make.height.width.equalTo(self)
         }
-        inco.snp_makeConstraints { (make) in
+        inco.snp.makeConstraints { (make) in
             make.centerX.centerY.equalTo(self)
             make.height.width.equalTo(self)
         }
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.bottom.equalTo(self)
             make.left.equalTo(self)
             make.right.equalTo(self)
-            make.height.equalTo(self.snp_height).dividedBy(6)
+            make.height.equalTo(self.snp.height).dividedBy(6)
         }
     }
     
-    func setData(data:SettingBlockData){
+    func setData(_ data:SettingBlockData){
         self.settingData = data
         setBackgroundImg(UIImage(named: settingData.backgroundImg)!)
         setInco(UIImage(named: settingData.icon)!)
@@ -89,41 +89,41 @@ class SettingBlockView: UIView {
     }
     
     
-    func setBackgroundImg(image: UIImage){
+    func setBackgroundImg(_ image: UIImage){
         backgroundImg.image = image
     }
     
-    func setInco(image: UIImage){
+    func setInco(_ image: UIImage){
         inco.image = image
     }
     
-    func setTitle(title: String){
+    func setTitle(_ title: String){
         titleLbl.text = title
     }
   
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        clickView.hidden = false
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        clickView.isHidden = false
     }
     
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
-        clickView.hidden = true
+    override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
+        clickView.isHidden = true
     }
 
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        let point:CGPoint = (touches.first?.locationInView(self))!
-        let isInside = self.pointInside(point, withEvent: event)
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let point:CGPoint = (touches.first?.location(in: self))!
+        let isInside = self.point(inside: point, with: event)
         if !isInside {
-            clickView.hidden = true
+            clickView.isHidden = true
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        clickView.hidden = true
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        clickView.isHidden = true
         if clickDelegate == nil{
             return
         }
-        let point:CGPoint = (touches.first?.locationInView(self))!
-        let isInside = self.pointInside(point, withEvent: event)
+        let point:CGPoint = (touches.first?.location(in: self))!
+        let isInside = self.point(inside: point, with: event)
         if !isInside {
             return
         }

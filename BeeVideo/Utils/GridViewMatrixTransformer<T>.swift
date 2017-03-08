@@ -10,7 +10,7 @@ import UIKit
 
 class GridViewMatrixTransformer {
 
-    func multiPageTransform<T>(matrixsList: [T]?,row: Int,col: Int) -> [T]?{
+    func multiPageTransform<T>(_ matrixsList: [T]?,row: Int,col: Int) -> [T]?{
         if matrixsList == nil || (matrixsList?.isEmpty)! {
             return nil
         } else if matrixsList!.count < 2{
@@ -72,7 +72,7 @@ class GridViewMatrixTransformer {
     }
     
     
-    func singlePageTransform<T>(matrix: [T]?,row: Int,col: Int) -> [T]?{
+    func singlePageTransform<T>(_ matrix: [T]?,row: Int,col: Int) -> [T]?{
         
         if matrix == nil || (matrix?.isEmpty)! {
             return nil
@@ -91,7 +91,7 @@ class GridViewMatrixTransformer {
 
         let size = matrix!.count
         var matrixIndex = 0
-        var res:[T] = Array<T>(count: size,repeatedValue: matrix![0])
+        var res:[T] = Array<T>(repeating: matrix![0],count: size)
         for i in 0..<col {
             for j in 0..<row {
                 let index = j * col + i

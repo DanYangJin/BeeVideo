@@ -10,7 +10,7 @@
 
 class ChooseOptionBarCell: ZXOptionBarCell {
     
-    private var backgroundImg:UIView!
+    fileprivate var backgroundImg:UIView!
     var titleLable:UILabel!
     
     override var selected: Bool{
@@ -18,7 +18,7 @@ class ChooseOptionBarCell: ZXOptionBarCell {
             if selected{
                 titleLable.textColor = UIColor.textBlueColor()
             }else{
-                titleLable.textColor = UIColor.whiteColor()
+                titleLable.textColor = UIColor.white
             }
         }
     }
@@ -28,17 +28,17 @@ class ChooseOptionBarCell: ZXOptionBarCell {
         
         backgroundImg = UIImageView(image: UIImage(named: "normal_bg"))
         self.addSubview(backgroundImg)
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.top.bottom.equalTo(self)
         }
         
         titleLable = UILabel()
-        titleLable.textColor = UIColor.whiteColor()
-        titleLable.font = UIFont.systemFontOfSize(12)
-        titleLable.textAlignment = .Center
+        titleLable.textColor = UIColor.white
+        titleLable.font = UIFont.systemFont(ofSize: 12)
+        titleLable.textAlignment = .center
         self.addSubview(titleLable)
-        titleLable.snp_makeConstraints { (make) in
+        titleLable.snp.makeConstraints { (make) in
             make.center.equalTo(self)
         }
         

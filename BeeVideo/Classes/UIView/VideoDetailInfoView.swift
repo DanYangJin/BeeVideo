@@ -9,28 +9,28 @@
 import UIKit
 
 @objc protocol DetailBtnClickDelegate {
-    func detailBtnClick(index: Int)
+    func detailBtnClick(_ index: Int)
 }
 
 
 class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
     
     var backBtn : UIButton!
-    private var videoTitleLbl : UILabel!
-    private var directorLbl : UILabel!
-    private var videoDirectorLbl : UILabel!
-    private var cateLbl : UILabel!
-    private var videoCateLbl : UILabel!
-    private var areaLbl : UILabel!
-    private var videoAreaLbl : UILabel!
-    private var publishLbl : UILabel!
-    private var videoPublishLbl : UILabel!
-    private var dramaLbl : UILabel! // 集数 ，时长
-    private var videoDramaLbl : UILabel!
-    private var actorLbl : UILabel!
-    private var videoActorLbl : UILabel!
-    private var descLbl : UILabel!
-    private var videoDescLbl : VerticalAlignmentLabel!
+    fileprivate var videoTitleLbl : UILabel!
+    fileprivate var directorLbl : UILabel!
+    fileprivate var videoDirectorLbl : UILabel!
+    fileprivate var cateLbl : UILabel!
+    fileprivate var videoCateLbl : UILabel!
+    fileprivate var areaLbl : UILabel!
+    fileprivate var videoAreaLbl : UILabel!
+    fileprivate var publishLbl : UILabel!
+    fileprivate var videoPublishLbl : UILabel!
+    fileprivate var dramaLbl : UILabel! // 集数 ，时长
+    fileprivate var videoDramaLbl : UILabel!
+    fileprivate var actorLbl : UILabel!
+    fileprivate var videoActorLbl : UILabel!
+    fileprivate var descLbl : UILabel!
+    fileprivate var videoDescLbl : VerticalAlignmentLabel!
     var mOptionBar:ZXOptionBar!
     
     weak var delegate:DetailBtnClickDelegate!
@@ -49,13 +49,13 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
     
     
     
-    private func initView(){
+    fileprivate func initView(){
         backBtn = UIButton()
-        backBtn.setImage(UIImage(named: "play_back_full"), forState: .Normal)
+        backBtn.setImage(UIImage(named: "play_back_full"), for: UIControlState())
         self.addSubview(backBtn)
         
         videoTitleLbl = UILabel()
-        videoTitleLbl.textColor = UIColor.whiteColor()
+        videoTitleLbl.textColor = UIColor.white
         self.addSubview(videoTitleLbl)
         
         directorLbl = UILabel()
@@ -103,9 +103,9 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
         self.addSubview(dramaLbl)
         
         videoDramaLbl = UILabel()
-        videoDramaLbl.textColor = UIColor.orangeColor()
+        videoDramaLbl.textColor = UIColor.orange
         videoDramaLbl.text = "测试"
-        videoDramaLbl.font = UIFont.systemFontOfSize(12)
+        videoDramaLbl.font = UIFont.systemFont(ofSize: 12)
         self.addSubview(videoDramaLbl)
         
         actorLbl = UILabel()
@@ -124,115 +124,115 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
         
         videoDescLbl = VerticalAlignmentLabel()
         setCommenAttr(videoDescLbl)
-        videoDescLbl.setVerticalAlignmentMode(VerticalAlignmentLabel.VerticalAlignmentMode.VerticalAlignmentTop)
+        videoDescLbl.setVerticalAlignmentMode(VerticalAlignmentLabel.VerticalAlignmentMode.verticalAlignmentTop)
         videoDescLbl.numberOfLines = 0
         self.addSubview(videoDescLbl)
         
-        mOptionBar = ZXOptionBar(frame: CGRectZero, barDelegate: self, barDataSource: self)
+        mOptionBar = ZXOptionBar(frame: CGRect.zero, barDelegate: self, barDataSource: self)
         mOptionBar.setDividerWidth(dividerWidth: 5)
-        mOptionBar.backgroundColor = UIColor.clearColor()
+        mOptionBar.backgroundColor = UIColor.clear
         self.addSubview(mOptionBar)
     }
     
-    private func setConstraint(){
-        backBtn.snp_makeConstraints { (make) in
+    fileprivate func setConstraint(){
+        backBtn.snp.makeConstraints { (make) in
             make.top.equalTo(self).offset(5)
             make.left.equalTo(self).offset(5)
             make.width.equalTo(30)
             make.height.equalTo(30)
         }
-        videoTitleLbl.snp_makeConstraints { (make) in
+        videoTitleLbl.snp.makeConstraints { (make) in
             make.top.equalTo(backBtn)
             make.bottom.equalTo(backBtn)
-            make.leading.equalTo(backBtn.snp_trailing).offset(5)
+            make.leading.equalTo(backBtn.snp.trailing).offset(5)
             make.trailing.equalTo(self).offset(-5)
         }
-        directorLbl.snp_makeConstraints { (make) in
+        directorLbl.snp.makeConstraints { (make) in
             make.left.equalTo(backBtn)
-            make.top.equalTo(backBtn.snp_bottom).offset(5)
+            make.top.equalTo(backBtn.snp.bottom).offset(5)
             make.width.equalTo(30)
             make.height.equalTo(16)
         }
-        videoDirectorLbl.snp_makeConstraints { (make) in
+        videoDirectorLbl.snp.makeConstraints { (make) in
             make.top.equalTo(directorLbl)
             make.bottom.equalTo(directorLbl)
-            make.leading.equalTo(directorLbl.snp_trailing).offset(2)
+            make.leading.equalTo(directorLbl.snp.trailing).offset(2)
             make.width.equalTo(self.frame.width * 1/3 - 30)
             //make.trailing.equalTo(self).offset(-(self.frame.width * 2/3))
         }
-        cateLbl.snp_makeConstraints { (make) in
-            make.leading.equalTo(videoDirectorLbl.snp_trailing).offset(2)
+        cateLbl.snp.makeConstraints { (make) in
+            make.leading.equalTo(videoDirectorLbl.snp.trailing).offset(2)
             make.top.equalTo(videoDirectorLbl)
             make.bottom.equalTo(videoDirectorLbl)
             make.width.equalTo(30)
         }
-        videoCateLbl.snp_makeConstraints { (make) in
-            make.leading.equalTo(cateLbl.snp_trailing).offset(2)
+        videoCateLbl.snp.makeConstraints { (make) in
+            make.leading.equalTo(cateLbl.snp.trailing).offset(2)
             make.top.equalTo(cateLbl)
             make.bottom.equalTo(cateLbl)
             make.width.equalTo(self.frame.width * 1/3 - 30)
         }
-        areaLbl.snp_makeConstraints { (make) in
-            make.leading.equalTo(videoCateLbl.snp_trailing).offset(2)
+        areaLbl.snp.makeConstraints { (make) in
+            make.leading.equalTo(videoCateLbl.snp.trailing).offset(2)
             make.top.equalTo(cateLbl)
             make.bottom.equalTo(cateLbl)
             make.width.equalTo(30)
         }
-        videoAreaLbl.snp_makeConstraints { (make) in
-            make.leading.equalTo(areaLbl.snp_trailing).offset(2)
+        videoAreaLbl.snp.makeConstraints { (make) in
+            make.leading.equalTo(areaLbl.snp.trailing).offset(2)
             make.top.equalTo(cateLbl)
             make.bottom.equalTo(cateLbl)
             make.trailing.equalTo(self).offset(-5)
         }
-        publishLbl.snp_makeConstraints { (make) in
+        publishLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(directorLbl)
             make.trailing.equalTo(directorLbl)
-            make.top.equalTo(directorLbl.snp_bottom).offset(5)
+            make.top.equalTo(directorLbl.snp.bottom).offset(5)
             make.height.equalTo(16)
         }
-        videoPublishLbl.snp_makeConstraints { (make) in
+        videoPublishLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(videoDirectorLbl)
             make.trailing.equalTo(videoDirectorLbl)
             make.top.equalTo(publishLbl)
             make.bottom.equalTo(publishLbl)
         }
-        dramaLbl.snp_makeConstraints { (make) in
+        dramaLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(cateLbl)
             make.trailing.equalTo(cateLbl)
             make.top.equalTo(publishLbl)
             make.bottom.equalTo(publishLbl)
         }
-        videoDramaLbl.snp_makeConstraints { (make) in
+        videoDramaLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(videoCateLbl)
             make.trailing.equalTo(videoCateLbl)
             make.top.equalTo(publishLbl)
             make.bottom.equalTo(publishLbl)
         }
-        actorLbl.snp_makeConstraints { (make) in
+        actorLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(directorLbl)
             make.trailing.equalTo(directorLbl)
-            make.top.equalTo(publishLbl.snp_bottom).offset(5)
+            make.top.equalTo(publishLbl.snp.bottom).offset(5)
             make.height.equalTo(16)
         }
-        videoActorLbl.snp_makeConstraints { (make) in
+        videoActorLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(videoDirectorLbl)
             make.trailing.equalTo(self).offset(-5)
             make.top.equalTo(actorLbl)
             make.bottom.equalTo(actorLbl)
         }
-        descLbl.snp_makeConstraints { (make) in
+        descLbl.snp.makeConstraints { (make) in
             make.leading.equalTo(actorLbl)
-            make.top.equalTo(actorLbl.snp_bottom).offset(5)
+            make.top.equalTo(actorLbl.snp.bottom).offset(5)
             make.height.equalTo(16)
         }
-        videoDescLbl.snp_makeConstraints { (make) in
+        videoDescLbl.snp.makeConstraints { (make) in
             make.left.equalTo(descLbl)
             make.right.equalTo(self).offset(-5)
-            make.top.equalTo(descLbl.snp_bottom)
-            make.bottom.equalTo(mOptionBar.snp_top)
-            //make.bottom.equalTo(playBtn.snp_top).offset(-5)
+            make.top.equalTo(descLbl.snp.bottom)
+            make.bottom.equalTo(mOptionBar.snp.top)
+            //make.bottom.equalTo(playBtn.snp.top).offset(-5)
         }
-        mOptionBar.snp_makeConstraints { (make) in
+        mOptionBar.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.bottom.equalTo(self)
             make.height.equalTo(30)
@@ -240,38 +240,38 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
         
     }
     
-    func optionBar(optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
+    func optionBar(_ optionBar: ZXOptionBar, widthForColumnsAtIndex index: Int) -> Float {
         return Float(self.frame.width * 3/4)/4
     }
     
-    func numberOfColumnsInOptionBar(optionBar: ZXOptionBar) -> Int {
+    func numberOfColumnsInOptionBar(_ optionBar: ZXOptionBar) -> Int {
         return btnItems.count
     }
     
-    func optionBar(optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
+    func optionBar(_ optionBar: ZXOptionBar, cellForColumnAtIndex index: Int) -> ZXOptionBarCell {
         
         var cell:VideoDetailBtnCell? = optionBar.dequeueReusableCellWithIdentifier("detailCell") as? VideoDetailBtnCell
         
         if cell == nil {
-            cell = VideoDetailBtnCell(style: .ZXOptionBarCellStyleDefault, reuseIdentifier: "detailCell")
+            cell = VideoDetailBtnCell(style: .zxOptionBarCellStyleDefault, reuseIdentifier: "detailCell")
         }
         cell?.setViewData(btnItems[index])
         
         return cell!
     }
     
-    func optionBar(optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
+    func optionBar(_ optionBar: ZXOptionBar, didSelectColumnAtIndex index: Int) {
         if delegate != nil {
             delegate.detailBtnClick(index)
         }
     }
     
-    private func setCommenAttr(label:UILabel){
-        label.textColor = UIColor.whiteColor()
-        label.font = UIFont.systemFontOfSize(12)
+    fileprivate func setCommenAttr(_ label:UILabel){
+        label.textColor = UIColor.white
+        label.font = UIFont.systemFont(ofSize: 12)
     }
     
-    func setData(videoDetailInfo: VideoDetailInfo){
+    func setData(_ videoDetailInfo: VideoDetailInfo){
         videoTitleLbl.text = videoDetailInfo.name
         videoDirectorLbl.text = videoDetailInfo.directorString
         videoCateLbl.text = videoDetailInfo.category
@@ -283,7 +283,7 @@ class VideoDetailInfoView: UIView,ZXOptionBarDataSource,ZXOptionBarDelegate {
         collectDramaList(videoDetailInfo)
     }
     
-    private func collectDramaList(videoDetailInfo: VideoDetailInfo){
+    fileprivate func collectDramaList(_ videoDetailInfo: VideoDetailInfo){
         let isChooseDramaNeeded = VideoInfoUtils.isChooseDramaNeeded(videoDetailInfo)
         if isChooseDramaNeeded {
             let totalSize = videoDetailInfo.dramas.count

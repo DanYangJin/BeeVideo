@@ -15,14 +15,14 @@ class VideoMenuContentCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
         
         titleLbl = UILabel()
-        titleLbl.textAlignment = .Center
-        titleLbl.font = UIFont.systemFontOfSize(10)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.textAlignment = .center
+        titleLbl.font = UIFont.systemFont(ofSize: 10)
+        titleLbl.textColor = UIColor.white
         self.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.top.bottom.equalTo(self)
         }
@@ -33,12 +33,12 @@ class VideoMenuContentCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         //super.setSelected(selected, animated: animated)
         if selected {
             titleLbl.textColor = UIColor.textBlueColor()
         }else{
-            titleLbl.textColor = UIColor.whiteColor()
+            titleLbl.textColor = UIColor.white
         }
         // Configure the view for the selected state
     }

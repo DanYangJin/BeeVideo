@@ -16,16 +16,16 @@ class KeyboardCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         
         backgroundView = UIImageView(image: UIImage(named: "normal_bg"))//?.resizableImageWithCapInsets(UIEdgeInsets(top: 12,left: 12,bottom: 58,right: 58), resizingMode: .Stretch))
-        backgroundView?.contentMode = .ScaleToFill
-        backgroundView?.hidden = true
+        backgroundView?.contentMode = .scaleToFill
+        backgroundView?.isHidden = true
         
         titleLabel = UILabel()
-        titleLabel.textAlignment = .Center
-        titleLabel.textColor = UIColor.whiteColor()
-        titleLabel.font = UIFont.systemFontOfSize(12)
+        titleLabel.textAlignment = .center
+        titleLabel.textColor = UIColor.white
+        titleLabel.font = UIFont.systemFont(ofSize: 12)
         self.contentView.addSubview(titleLabel)
         
-        titleLabel.snp_makeConstraints { (make) in
+        titleLabel.snp.makeConstraints { (make) in
             make.center.equalTo(self)
         }
     }

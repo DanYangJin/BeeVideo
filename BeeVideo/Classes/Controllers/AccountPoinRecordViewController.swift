@@ -10,7 +10,7 @@
 
 class AccountPoinRecordViewController: BaseBackViewController,UITableViewDelegate,UITableViewDataSource {
 
-    private var mTableView:UITableView!
+    fileprivate var mTableView:UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,12 +22,12 @@ class AccountPoinRecordViewController: BaseBackViewController,UITableViewDelegat
     }
     
     //UITableViewDataSource
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return UITableViewCell(style: .Default, reuseIdentifier: "11")
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell(style: .default, reuseIdentifier: "11")
     }
     
 }

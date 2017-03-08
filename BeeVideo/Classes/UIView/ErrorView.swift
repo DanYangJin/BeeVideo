@@ -20,23 +20,23 @@ class ErrorView: UIView {
         
         
         errorInfoLable = UILabel()
-        errorInfoLable.font = UIFont.systemFontOfSize(14)
-        errorInfoLable.textAlignment = .Center
-        errorInfoLable.textColor = UIColor.whiteColor()
+        errorInfoLable.font = UIFont.systemFont(ofSize: 14)
+        errorInfoLable.textAlignment = .center
+        errorInfoLable.textColor = UIColor.white
         self.addSubview(errorInfoLable)
-        errorInfoLable.snp_makeConstraints { (make) in
+        errorInfoLable.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.bottom.equalTo(self)
             make.height.equalTo(30)
         }
         
         errorImg = UIImageView()
-        errorImg.contentMode = .ScaleAspectFit
+        errorImg.contentMode = .scaleAspectFit
         errorImg.image = UIImage(named: "error_icon")
         self.addSubview(errorImg)
-        errorImg.snp_makeConstraints { (make) in
+        errorImg.snp.makeConstraints { (make) in
             make.top.equalTo(self)
-            make.bottom.equalTo(errorInfoLable.snp_top)
+            make.bottom.equalTo(errorInfoLable.snp.top)
             make.left.right.equalTo(self)
         }
         

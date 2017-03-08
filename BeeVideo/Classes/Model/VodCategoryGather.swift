@@ -18,18 +18,18 @@ class VodCategoryGather{
     var vodCategoryList : Array<VodCategory> = Array<VodCategory>()
     
     //拼接本地默认的分类
-    func assembleLocalCategory(channelId: String){
+    func assembleLocalCategory(_ channelId: String){
         var cate : VodCategory = VodCategory()
         cate.channelId = channelId
         cate.id = VodCategory.ID_FILTER_CATEGORY_VIDEO
         cate.name = "筛选"
-        vodCategoryList.insert(cate, atIndex: 0)
+        vodCategoryList.insert(cate, at: 0)
         
         cate = VodCategory()
         cate.channelId = channelId
         cate.name = "搜索"
         cate.id = VodCategory.ID_SEARCH
-        vodCategoryList.insert(cate, atIndex: 1)
+        vodCategoryList.insert(cate, at: 1)
         
         var title : String = ""
         for category in vodCategoryList{

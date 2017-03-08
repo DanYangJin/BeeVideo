@@ -22,7 +22,7 @@ class VideoCategoryCell: ZXOptionBarCell {
     }
     
     override func layoutSubviews() {
-        itemView.frame = CGRectMake(0, 0, self.frame.width, self.frame.height)
+        itemView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
     }
 
     

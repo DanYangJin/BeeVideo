@@ -12,15 +12,15 @@
 
 class LoadingView: UIView {
 
-    private var animaImg:UIImageView!
+    fileprivate var animaImg:UIImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         animaImg = UIImageView()
-        animaImg.contentMode = .ScaleAspectFit
+        animaImg.contentMode = .scaleAspectFit
         self.addSubview(animaImg)
-        animaImg.snp_makeConstraints { (make) in
+        animaImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
@@ -40,15 +40,15 @@ class LoadingView: UIView {
     }
     
     func startAnimat(){
-        if self.hidden {
-            self.hidden = false
+        if self.isHidden {
+            self.isHidden = false
         }
         animaImg.startAnimating()
     }
     
     func stopAnimat(){
-        if animaImg.isAnimating(){
-            self.hidden = true
+        if animaImg.isAnimating{
+            self.isHidden = true
             animaImg.stopAnimating()
         }
     }

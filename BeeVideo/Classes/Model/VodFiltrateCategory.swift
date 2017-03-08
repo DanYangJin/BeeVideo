@@ -9,11 +9,11 @@
 import UIKit
 
 enum FiltType {
-    case YEAR
-    case AREA
-    case ORDER
-    case CATEGORY
-    case UNKNOW
+    case year
+    case area
+    case order
+    case category
+    case unknow
 }
 
 
@@ -23,7 +23,7 @@ class VodFiltrateCategory: NSObject {
     static let ID_VOD_FILTRATE_LAST_UPDATE = -10 //最新
     static let ID_VOD_FILTRATE_MOST_POPULE = -11 //最热
     
-    var type:FiltType = FiltType.UNKNOW
+    var type:FiltType = FiltType.unknow
     var id = 0;
     var name = ""
     

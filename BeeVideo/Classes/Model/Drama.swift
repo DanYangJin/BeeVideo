@@ -36,7 +36,7 @@ class Drama {
         return currentUsedSourceInfo
     }
     
-    func setCurrentUsedSourcePosition(position: Int){
+    func setCurrentUsedSourcePosition(_ position: Int){
         if sources.isEmpty {
             return
         }

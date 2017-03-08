@@ -12,13 +12,13 @@ import Alamofire
     我的帐户页面
  */
 
-class AccountViewController: BaseBackViewController,NSXMLParserDelegate {
+class AccountViewController: BaseBackViewController,XMLParserDelegate {
 
-    private var accountView:AccountView!
-    private var recordBtn:KeyBoardViewButton!
-    private var helpBtn:KeyBoardViewButton!
+    fileprivate var accountView:AccountView!
+    fileprivate var recordBtn:KeyBoardViewButton!
+    fileprivate var helpBtn:KeyBoardViewButton!
     
-    private var accountInfo:AccountInfo!
+    fileprivate var accountInfo:AccountInfo!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,34 +26,34 @@ class AccountViewController: BaseBackViewController,NSXMLParserDelegate {
         
         accountView = AccountView()
         self.view.addSubview(accountView)
-        accountView.snp_makeConstraints { (make) in
+        accountView.snp.makeConstraints { (make) in
             make.center.equalTo(self.view)
             make.height.equalTo(self.view).multipliedBy(0.4)
             make.width.equalTo(self.view).multipliedBy(0.7)
         }
         
         recordBtn = KeyBoardViewButton()
-        recordBtn.buttonMode = .Text
+        recordBtn.buttonMode = .text
         recordBtn.textLbl.text = "积分纪录"
-        recordBtn.textLbl.font = UIFont.systemFontOfSize(12)
-        recordBtn.addTarget(self, action: #selector(self.toPointRecordController), forControlEvents: .TouchUpInside)
+        recordBtn.textLbl.font = UIFont.systemFont(ofSize: 12)
+        recordBtn.addTarget(self, action: #selector(self.toPointRecordController), for: .touchUpInside)
         self.view.addSubview(recordBtn)
-        recordBtn.snp_makeConstraints { (make) in
-            make.top.equalTo(accountView.snp_bottom).offset(30)
-            make.right.equalTo(accountView.snp_centerX).offset(-10)
-            make.width.equalTo(accountView.snp_height).multipliedBy(0.7)
-            make.height.equalTo(accountView.snp_height).dividedBy(5)
+        recordBtn.snp.makeConstraints { (make) in
+            make.top.equalTo(accountView.snp.bottom).offset(30)
+            make.right.equalTo(accountView.snp.centerX).offset(-10)
+            make.width.equalTo(accountView.snp.height).multipliedBy(0.7)
+            make.height.equalTo(accountView.snp.height).dividedBy(5)
         }
         
         helpBtn = KeyBoardViewButton()
-        helpBtn.buttonMode = .Text
-        helpBtn.textLbl.font = UIFont.systemFontOfSize(12)
+        helpBtn.buttonMode = .text
+        helpBtn.textLbl.font = UIFont.systemFont(ofSize: 12)
         helpBtn.textLbl.text = "积分帮助"
         self.view.addSubview(helpBtn)
-        helpBtn.snp_makeConstraints { (make) in
+        helpBtn.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(recordBtn)
             make.width.equalTo(recordBtn)
-            make.left.equalTo(accountView.snp_centerX).offset(10)
+            make.left.equalTo(accountView.snp.centerX).offset(10)
         }
         
         getAccountData()
@@ -64,18 +64,18 @@ class AccountViewController: BaseBackViewController,NSXMLParserDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    private var currentElement = ""
-    func parserDidStartDocument(parser: NSXMLParser) {
+    fileprivate var currentElement = ""
+    func parserDidStartDocument(_ parser: XMLParser) {
         accountInfo = AccountInfo()
     }
     
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
         currentElement = elementName
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String) {
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
         
-        let content = string.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let content = string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         if currentElement == "totalPoint" {
             accountInfo.totalPoint = content
@@ -88,12 +88,12 @@ class AccountViewController: BaseBackViewController,NSXMLParserDelegate {
         }
     }
     
-    func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         currentElement = ""
         
     }
     
-    func parserDidEndDocument(parser: NSXMLParser) {
+    func parserDidEndDocument(_ parser: XMLParser) {
         accountView.currentPointLbl.text = accountInfo.currentPoint + "分"
         accountView.nameLbl.text = accountInfo.username
         accountView.allPointLbl.text = accountInfo.totalPoint + "分"
@@ -102,21 +102,21 @@ class AccountViewController: BaseBackViewController,NSXMLParserDelegate {
     
     
     func getAccountData(){
-        Alamofire.request(.GET, CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.ACTION_QUERY_USER_POINT_INFO)!, parameters: nil).response{
-            request,_,data,error in
-            if error != nil{
-                return
+        Alamofire.request(CommenUtils.fixRequestUrl(HttpContants.HOST, action: HttpContants.ACTION_QUERY_USER_POINT_INFO)!).responseData { (response) in
+            switch response.result{
+            case .failure(let error):
+                print(error)
+            case .success(let data):
+                let parser = XMLParser(data: data)
+                parser.delegate = self
+                parser.parse()
             }
-            let parser = NSXMLParser(data: data!)
-            parser.delegate = self
-            parser.parse()
-            
         }
     }
     
     func toPointRecordController(){
         let controller = AccountPoinRecordViewController()
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
     
     

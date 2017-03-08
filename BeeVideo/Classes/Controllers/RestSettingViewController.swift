@@ -12,9 +12,9 @@
 
 class RestSettingViewController: BaseBackViewController,SettingBlockViewClickDelegate {
 
-    private var backgroundSettingBlockView:SettingBlockView!
-    private var downloadSettingBlockView:SettingBlockView!
-    private var clearCacheBlockView:SettingBlockView!
+    fileprivate var backgroundSettingBlockView:SettingBlockView!
+    fileprivate var downloadSettingBlockView:SettingBlockView!
+    fileprivate var clearCacheBlockView:SettingBlockView!
     
     
     override func viewDidLoad() {
@@ -28,9 +28,9 @@ class RestSettingViewController: BaseBackViewController,SettingBlockViewClickDel
         backgroundSettingBlockView.setData(settingData)
         backgroundSettingBlockView.clickDelegate = self
         view.addSubview(backgroundSettingBlockView)
-        backgroundSettingBlockView.snp_makeConstraints { (make) in
-            make.top.equalTo(backView.snp_bottom).offset(30)
-            make.left.equalTo(titleLbl.snp_centerX)
+        backgroundSettingBlockView.snp.makeConstraints { (make) in
+            make.top.equalTo(backView.snp.bottom).offset(30)
+            make.left.equalTo(titleLbl.snp.centerX)
             make.height.width.equalTo(150)
         }
         
@@ -39,8 +39,8 @@ class RestSettingViewController: BaseBackViewController,SettingBlockViewClickDel
         downloadSettingBlockView.clickDelegate = self
         downloadSettingBlockView.setData(settingData)
         view.addSubview(downloadSettingBlockView)
-        downloadSettingBlockView.snp_makeConstraints { (make) in
-            make.left.equalTo(backgroundSettingBlockView.snp_right).offset(10)
+        downloadSettingBlockView.snp.makeConstraints { (make) in
+            make.left.equalTo(backgroundSettingBlockView.snp.right).offset(10)
             make.top.bottom.equalTo(backgroundSettingBlockView)
             make.width.equalTo(backgroundSettingBlockView)
         }
@@ -51,8 +51,8 @@ class RestSettingViewController: BaseBackViewController,SettingBlockViewClickDel
         clearCacheBlockView.setData(settingData)
         clearCacheBlockView.clickDelegate = self
         view.addSubview(clearCacheBlockView)
-        clearCacheBlockView.snp_makeConstraints { (make) in
-            make.left.equalTo(downloadSettingBlockView.snp_right).offset(10)
+        clearCacheBlockView.snp.makeConstraints { (make) in
+            make.left.equalTo(downloadSettingBlockView.snp.right).offset(10)
             make.top.bottom.equalTo(downloadSettingBlockView)
             make.width.equalTo(backgroundSettingBlockView)
         }
@@ -64,7 +64,7 @@ class RestSettingViewController: BaseBackViewController,SettingBlockViewClickDel
     }
     
     
-    func settingBlockViewClick(settingData: SettingBlockData) {
+    func settingBlockViewClick(_ settingData: SettingBlockData) {
         
     }
     

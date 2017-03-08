@@ -10,9 +10,9 @@ import UIKit
 
 class GuideViewController: BaseViewController,UIScrollViewDelegate {
     
-    private var guideScrollerView : UIScrollView!
-    private let numOfPages = 3
-    private var enterBtn : UIButton!
+    fileprivate var guideScrollerView : UIScrollView!
+    fileprivate let numOfPages = 3
+    fileprivate var enterBtn : UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,7 @@ class GuideViewController: BaseViewController,UIScrollViewDelegate {
         let frame = self.view.bounds
         guideScrollerView = UIScrollView()
         guideScrollerView.frame = frame
-        guideScrollerView.pagingEnabled = true
+        guideScrollerView.isPagingEnabled = true
         guideScrollerView.showsVerticalScrollIndicator = false
         guideScrollerView.showsHorizontalScrollIndicator = false
         guideScrollerView.scrollsToTop = false
@@ -30,39 +30,39 @@ class GuideViewController: BaseViewController,UIScrollViewDelegate {
         
         for i in 0 ..< numOfPages{
             let imageView = UIImageView(image: UIImage(named: "launcher_guide_\(i + 1)"))
-            imageView.frame = CGRectMake(frame.size.width * CGFloat(i), 0, frame.size.width, frame.size.height)
-            imageView.contentMode = .ScaleToFill
+            imageView.frame = CGRect(x: frame.size.width * CGFloat(i), y: 0, width: frame.size.width, height: frame.size.height)
+            imageView.contentMode = .scaleToFill
             guideScrollerView.addSubview(imageView)
         }
         
         self.view.addSubview(guideScrollerView)
         
         enterBtn = UIButton()
-        enterBtn.enabled = false
-        enterBtn.addTarget(self, action: #selector(self.toLauncherController), forControlEvents: .TouchUpInside)
+        enterBtn.isEnabled = false
+        enterBtn.addTarget(self, action: #selector(self.toLauncherController), for: .touchUpInside)
         self.view.addSubview(enterBtn)
-        enterBtn.snp_makeConstraints { (make) in
+        enterBtn.snp.makeConstraints { (make) in
             make.centerX.equalTo(self.view)
             //make.bottom.equalTo(self.view).offset(-20)
-            make.bottom.equalTo(self.view.snp_bottom).offset(-30)
+            make.bottom.equalTo(self.view.snp.bottom).offset(-30)
             make.width.equalTo(120)
             make.height.equalTo(40)
         }
         
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let currentPage = scrollView.contentOffset.x / self.view.frame.width
         //print(currentPage)
         if currentPage == 2 {
-            enterBtn.enabled = true
+            enterBtn.isEnabled = true
         }
     }
     
     
     func toLauncherController(){
         let controller = LauncherViewController()
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
         
     }
     

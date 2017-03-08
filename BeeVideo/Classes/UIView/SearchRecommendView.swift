@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol SearchRecommendViewItemClickDelegate {
-    func onSearchRecommendViewItemClick(title: String)
+    func onSearchRecommendViewItemClick(_ title: String)
 }
 
 /**
@@ -18,8 +18,8 @@ import UIKit
 
 class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
 
-    private var mCollectionView:UICollectionView!
-    private var dataList:[String] = [String]()
+    fileprivate var mCollectionView:UICollectionView!
+    fileprivate var dataList:[String] = [String]()
     var loadingView:LoadingView!
     weak var itemClickDelegate:SearchRecommendViewItemClickDelegate!
         
@@ -28,13 +28,13 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 3
-        mCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        mCollectionView.registerClass(SearchRecomCollectionViewCell.self, forCellWithReuseIdentifier: "recomCell")
-        mCollectionView.backgroundColor = UIColor.clearColor()
+        mCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        mCollectionView.register(SearchRecomCollectionViewCell.self, forCellWithReuseIdentifier: "recomCell")
+        mCollectionView.backgroundColor = UIColor.clear
         mCollectionView.dataSource = self
         mCollectionView.delegate = self
         self.addSubview(mCollectionView)
-        mCollectionView.snp_makeConstraints { (make) in
+        mCollectionView.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
@@ -42,7 +42,7 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
         loadingView = LoadingView()
         loadingView.startAnimat()
         self.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
+        loadingView.snp.makeConstraints { (make) in
             make.height.width.equalTo(40)
             make.center.equalTo(self)
         }
@@ -53,21 +53,21 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setViewData(data: [String]){
+    func setViewData(_ data: [String]){
         self.dataList = data
         loadingView.stopAnimat()
         mCollectionView.reloadData()
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataList.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("recomCell", forIndexPath: indexPath) as! SearchRecomCollectionViewCell
-        cell.titleLable.text = dataList[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "recomCell", for: indexPath) as! SearchRecomCollectionViewCell
+        cell.titleLable.text = dataList[(indexPath as NSIndexPath).row]
         
-        let index = indexPath.row
+        let index = (indexPath as NSIndexPath).row
         if index == 0 {
             cell.titleLable.textColor = UIColor.colorWithHexString(ColorUtil.search_recom_item_first)
         }else if index == 2{
@@ -79,16 +79,16 @@ class SearchRecommendView: UIView,UICollectionViewDataSource,UICollectionViewDel
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let width = collectionView.frame.width * 0.48
         
         return CGSize(width: width, height: 30)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.itemClickDelegate != nil {
-            itemClickDelegate.onSearchRecommendViewItemClick(dataList[indexPath.row])
+            itemClickDelegate.onSearchRecommendViewItemClick(dataList[(indexPath as NSIndexPath).row])
         }
     }
     

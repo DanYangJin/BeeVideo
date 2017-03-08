@@ -18,7 +18,7 @@ class BasePageView: UIView {
        initData()
     }
     
-    func setController(viewController:UIViewController){
+    func setController(_ viewController:UIViewController){
        self.viewController = viewController
     }
     
@@ -26,7 +26,7 @@ class BasePageView: UIView {
         return 0
     }
     
-    func setData(homeSpace:[HomeSpace]?){
+    func setData(_ homeSpace:[HomeSpace]?){
         self.homeSpace = homeSpace
     }
 

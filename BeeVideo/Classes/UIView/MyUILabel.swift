@@ -12,17 +12,17 @@
 
 class MyUILabel: UILabel {
     
-    override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
         setViewRadius(self)
     }
 
     
-    private func setViewRadius(view: UIView){
-        let maskPath = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [UIRectCorner.BottomLeft,UIRectCorner.BottomRight], cornerRadii: CGSizeMake(5,5))
+    fileprivate func setViewRadius(_ view: UIView){
+        let maskPath = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [UIRectCorner.bottomLeft,UIRectCorner.bottomRight], cornerRadii: CGSize(width: 5,height: 5))
         let maskLayer = CAShapeLayer()
         maskLayer.frame = view.bounds
-        maskLayer.path = maskPath.CGPath
+        maskLayer.path = maskPath.cgPath
         view.layer.mask = maskLayer
     }
     

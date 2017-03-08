@@ -9,7 +9,7 @@
 
 class RestVideoCollectionCell: UICollectionViewCell {
     
-    private var backgroundImg : UIImageView!
+    fileprivate var backgroundImg : UIImageView!
     var icon : UIImageView!
     var titleLbl : UILabel!
 
@@ -17,27 +17,27 @@ class RestVideoCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .ScaleToFill
+        backgroundImg.contentMode = .scaleToFill
         backgroundImg.image = UIImage(named: "v2_laucher_block_blue_bg")
         self.contentView.addSubview(backgroundImg)
-        backgroundImg.snp_makeConstraints { (make) in
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
         
         icon = UIImageView()
-        icon.contentMode = .ScaleAspectFit
+        icon.contentMode = .scaleAspectFit
         self.contentView.addSubview(icon)
-        icon.snp_makeConstraints { (make) in
+        icon.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
         
         titleLbl = UILabel()
-        titleLbl.textColor = UIColor.whiteColor()
-        titleLbl.textAlignment = .Center
+        titleLbl.textColor = UIColor.white
+        titleLbl.textAlignment = .center
         self.contentView.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
+        titleLbl.snp.makeConstraints { (make) in
             make.left.right.equalTo(self)
             make.bottom.equalTo(self).offset(-5)
         }

@@ -18,36 +18,36 @@ class VideoMenuCategoryCell: UITableViewCell {
     
     init(style: UITableViewCellStyle, reuseIdentifier: String?,data:LeftViewTableData) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clearColor()
+        self.backgroundColor = UIColor.clear
         
         self.data = data
         
         icon = UIImageView()
         icon.image = UIImage(named: data.unSelectPic)
         self.addSubview(icon)
-        icon.snp_makeConstraints { (make) in
+        icon.snp.makeConstraints { (make) in
             make.centerY.equalTo(self)
             make.height.equalTo(self).multipliedBy(0.75)
-            make.width.equalTo(icon.snp_height)
+            make.width.equalTo(icon.snp.height)
             make.left.equalTo(self).offset(3)
         }
         
         titleLbl = UILabel()
-        titleLbl.textAlignment = .Left
-        titleLbl.font = UIFont.systemFontOfSize(10)
-        titleLbl.textColor = UIColor.whiteColor()
+        titleLbl.textAlignment = .left
+        titleLbl.font = UIFont.systemFont(ofSize: 10)
+        titleLbl.textColor = UIColor.white
         self.addSubview(titleLbl)
-        titleLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(icon.snp_right).offset(3)
+        titleLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(icon.snp.right).offset(3)
             make.centerY.equalTo(self)
         }
         
         subTitleLbl = UILabel()
-        subTitleLbl.textAlignment = .Left
-        subTitleLbl.font = UIFont.systemFontOfSize(10)
-        subTitleLbl.textColor = UIColor.whiteColor()
+        subTitleLbl.textAlignment = .left
+        subTitleLbl.font = UIFont.systemFont(ofSize: 10)
+        subTitleLbl.textColor = UIColor.white
         self.addSubview(subTitleLbl)
-        subTitleLbl.snp_makeConstraints { (make) in
+        subTitleLbl.snp.makeConstraints { (make) in
             make.right.equalTo(self)
             make.width.equalTo(self).dividedBy(3)
             make.centerY.equalTo(self)
@@ -58,7 +58,7 @@ class VideoMenuCategoryCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         //super.setSelected(selected, animated: animated)
         guard data != nil else{
             return
@@ -69,8 +69,8 @@ class VideoMenuCategoryCell: UITableViewCell {
             subTitleLbl.textColor = UIColor.textBlueColor()
         }else{
             icon.image = UIImage(named: data.unSelectPic)
-            titleLbl.textColor = UIColor.whiteColor()
-            subTitleLbl.textColor = UIColor.whiteColor()
+            titleLbl.textColor = UIColor.white
+            subTitleLbl.textColor = UIColor.white
         }
         
     }

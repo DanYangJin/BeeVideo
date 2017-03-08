@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import SnapKit
+//import SnapKit
 
 class AVPlayerControlView: UIView {
 
-    private let AutoFadeOutTimeInterval:Float = 0.5
-    private let AnimationTimeInterval:Float = 7.0
+    fileprivate let AutoFadeOutTimeInterval:Float = 0.5
+    fileprivate let AnimationTimeInterval:Float = 7.0
     
     internal var topImageView:UIImageView!
     internal var bottomImageView:UIImageView!
@@ -70,77 +70,77 @@ class AVPlayerControlView: UIView {
     }
     
     func makeSubViewsConstraints(){
-        self.topImageView.snp_makeConstraints{ (make) -> Void in
+        self.topImageView.snp.makeConstraints{ (make) -> Void in
             make.leading.trailing.top.equalTo(self)
             make.height.equalTo(80)
         }
-        self.bottomImageView.snp_makeConstraints{ (make) -> Void in
+        self.bottomImageView.snp.makeConstraints{ (make) -> Void in
             make.leading.trailing.bottom.equalTo(self)
             make.height.equalTo(50)
         }
         
-        self.playButton.snp_makeConstraints{ (make) -> Void in
-            make.topMargin.equalTo(self.bottomImageView).offset(10)
+        self.playButton.snp.makeConstraints{ (make) -> Void in
+            make.top.equalTo(self.bottomImageView).offset(10)
             make.leftMargin.equalTo(self.bottomImageView).offset(5)
             make.width.height.equalTo(30);
         }
         
-        self.nextDramaBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(playButton.snp_right)
+        self.nextDramaBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(playButton.snp.right)
             make.width.equalTo(playButton)
             make.top.bottom.equalTo(playButton)
         }
         
-        self.currentTimeLabel.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.nextDramaBtn.snp_trailing).offset(0)
-            make.centerY.equalTo(self.playButton.snp_centerY)
+        self.currentTimeLabel.snp.makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.nextDramaBtn.snp.trailing).offset(0)
+            make.centerY.equalTo(self.playButton.snp.centerY)
 
             make.width.equalTo(80);
         }
         
-        self.totalTimeLabel.snp_makeConstraints{ (make) -> Void in
-            make.trailing.equalTo(self.bottomImageView.snp_trailing).offset(3)
-            make.centerY.equalTo(self.playButton.snp_centerY)
+        self.totalTimeLabel.snp.makeConstraints{ (make) -> Void in
+            make.trailing.equalTo(self.bottomImageView.snp.trailing).offset(3)
+            make.centerY.equalTo(self.playButton.snp.centerY)
             
             make.width.equalTo(80);
         }
         
-        self.progressView.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.currentTimeLabel.snp_trailing).offset(4);
-            make.trailing.equalTo(self.totalTimeLabel.snp_leading).offset(-4);
+        self.progressView.snp.makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.currentTimeLabel.snp.trailing).offset(4);
+            make.trailing.equalTo(self.totalTimeLabel.snp.leading).offset(-4);
             //进度条偏移0.5
-            make.centerY.equalTo(self.playButton.snp_centerY).offset(0.5)
+            make.centerY.equalTo(self.playButton.snp.centerY).offset(0.5)
         }
         
-        self.videoSlider.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.currentTimeLabel.snp_trailing).offset(4);
-            make.trailing.equalTo(self.totalTimeLabel.snp_leading).offset(-4);
-            make.centerY.equalTo(self.playButton.snp_centerY)
+        self.videoSlider.snp.makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.currentTimeLabel.snp.trailing).offset(4);
+            make.trailing.equalTo(self.totalTimeLabel.snp.leading).offset(-4);
+            make.centerY.equalTo(self.playButton.snp.centerY)
         }
         
-        self.backButton.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.snp_leading).offset(15);
-            make.top.equalTo(self.snp_top).offset(15);
+        self.backButton.snp.makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.snp.leading).offset(15);
+            make.top.equalTo(self.snp.top).offset(15);
             make.width.height.equalTo(30);
         }
         
-        self.videoNameLabel.snp_makeConstraints{ (make) -> Void in
-            make.leading.equalTo(self.backButton.snp_trailing).offset(15);
+        self.videoNameLabel.snp.makeConstraints{ (make) -> Void in
+            make.leading.equalTo(self.backButton.snp.trailing).offset(15);
             make.centerY.equalTo(self.backButton)
         }
         
-        self.systemTimeLabel.snp_makeConstraints{ (make) -> Void in
-            make.trailing.equalTo(self.snp_trailing).offset(-15);
+        self.systemTimeLabel.snp.makeConstraints{ (make) -> Void in
+            make.trailing.equalTo(self.snp.trailing).offset(-15);
             make.centerY.equalTo(self.backButton)
         }
         
-        self.loadingView.snp_makeConstraints{ (make) -> Void in
+        self.loadingView.snp.makeConstraints{ (make) -> Void in
             make.center.equalTo(self)
         }
         
-        self.menuButton.snp_makeConstraints { (make) in
+        self.menuButton.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(backButton)
-            make.right.equalTo(systemTimeLabel.snp_left)
+            make.right.equalTo(systemTimeLabel.snp.left)
             make.width.equalTo(backButton)
         }
         
@@ -149,7 +149,7 @@ class AVPlayerControlView: UIView {
     func initTopImageView() -> UIImageView {
         if topImageView == nil {
             topImageView                        = UIImageView()
-            topImageView.userInteractionEnabled = true
+            topImageView.isUserInteractionEnabled = true
             topImageView.image                  = UIImage(named: "top_shadow")
         }
         return topImageView
@@ -158,7 +158,7 @@ class AVPlayerControlView: UIView {
     func initBottomImageView() -> UIImageView {
         if bottomImageView == nil {
             bottomImageView                         = UIImageView()
-            bottomImageView.userInteractionEnabled  = true
+            bottomImageView.isUserInteractionEnabled  = true
             bottomImageView.image                   = UIImage(named: "bottom_shadow")
         }
         return bottomImageView
@@ -166,8 +166,8 @@ class AVPlayerControlView: UIView {
     
     func initPlayButton() -> UIButton {
         if playButton == nil {
-            playButton = UIButton(type: UIButtonType.Custom)
-            playButton.setImage(UIImage(named: "kr-video-player-play"), forState: .Normal)
+            playButton = UIButton(type: UIButtonType.custom)
+            playButton.setImage(UIImage(named: "kr-video-player-play"), for: UIControlState())
         }
         return playButton
     }
@@ -175,9 +175,9 @@ class AVPlayerControlView: UIView {
     func initCurrentTimeLabel() -> UILabel {
         if currentTimeLabel == nil {
             currentTimeLabel = UILabel()
-            currentTimeLabel.textColor          = UIColor.whiteColor()
-            currentTimeLabel.font               = UIFont.boldSystemFontOfSize(12.0)
-            currentTimeLabel.textAlignment      = NSTextAlignment.Center
+            currentTimeLabel.textColor          = UIColor.white
+            currentTimeLabel.font               = UIFont.boldSystemFont(ofSize: 12.0)
+            currentTimeLabel.textAlignment      = NSTextAlignment.center
             currentTimeLabel.text               = "00:00"
         }
         return currentTimeLabel
@@ -185,10 +185,10 @@ class AVPlayerControlView: UIView {
     
     func initProgressView() -> UIProgressView {
         if progressView == nil {
-            progressView                    = UIProgressView(progressViewStyle: .Default)
-            progressView.progressTintColor = UIColor.blueColor()
+            progressView                    = UIProgressView(progressViewStyle: .default)
+            progressView.progressTintColor = UIColor.blue
 //            progressView.progressTintColor  = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.3)
-            progressView.trackTintColor     = UIColor.clearColor()
+            progressView.trackTintColor     = UIColor.clear
         }
         return progressView
     }
@@ -196,8 +196,8 @@ class AVPlayerControlView: UIView {
     func initVideoSlider() -> UISlider {
         if videoSlider == nil {
             videoSlider = UISlider()
-            videoSlider.setThumbImage(UIImage(named: "slider"), forState: .Normal)
-            videoSlider.minimumTrackTintColor = UIColor.whiteColor()
+            videoSlider.setThumbImage(UIImage(named: "slider"), for: UIControlState())
+            videoSlider.minimumTrackTintColor = UIColor.white
             videoSlider.maximumTrackTintColor = UIColor.init(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.6)
         }
         return videoSlider
@@ -206,9 +206,9 @@ class AVPlayerControlView: UIView {
     func initTotalTimeLabel() -> UILabel {
         if totalTimeLabel == nil {
             totalTimeLabel = UILabel()
-            totalTimeLabel.textColor          = UIColor.whiteColor()
-            totalTimeLabel.font               = UIFont.boldSystemFontOfSize(12.0)
-            totalTimeLabel.textAlignment      = NSTextAlignment.Center
+            totalTimeLabel.textColor          = UIColor.white
+            totalTimeLabel.font               = UIFont.boldSystemFont(ofSize: 12.0)
+            totalTimeLabel.textAlignment      = NSTextAlignment.center
             totalTimeLabel.text               = "00:00"
         }
         return totalTimeLabel
@@ -216,8 +216,8 @@ class AVPlayerControlView: UIView {
     
     func initBackButton() -> UIButton {
         if backButton == nil {
-            backButton = UIButton(type: UIButtonType.Custom)
-            backButton.setImage(UIImage(named: "play_back_full"), forState: .Normal)
+            backButton = UIButton(type: UIButtonType.custom)
+            backButton.setImage(UIImage(named: "play_back_full"), for: UIControlState())
         }
         return backButton
     }
@@ -225,9 +225,9 @@ class AVPlayerControlView: UIView {
     func initVideoNameLabel() -> UILabel {
         if videoNameLabel == nil {
             videoNameLabel = UILabel()
-            videoNameLabel.textColor          = UIColor.whiteColor()
-            videoNameLabel.font               = UIFont.boldSystemFontOfSize(15.0)
-            videoNameLabel.textAlignment      = NSTextAlignment.Center
+            videoNameLabel.textColor          = UIColor.white
+            videoNameLabel.font               = UIFont.boldSystemFont(ofSize: 15.0)
+            videoNameLabel.textAlignment      = NSTextAlignment.center
            // videoNameLabel.text               = "武神赵子龙"
         }
         return videoNameLabel
@@ -236,9 +236,9 @@ class AVPlayerControlView: UIView {
     func initSystemTimeLabel() -> UILabel {
         if systemTimeLabel == nil {
             systemTimeLabel = UILabel()
-            systemTimeLabel.textColor          = UIColor.whiteColor()
-            systemTimeLabel.font               = UIFont.boldSystemFontOfSize(15.0)
-            systemTimeLabel.textAlignment      = NSTextAlignment.Center
+            systemTimeLabel.textColor          = UIColor.white
+            systemTimeLabel.font               = UIFont.boldSystemFont(ofSize: 15.0)
+            systemTimeLabel.textAlignment      = NSTextAlignment.center
             systemTimeLabel.text               = TimeUtils.formatCurrentDate()
         }
         return systemTimeLabel
@@ -246,7 +246,7 @@ class AVPlayerControlView: UIView {
     
     func initIndicatorView() -> UIActivityIndicatorView{
         if loadingView == nil {
-            loadingView = UIActivityIndicatorView(activityIndicatorStyle: .White)
+            loadingView = UIActivityIndicatorView(activityIndicatorStyle: .white)
             //loadingView.startAnimating()
         }
         return loadingView
@@ -254,8 +254,8 @@ class AVPlayerControlView: UIView {
     
     func initNextDramaBtn() -> UIButton{
         if nextDramaBtn == nil {
-            nextDramaBtn = UIButton(type: UIButtonType.Custom)
-            nextDramaBtn.setImage(UIImage(named: "video_seek_next_bg"), forState: .Normal)
+            nextDramaBtn = UIButton(type: UIButtonType.custom)
+            nextDramaBtn.setImage(UIImage(named: "video_seek_next_bg"), for: UIControlState())
         }
         return nextDramaBtn
     }
@@ -263,21 +263,21 @@ class AVPlayerControlView: UIView {
     func initMenuButton() -> UIButton{
         if menuButton == nil{
             menuButton = UIButton()
-            menuButton.setImage(UIImage(named: "video_menu_normal"), forState: .Normal)
-            menuButton.setImage(UIImage(named: "video_menu_press"), forState: .Highlighted)
+            menuButton.setImage(UIImage(named: "video_menu_normal"), for: UIControlState())
+            menuButton.setImage(UIImage(named: "video_menu_press"), for: .highlighted)
         }
         return menuButton
     }
     
-    func changePlayButtonBg(flag:Bool){
+    func changePlayButtonBg(_ flag:Bool){
         if flag {
-            self.playButton.setImage(UIImage(named: "kr-video-player-play"), forState: .Normal)
+            self.playButton.setImage(UIImage(named: "kr-video-player-play"), for: UIControlState())
         } else {
-            self.playButton.setImage(UIImage(named: "kr-video-player-pause"), forState: .Normal)
+            self.playButton.setImage(UIImage(named: "kr-video-player-pause"), for: UIControlState())
         }
     }
     
-    func updateProgress(currentTime:Int, totalTime:Int){
+    func updateProgress(_ currentTime:Int, totalTime:Int){
         currentTimeLabel.text = TimeUtils.formatTime(currentTime)
         totalTimeLabel.text   = TimeUtils.formatTime(totalTime)
     }
@@ -286,22 +286,22 @@ class AVPlayerControlView: UIView {
      * 定时隐藏控制条
      */
     func autoFadeOutControlBar(){
-        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(hideControlView), object: nil)
-        self.performSelector(#selector(hideControlView), withObject: nil, afterDelay: NSTimeInterval.init(AnimationTimeInterval))
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(hideControlView), object: nil)
+        self.perform(#selector(hideControlView), with: nil, afterDelay: TimeInterval.init(AnimationTimeInterval))
     }
     
     /**
      * 取消隐藏控制条
      */
     func cancelAutoFadeOutControlBar(){
-       NSObject.cancelPreviousPerformRequestsWithTarget(self)
+       NSObject.cancelPreviousPerformRequests(withTarget: self)
     }
     
     /**
      * 动画显示控制条
      */
     func animationShow(){
-        UIView.animateWithDuration( NSTimeInterval.init(AutoFadeOutTimeInterval), animations: {
+        UIView.animate( withDuration: TimeInterval.init(AutoFadeOutTimeInterval), animations: {
                 self.showControlView()
             }, completion: { (flag:Bool) -> Void in
                 self.autoFadeOutControlBar()
@@ -312,7 +312,7 @@ class AVPlayerControlView: UIView {
      * 动画隐藏控制条
      */
     func animationHide(){
-        UIView.animateWithDuration( NSTimeInterval.init(AutoFadeOutTimeInterval),
+        UIView.animate( withDuration: TimeInterval.init(AutoFadeOutTimeInterval),
             animations: {
                 self.hideControlView()
             }, completion: nil)

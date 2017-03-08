@@ -9,10 +9,10 @@
 
 class TimeUtils {
     
-    static let dateFormat:NSDateFormatter = NSDateFormatter()
+    static let dateFormat:DateFormatter = DateFormatter()
     
 
-    static func formatTime(time:Int) -> String {
+    static func formatTime(_ time:Int) -> String {
         if time <= 0 {
             return String.init(format: "%02zd:%02zd", 0, 0)
         } else if time < 60 {
@@ -31,7 +31,7 @@ class TimeUtils {
    
     static func formatCurrentDate() -> String{
         dateFormat.dateFormat = "HH:mm"
-        return dateFormat.stringFromDate(NSDate())
+        return dateFormat.string(from: Date())
     }
 
 }

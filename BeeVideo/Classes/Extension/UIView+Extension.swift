@@ -8,10 +8,10 @@
 
 extension UIView {
     
-    func addOnClickListener(target: AnyObject, action: Selector) {
+    func addOnClickListener(_ target: AnyObject, action: Selector) {
         let gr = UITapGestureRecognizer(target: target, action: action)
         gr.numberOfTapsRequired = 1
-        self.userInteractionEnabled = true
+        self.isUserInteractionEnabled = true
         self.addGestureRecognizer(gr)
     }
 }

@@ -9,7 +9,7 @@
 class CornerImageView: UIImageView {
     
     
-    func setCorner(corner:CGFloat) {
+    func setCorner(_ corner:CGFloat) {
         self.layer.masksToBounds = true
         self.layer.cornerRadius = corner;
     }

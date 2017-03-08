@@ -11,13 +11,13 @@ class PlaySettingItemView: UIView {
 
     var iconImg:UIImageView!
     var contentChanged:Bool = false
-    private var backgroundImg:UIImageView!
-    private var nameLbl:UILabel!
-    private var selectionLbl:UILabel!
-    private var leftArrowImg:UIImageView!
-    private var rightArrowImg:UIImageView!
+    fileprivate var backgroundImg:UIImageView!
+    fileprivate var nameLbl:UILabel!
+    fileprivate var selectionLbl:UILabel!
+    fileprivate var leftArrowImg:UIImageView!
+    fileprivate var rightArrowImg:UIImageView!
     
-    private var index = 0
+    fileprivate var index = 0
     
     var currentIndex:Int{
         set{
@@ -35,34 +35,34 @@ class PlaySettingItemView: UIView {
         self.selectionList = selectionList
         
         backgroundImg = UIImageView()
-        backgroundImg.contentMode = .Redraw
-        backgroundImg.image = UIImage(named: "v2_play_setting_item_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30))
+        backgroundImg.contentMode = .redraw
+        backgroundImg.image = UIImage(named: "v2_play_setting_item_bg")?.resizableImage(withCapInsets: UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30))
         self.addSubview(backgroundImg)
         
         iconImg = UIImageView()
-        iconImg.contentMode = .ScaleAspectFill
+        iconImg.contentMode = .scaleAspectFill
         self.addSubview(iconImg)
         
         nameLbl = UILabel()
-        nameLbl.textColor = UIColor.whiteColor()
+        nameLbl.textColor = UIColor.white
         nameLbl.text = title
-        nameLbl.font = UIFont.systemFontOfSize(12)
+        nameLbl.font = UIFont.systemFont(ofSize: 12)
         self.addSubview(nameLbl)
         
         selectionLbl = UILabel()
         selectionLbl.textColor = UIColor.textBlueColor()
-        selectionLbl.textAlignment = .Center
+        selectionLbl.textAlignment = .center
         selectionLbl.text = selectionList[currentIndex]
-        selectionLbl.font = UIFont.systemFontOfSize(12)
+        selectionLbl.font = UIFont.systemFont(ofSize: 12)
         self.addSubview(selectionLbl)
         
         leftArrowImg = UIImageView()
-        leftArrowImg.contentMode = .ScaleAspectFit
+        leftArrowImg.contentMode = .scaleAspectFit
         leftArrowImg.image = UIImage(named: "v2_play_setting_left_arrow_selected")
         self.addSubview(leftArrowImg)
         
         rightArrowImg = UIImageView()
-        rightArrowImg.contentMode = .ScaleAspectFit
+        rightArrowImg.contentMode = .scaleAspectFit
         rightArrowImg.image = UIImage(named: "v2_play_setting_right_arrow_selected")
         self.addSubview(rightArrowImg)
         
@@ -76,39 +76,39 @@ class PlaySettingItemView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setConstraints(){
-        backgroundImg.snp_makeConstraints { (make) in
+    fileprivate func setConstraints(){
+        backgroundImg.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
         
-        iconImg.snp_makeConstraints { (make) in
+        iconImg.snp.makeConstraints { (make) in
             make.centerY.equalTo(self)
             make.height.equalTo(self).dividedBy(2.5)
-            make.width.equalTo(iconImg.snp_height)
+            make.width.equalTo(iconImg.snp.height)
             make.left.equalTo(self).offset(10)
         }
         
-        nameLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(iconImg.snp_right).offset(5)
+        nameLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(iconImg.snp.right).offset(5)
             make.centerY.equalTo(self)
         }
         
-        rightArrowImg.snp_makeConstraints { (make) in
+        rightArrowImg.snp.makeConstraints { (make) in
             make.right.equalTo(self).offset(-20)
             make.centerY.equalTo(self)
             make.height.width.equalTo(iconImg)
         }
         
-        leftArrowImg.snp_makeConstraints { (make) in
+        leftArrowImg.snp.makeConstraints { (make) in
             make.centerY.equalTo(self)
             make.height.width.equalTo(rightArrowImg)
-            make.left.equalTo(self.snp_right).multipliedBy(0.75)
+            make.left.equalTo(self.snp.right).multipliedBy(0.75)
         }
         
-        selectionLbl.snp_makeConstraints { (make) in
-            make.left.equalTo(leftArrowImg.snp_right)
-            make.right.equalTo(rightArrowImg.snp_left)
+        selectionLbl.snp.makeConstraints { (make) in
+            make.left.equalTo(leftArrowImg.snp.right)
+            make.right.equalTo(rightArrowImg.snp.left)
             make.centerY.equalTo(self)
         }
         

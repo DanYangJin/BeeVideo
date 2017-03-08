@@ -6,7 +6,7 @@
 //  Copyright © 2016年 skyworth. All rights reserved.
 //
 @objc protocol CateGroupBlockClick {
-    func cateGroupBlockClick(categoryGroupItem:CategoryGroupItem)
+    func cateGroupBlockClick(_ categoryGroupItem:CategoryGroupItem)
 }
 
 class CateGroupBlockView: BaseBlockView {
@@ -23,14 +23,14 @@ class CateGroupBlockView: BaseBlockView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setData(categoryGroupItem:CategoryGroupItem){
+    func setData(_ categoryGroupItem:CategoryGroupItem){
         self.categoryGroupItem = categoryGroupItem
         setImage(categoryGroupItem.poster)
         setTitle(categoryGroupItem.name)
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesEnded(touches, withEvent: event)
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
         if delegate == nil{
             return
         }

@@ -11,8 +11,8 @@ import DZNEmptyDataSet
 
 @objc
 protocol VideoListViewDelegate{
-    func onVideoListViewItemClick(videoId: String)
-    optional func onLoadMoreListener()
+    func onVideoListViewItemClick(_ videoId: String)
+    @objc optional func onLoadMoreListener()
 }
 
 
@@ -23,22 +23,22 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
     
     weak var delegate:VideoListViewDelegate!
     
-    private var viewData:[VideoBriefItem] = [VideoBriefItem]()
+    fileprivate var viewData:[VideoBriefItem] = [VideoBriefItem]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         let layout = UICollectionViewFlowLayout()
-        collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.emptyDataSetSource = self
         collectionView.emptyDataSetDelegate = self
-        collectionView.hidden = true
-        collectionView.backgroundColor = UIColor.clearColor()
-        collectionView.registerClass(VideoItemCell.self, forCellWithReuseIdentifier: "searchCell")
+        collectionView.isHidden = true
+        collectionView.backgroundColor = UIColor.clear
+        collectionView.register(VideoItemCell.self, forCellWithReuseIdentifier: "searchCell")
         self.addSubview(collectionView)
-        collectionView.snp_makeConstraints { (make) in
+        collectionView.snp.makeConstraints { (make) in
             make.top.bottom.equalTo(self)
             make.left.right.equalTo(self)
         }
@@ -46,7 +46,7 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
         loadingView = LoadingView()
         loadingView.startAnimat()
         self.addSubview(loadingView)
-        loadingView.snp_makeConstraints { (make) in
+        loadingView.snp.makeConstraints { (make) in
             make.center.equalTo(self)
             make.height.width.equalTo(40)
         }
@@ -57,33 +57,33 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
         fatalError("init(coder:) has not been implemented")
     }
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewData.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("searchCell", forIndexPath: indexPath) as? VideoItemCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchCell", for: indexPath) as? VideoItemCell
         if cell == nil {
             cell = VideoItemCell()
         }
-        cell!.itemView.setData(viewData[indexPath.row])
+        cell!.itemView.setData(viewData[(indexPath as NSIndexPath).row])
         return cell!
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let superWidth = collectionView.frame.width
         let width = (superWidth - 50) / 6
         return CGSize(width: width, height: width * 7/5)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.delegate != nil {
-            delegate.onVideoListViewItemClick(viewData[indexPath.row].id)
+            delegate.onVideoListViewItemClick(viewData[(indexPath as NSIndexPath).row].id)
         }
     }
     
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        let cellNum = indexPath.row
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let cellNum = (indexPath as NSIndexPath).row
         if cellNum == viewData.count - 1 {
             if self.delegate != nil {
                 delegate.onLoadMoreListener!()
@@ -91,15 +91,15 @@ class VideoListView: UIView,UICollectionViewDelegateFlowLayout,UICollectionViewD
         }
     }
     
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         let emptyMessage = "没有找到相关内容"
-        let attributes:[String:AnyObject] = [NSFontAttributeName : UIFont.systemFontOfSize(12),
-                                             NSForegroundColorAttributeName: UIColor.whiteColor()
+        let attributes:[String:AnyObject] = [NSFontAttributeName : UIFont.systemFont(ofSize: 12),
+                                             NSForegroundColorAttributeName: UIColor.white
         ]
         return NSAttributedString(string: emptyMessage, attributes: attributes)
     }
     
-    func setViewData(viewData: [VideoBriefItem]){
+    func setViewData(_ viewData: [VideoBriefItem]){
         self.viewData = viewData
         collectionView.reloadData()
         loadingView.stopAnimat()

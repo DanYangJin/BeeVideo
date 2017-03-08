@@ -20,18 +20,18 @@ class VodFiltrateCategoryGather: NSObject {
     }
     
     
-    func addFiltCategory(filtCategory:VodFiltrateCategory){
+    func addFiltCategory(_ filtCategory:VodFiltrateCategory){
         switch filtCategory.type {
-        case FiltType.YEAR:
+        case FiltType.year:
             yearList.append(filtCategory)
             break
-        case FiltType.AREA:
+        case FiltType.area:
             areaList.append(filtCategory)
             break
-        case FiltType.CATEGORY:
+        case FiltType.category:
             categoryList.append(filtCategory)
             break
-        case FiltType.ORDER:
+        case FiltType.order:
             orderList.append(filtCategory)
             break
         default:
@@ -43,30 +43,30 @@ class VodFiltrateCategoryGather: NSObject {
     func configOrderList(){
         let allCate = VodFiltrateCategory()
         allCate.id = Int(VodFiltrateCategory.ID_VOD_FILTRATE_ALL)
-        allCate.type = FiltType.AREA
+        allCate.type = FiltType.area
         allCate.name = "全部"
         
         var cate = VodFiltrateCategory(filt: allCate)
         areaList.append(cate)
         
         cate = VodFiltrateCategory(filt: allCate)
-        cate.type = FiltType.CATEGORY
+        cate.type = FiltType.category
         categoryList.append(cate)
         
         cate = VodFiltrateCategory(filt: allCate)
-        cate.type = FiltType.YEAR
+        cate.type = FiltType.year
         yearList.append(cate)
         
         cate = VodFiltrateCategory(filt: allCate)
         cate.id = VodFiltrateCategory.ID_VOD_FILTRATE_LAST_UPDATE
         cate.name = "最新"
-        cate.type = FiltType.ORDER
+        cate.type = FiltType.order
         orderList.append(cate)
         
         cate = VodFiltrateCategory(filt: allCate)
         cate.id = VodFiltrateCategory.ID_VOD_FILTRATE_MOST_POPULE
         cate.name = "最热"
-        cate.type = FiltType.ORDER
+        cate.type = FiltType.order
         orderList.append(cate)
         
     }

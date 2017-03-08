@@ -7,10 +7,10 @@
 //
 
 @objc protocol IKeyboardDelegate {
-    func onKeyboardClick(letter:String)
+    func onKeyboardClick(_ letter:String)
     func onClearBtnClick()
     func onBackspaceClick()
-    optional func onDigitalBtnClick(point:CGRect,data: [String])
+    @objc optional func onDigitalBtnClick(_ point:CGRect,data: [String])
 }
 
 
@@ -23,10 +23,10 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
     
     weak var keyboardDelegate:IKeyboardDelegate!
     
-    private var isAlphabet:Bool = true
-    private var alphabetList:[String] = [String]()
-    private var digitalList:[String] = [String]()
-    private var keyList:[String]!
+    fileprivate var isAlphabet:Bool = true
+    fileprivate var alphabetList:[String] = [String]()
+    fileprivate var digitalList:[String] = [String]()
+    fileprivate var keyList:[String]!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,31 +34,31 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         initData()
         
         clearBtn = KeyBoardViewButton()
-        clearBtn.buttonMode = .Icon
-        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_normal"), forState: .Normal)
-        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_selected"), forState: .Highlighted)
-        clearBtn.addTarget(self, action: #selector(self.clearBtnClick), forControlEvents: .TouchUpInside)
+        clearBtn.buttonMode = .icon
+        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_normal"), for: UIControlState())
+        clearBtn.setImage(UIImage(named: "v2_keyboard_clean_selected"), for: .highlighted)
+        clearBtn.addTarget(self, action: #selector(self.clearBtnClick), for: .touchUpInside)
         self.addSubview(clearBtn)
         
         digitalSwitcherBtn = KeyBoardViewButton()
-        digitalSwitcherBtn.buttonMode = .Text
+        digitalSwitcherBtn.buttonMode = .text
         digitalSwitcherBtn.textLbl.text = "123"
-        digitalSwitcherBtn.addTarget(self, action: #selector(self.keySwitcherClick), forControlEvents: .TouchUpInside)
+        digitalSwitcherBtn.addTarget(self, action: #selector(self.keySwitcherClick), for: .touchUpInside)
         self.addSubview(digitalSwitcherBtn)
         
         backspaceBtn = KeyBoardViewButton()
-        backspaceBtn.buttonMode = .Icon
-        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_normal"), forState: .Normal)
-        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_selected"), forState: .Highlighted)
-        backspaceBtn.addTarget(self, action: #selector(self.backspaceClick), forControlEvents: .TouchUpInside)
+        backspaceBtn.buttonMode = .icon
+        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_normal"), for: UIControlState())
+        backspaceBtn.setImage(UIImage(named: "v2_keyboard_delete_selected"), for: .highlighted)
+        backspaceBtn.addTarget(self, action: #selector(self.backspaceClick), for: .touchUpInside)
         self.addSubview(backspaceBtn)
         
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
-        keyCollectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        keyCollectionView.backgroundColor = UIColor.clearColor()
-        keyCollectionView.registerClass(KeyboardCollectionViewCell.self, forCellWithReuseIdentifier: "keyCollectionView")
+        keyCollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        keyCollectionView.backgroundColor = UIColor.clear
+        keyCollectionView.register(KeyboardCollectionViewCell.self, forCellWithReuseIdentifier: "keyCollectionView")
         keyCollectionView.delaysContentTouches = false
         keyCollectionView.dataSource = self
         keyCollectionView.delegate = self
@@ -71,34 +71,34 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func makeConstraints(){
-        clearBtn.snp_makeConstraints { (make) in
+    fileprivate func makeConstraints(){
+        clearBtn.snp.makeConstraints { (make) in
             make.left.equalTo(self)
             make.top.equalTo(self)
             make.height.equalTo(30)
             make.width.equalTo(self).multipliedBy(0.32)
         }
         
-        digitalSwitcherBtn.snp_makeConstraints { (make) in
+        digitalSwitcherBtn.snp.makeConstraints { (make) in
             make.centerX.equalTo(self)
             make.top.equalTo(self)
             make.width.height.equalTo(clearBtn)
         }
         
-        backspaceBtn.snp_makeConstraints { (make) in
+        backspaceBtn.snp.makeConstraints { (make) in
             make.right.equalTo(self)
             make.top.equalTo(self)
             make.height.width.equalTo(clearBtn)
         }
         
-        keyCollectionView.snp_makeConstraints { (make) in
+        keyCollectionView.snp.makeConstraints { (make) in
             make.right.left.equalTo(self)
-            make.top.equalTo(clearBtn.snp_bottom)
+            make.top.equalTo(clearBtn.snp.bottom)
             make.bottom.equalTo(self)
         }
     }
     
-    private func initData(){
+    fileprivate func initData(){
         let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         let digital = "0123456789"
         
@@ -113,35 +113,35 @@ class FullKeyboardView: UIView,UICollectionViewDataSource,UICollectionViewDelega
         keyList = alphabetList
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return keyList.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("keyCollectionView", forIndexPath: indexPath) as! KeyboardCollectionViewCell
-        cell.titleLabel.text = keyList[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "keyCollectionView", for: indexPath) as! KeyboardCollectionViewCell
+        cell.titleLabel.text = keyList[(indexPath as NSIndexPath).row]
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (collectionView.frame.width - 10) / 6
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if keyboardDelegate != nil {
-            keyboardDelegate.onKeyboardClick(keyList[indexPath.row])
+            keyboardDelegate.onKeyboardClick(keyList[(indexPath as NSIndexPath).row])
         }
     }
     
-    func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! KeyboardCollectionViewCell
-        cell.backgroundView?.hidden = false
+    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! KeyboardCollectionViewCell
+        cell.backgroundView?.isHidden = false
     }
     
-    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath) {
-        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! KeyboardCollectionViewCell
-        cell.backgroundView?.hidden = true
+    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! KeyboardCollectionViewCell
+        cell.backgroundView?.isHidden = true
     }
     
     //点击清理按钮

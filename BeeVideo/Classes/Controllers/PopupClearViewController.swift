@@ -20,40 +20,40 @@ class PopupClearViewController: UIViewController,PopupContentViewController {
     weak var delegate:ClearDelegate!
     var clearAllBtn:UIButton!
     var clearSelectBtn:UIButton!
-    private var bgView:UIImageView!
+    fileprivate var bgView:UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         bgView = UIImageView(frame: self.view.frame)
-        bgView.image = UIImage(named: "v2_choose_drama_dlg_bg")?.resizableImageWithCapInsets(UIEdgeInsets(top:100, left: 5,bottom:100,right: 100), resizingMode: .Stretch)
+        bgView.image = UIImage(named: "v2_choose_drama_dlg_bg")?.resizableImage(withCapInsets: UIEdgeInsets(top:100, left: 5,bottom:100,right: 100), resizingMode: .stretch)
         self.view.addSubview(bgView)
         
         clearSelectBtn = UIButton()
-        clearSelectBtn.setTitle("清除选定", forState: .Normal)
-        clearSelectBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        clearSelectBtn.setBackgroundImage(UIImage(named: "normal_bg"), forState: .Normal)
-        clearSelectBtn.titleLabel?.font = UIFont.systemFontOfSize(12)
-        clearSelectBtn.addTarget(self, action: #selector(self.clearSelect), forControlEvents: .TouchUpInside)
+        clearSelectBtn.setTitle("清除选定", for: UIControlState())
+        clearSelectBtn.setTitleColor(UIColor.white, for: UIControlState())
+        clearSelectBtn.setBackgroundImage(UIImage(named: "normal_bg"), for: UIControlState())
+        clearSelectBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        clearSelectBtn.addTarget(self, action: #selector(self.clearSelect), for: .touchUpInside)
         self.view.addSubview(clearSelectBtn)
         
         clearAllBtn = UIButton()
-        clearAllBtn.setTitle("清除所有", forState: .Normal)
-        clearAllBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        clearAllBtn.titleLabel?.font = UIFont.systemFontOfSize(12)
-        clearAllBtn.addTarget(self, action: #selector(self.clearAll), forControlEvents: .TouchUpInside)
-        clearAllBtn.setBackgroundImage(UIImage(named: "normal_bg"), forState: .Normal)
+        clearAllBtn.setTitle("清除所有", for: UIControlState())
+        clearAllBtn.setTitleColor(UIColor.white, for: UIControlState())
+        clearAllBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        clearAllBtn.addTarget(self, action: #selector(self.clearAll), for: .touchUpInside)
+        clearAllBtn.setBackgroundImage(UIImage(named: "normal_bg"), for: UIControlState())
         self.view.addSubview(clearAllBtn)
         
-        clearSelectBtn.snp_makeConstraints { (make) in
-            make.right.equalTo(self.view.snp_centerX).offset(-10)
+        clearSelectBtn.snp.makeConstraints { (make) in
+            make.right.equalTo(self.view.snp.centerX).offset(-10)
             make.width.equalTo(100)
             make.height.equalTo(30)
             make.centerY.equalTo(self.view)
         }
         
-        clearAllBtn.snp_makeConstraints { (make) in
-            make.left.equalTo(self.view.snp_centerX).offset(10)
+        clearAllBtn.snp.makeConstraints { (make) in
+            make.left.equalTo(self.view.snp.centerX).offset(10)
             make.top.bottom.equalTo(clearSelectBtn)
             make.width.equalTo(clearSelectBtn)
         }
@@ -78,7 +78,7 @@ class PopupClearViewController: UIViewController,PopupContentViewController {
         delegate.clearSelect()
     }
 
-    func sizeForPopup(popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
+    func sizeForPopup(_ popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
         return CGSize(width: self.view.bounds.width, height: 100)
     }
     
